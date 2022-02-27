@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskerMaster.Data;
 
 namespace TaskerMaster.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220227123332_ForeignRelationships_Fixes")]
+    partial class ForeignRelationships_Fixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -614,19 +616,13 @@ namespace TaskerMaster.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("WorkspaceId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("WorkspaceId")
-                        .IsUnique();
-
-                    b.HasIndex("WorkspaceId1");
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Teams");
                 });
@@ -803,15 +799,11 @@ namespace TaskerMaster.Data.Migrations
                         .WithMany("Teams")
                         .HasForeignKey("CompanyId");
 
-                    b.HasOne("TaskerMaster.Data.Models.Workspace", null)
-                        .WithOne()
-                        .HasForeignKey("TaskerMaster.Data.Models.Team", "WorkspaceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("TaskerMaster.Data.Models.Workspace", "Workspace")
                         .WithMany()
-                        .HasForeignKey("WorkspaceId1");
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Workspace");
                 });

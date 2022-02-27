@@ -1,15 +1,18 @@
 ﻿namespace TaskerMaster.Web.Controllers
 {
     using System.Diagnostics;
-
-    using TaskerMaster.Web.ViewModels;
-
     using Microsoft.AspNetCore.Mvc;
+    using TaskerMaster.Web.ViewModels;
 
     public class HomeController : BaseController
     {
         public IActionResult Index()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.Redirect("/Teams");
+            }
+
             return this.View();
         }
 

@@ -36,7 +36,7 @@
 
         public DbSet<Tag> Tag { get; set; }
 
-        public DbSet<TaskerMaster.Data.Models.Task> Tasks { get; set; }
+        public DbSet<Card> Cards { get; set; }
 
         public DbSet<Team> Teams { get; set; }
 
@@ -89,7 +89,12 @@
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-            //builder.Entity<TaskerMaster.Data.Models.Task>().HasKey(x => x.Id);
+            builder
+                .Entity<Team>()
+                .HasOne<Workspace>()
+                .WithOne()
+                .HasForeignKey<Team>(d => d.WorkspaceId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

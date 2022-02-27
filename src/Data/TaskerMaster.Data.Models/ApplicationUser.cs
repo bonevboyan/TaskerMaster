@@ -16,8 +16,8 @@
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.Companies = new HashSet<Company>();
             this.Teams = new HashSet<Team>();
+            this.Messages = new HashSet<Message>();
         }
 
         [Required]
@@ -56,8 +56,10 @@
 
         public ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
-        public ICollection<Company> Companies { get; set; }
-
         public ICollection<Team> Teams { get; set; }
+
+        public ICollection<Card> Cards { get; set; }
+
+        public ICollection<Message> Messages { get; set; }
     }
 }

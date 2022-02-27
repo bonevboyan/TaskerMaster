@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     using TaskerMaster.Data.Common.Models;
 
     using static TaskerMaster.Common.DataConstants.Discussion;
@@ -21,5 +22,11 @@
         public string Name { get; set; }
 
         public ICollection<Message> Messages { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(Team))]
+        public string TeamId { get; set; }
+
+        public Team Team { get; set; }
     }
 }

@@ -13,13 +13,13 @@
             : base()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Tasks = new HashSet<Task>();
+            this.Cards = new HashSet<Card>();
         }
 
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
 
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<Card> Cards { get; set; }
     }
 }

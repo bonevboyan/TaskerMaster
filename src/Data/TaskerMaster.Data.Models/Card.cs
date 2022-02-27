@@ -8,9 +8,9 @@
 
     using static TaskerMaster.Common.DataConstants.Task;
 
-    public class Task : BaseDeletableModel<string>
+    public class Card : BaseDeletableModel<string>
     {
-        public Task()
+        public Card()
             : base()
         {
             this.Id = Guid.NewGuid().ToString();
