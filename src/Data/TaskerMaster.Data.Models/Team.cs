@@ -26,6 +26,12 @@
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; }
 
+        [Required
+        //[ForeignKey(nameof(Schedule))]
+        public string ScheduleId { get; set; }
+
+        public Schedule Schedule { get; set; }
+
         [Required]
         [ForeignKey(nameof(Workspace))]
         public string WorkspaceId { get; set; }

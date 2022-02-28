@@ -28,7 +28,7 @@
 
         public DbSet<Bucket> Buckets { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Workspace> Companies { get; set; }
 
         public DbSet<Discussion> Discussions { get; set; }
 
@@ -40,7 +40,7 @@
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<Workspace> Workspaces { get; set; }
+        public DbSet<Schedule> Workspaces { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -91,10 +91,15 @@
 
             builder
                 .Entity<Team>()
-                .HasOne<Workspace>()
+                .HasOne<Schedule>()
                 .WithOne()
-                .HasForeignKey<Team>(d => d.WorkspaceId)
+                .HasForeignKey<Team>(d => d.ScheduleId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Team>()
+                .HasOne<Schedule>(x => x.Schedule)
+                .WithOne(x => x.Team)
+                .HasForeignKey<Schedule>(x => x.TeamId);
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

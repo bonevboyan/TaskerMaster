@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskerMaster.Data;
 
@@ -11,9 +12,10 @@ using TaskerMaster.Data;
 namespace TaskerMaster.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220228072036_FixedNames_WorkspaceAdditions")]
+    partial class FixedNames_WorkspaceAdditions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,8 +509,7 @@ namespace TaskerMaster.Data.Migrations
 
                     b.HasIndex("IsDeleted");
 
-                    b.HasIndex("TeamId")
-                        .IsUnique();
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Workspaces");
                 });
@@ -609,6 +610,9 @@ namespace TaskerMaster.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ScheduleId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("WorkspaceId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -619,6 +623,8 @@ namespace TaskerMaster.Data.Migrations
 
                     b.HasIndex("ScheduleId")
                         .IsUnique();
+
+                    b.HasIndex("ScheduleId1");
 
                     b.HasIndex("WorkspaceId");
 
@@ -820,9 +826,9 @@ namespace TaskerMaster.Data.Migrations
             modelBuilder.Entity("TaskerMaster.Data.Models.Schedule", b =>
                 {
                     b.HasOne("TaskerMaster.Data.Models.Team", "Team")
-                        .WithOne("Schedule")
-                        .HasForeignKey("TaskerMaster.Data.Models.Schedule", "TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Team");
@@ -836,11 +842,17 @@ namespace TaskerMaster.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("TaskerMaster.Data.Models.Schedule", "Schedule")
+                        .WithMany()
+                        .HasForeignKey("ScheduleId1");
+
                     b.HasOne("TaskerMaster.Data.Models.Workspace", "Workspace")
                         .WithMany("Teams")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Schedule");
 
                     b.Navigation("Workspace");
                 });
@@ -883,8 +895,6 @@ namespace TaskerMaster.Data.Migrations
             modelBuilder.Entity("TaskerMaster.Data.Models.Team", b =>
                 {
                     b.Navigation("Discussions");
-
-                    b.Navigation("Schedule");
                 });
 
             modelBuilder.Entity("TaskerMaster.Data.Models.Workspace", b =>

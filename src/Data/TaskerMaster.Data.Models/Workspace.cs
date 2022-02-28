@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
     using TaskerMaster.Data.Common.Models;
+    using TaskerMaster.Data.Models.Enums;
 
-    using static TaskerMaster.Common.DataConstants.Workspace;
+    using static TaskerMaster.Common.DataConstants.Company;
 
     public class Workspace : BaseDeletableModel<string>
     {
@@ -14,15 +14,28 @@
             : base()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Buckets = new HashSet<Bucket>();
+            this.Teams = new HashSet<Team>();
         }
 
         [Required]
-        [ForeignKey(nameof(Team))]
-        public string TeamId { get; set; }
+        [MaxLength(NameMaxLength)]
+        public string Name { get; set; }
 
-        public Team Team { get; set; }
+        [Required]
+        public string ImageUrl { get; set; }
 
-        public ICollection<Bucket> Buckets { get; set; }
+        [Required]
+        [MaxLength(DescriptionMaxLength)]
+        public string Description { get; set; }
+
+        public CompanySize CompanySize { get; set; }
+
+        public CompanyType CompanyType { get; set; }
+
+        public ICollection<Team> Teams { get; set; }
+
+        public ApplicationUser Owner { get; set; }
+
+        public ICollection<ApplicationUser> Admins { get; set; }
     }
 }

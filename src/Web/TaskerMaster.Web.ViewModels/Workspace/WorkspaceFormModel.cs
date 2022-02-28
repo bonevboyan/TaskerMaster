@@ -7,7 +7,7 @@
     using TaskerMaster.Common;
     using TaskerMaster.Data.Models.Enums;
 
-    public class CompanyFormModel
+    public class WorkspaceFormModel
     {
         public string Name { get; set; }
 
