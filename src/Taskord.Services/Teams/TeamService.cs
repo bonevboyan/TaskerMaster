@@ -2,6 +2,7 @@
 {
     using Taskord.Data;
     using Taskord.Data.Models;
+    using Taskord.Services.Teams.Models;
 
     public class TeamService : ITeamService
     {
@@ -14,13 +15,6 @@
 
         public string Create(string name, string description, string imageUrl)
         {
-            Team team = new Team
-            {
-                Name = name,
-                Description = description,
-                ImagePath = imageUrl
-            };
-
             Schedule schedule = new Schedule();
 
             schedule.Buckets.Add(new Bucket
@@ -34,12 +28,31 @@
 
             data.Schedules.Add(schedule);
 
-            team.ScheduleId = schedule.Id;
+            Team team = new Team
+            {
+                Name = name,
+                Description = description,
+                ImagePath = imageUrl,
+                ScheduleId = schedule.Id,
+            };
 
             data.Teams.Add(team);
             data.SaveChanges();
 
             return team.Id;
+        }
+
+        public IEnumerable<TeamListServiceModel> GetTeamList(string userId)
+        {
+            var teamList = data.Teams
+                .Select(t => new TeamListServiceModel
+                {
+                    ImagePath = t.ImagePath,
+                    Name = t.Name
+                })
+                .ToList();
+
+            return teamList;
         }
     }
 }
