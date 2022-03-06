@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
+using Taskord.Services.Chats;
+using Taskord.Services.Schedules;
 using Taskord.Services.Teams;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITeamService, TeamService>();
+builder.Services.AddTransient<IScheduleService, ScheduleService>();
+builder.Services.AddTransient<IChatService, ChatService>();
 
 var app = builder.Build();
 
