@@ -4,13 +4,8 @@
 
     public class ChatsController : Controller
     {
-        public IActionResult ById(string chat)
+        public IActionResult Personal(string chat)
         {
-            if (team == "@me")
-            {
-
-            }
-
             return View();
         }
 

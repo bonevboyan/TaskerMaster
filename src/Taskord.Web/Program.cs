@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
+using Taskord.Services.Teams;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TaskordDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<ITeamService, TeamService>();
 
 var app = builder.Build();
 
