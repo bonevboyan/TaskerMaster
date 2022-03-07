@@ -28,6 +28,9 @@
         [Required]
         public TaskCompletion State { get; set; }
 
+        [Required]
+        public DateTime? DueDate { get; set; }
+
         public ICollection<Tag> Tags { get; set; }
 
         public ICollection<ApplicationUser> Users { get; set; }
