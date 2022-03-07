@@ -50,16 +50,30 @@
             var cards = data.Schedules.Find(team.ScheduleId).Buckets.SelectMany(x => x.Cards);
 
 
-            //TODO
-            //ScheduleCalendarServiceModel calendarServiceModel = new ScheduleCalendarServiceModel
-            //{
-            //    Name = team.Name + " Schedule Calendar",
-            //    Days = cards
-            //        .GroupBy(c => c.DueDate)
-            //        .Select(c => c.)
-            //};
+            ScheduleCalendarServiceModel calendarServiceModel = new ScheduleCalendarServiceModel
+            {
+                Name = team.Name + " Schedule Calendar",
+                Days = cards
+                    .GroupBy(c => c.DueDate.Value.Date)
+                    .SelectMany(c => c
+                        .Select(d => new ScheduleCalendarDayServiceModel
+                        {
+                            Date = c.Key.Date,
+                            Cards = c.Select(cd => new ScheduleCardServiceModel
+                            {
+                                Description = cd.Description,
+                                Name = cd.Name,
+                                State = cd.State.ToString(),
+                                Tags = cd.Tags.Select(t => new ScheduleTagServiceModel
+                                {
+                                    Color = t.Color,
+                                    Name = t.Name
+                                })
+                            })
+                        }))
+            };
 
-            throw new NotImplementedException();
+            return calendarServiceModel;
         }
 
         private Team GetTeamFromId(string teamId)

@@ -4,6 +4,6 @@
     {
         public DateTime Date { get; set; }
 
-        public IEnumerable<ScheduleCalendarCardServiceModel> Cards { get; set; }
+        public IEnumerable<ScheduleCardServiceModel> Cards { get; set; }
     }
 }
