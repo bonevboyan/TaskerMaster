@@ -37,6 +37,8 @@
 
         public ICollection<Team> Teams { get; set; }
 
+        public ICollection<AdminTeam> AdminTeams { get; set; }
+
         public ICollection<Card> Cards { get; set; }
 
         public ICollection<Message> Messages { get; set; }

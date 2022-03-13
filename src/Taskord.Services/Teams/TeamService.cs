@@ -36,6 +36,13 @@
                 ScheduleId = schedule.Id,
             };
 
+            Chat chat = new Chat
+            {
+                Name = "General"
+            };
+
+            team.Chats.Add(chat);
+
             data.Teams.Add(team);
             data.SaveChanges();
 

@@ -33,6 +33,8 @@
 
         public ICollection<ApplicationUser> Members { get; set; }
 
+        public ICollection<AdminTeam> AdminTeams { get; set; }
+
         public ICollection<Chat> Chats { get; set; }
     }
 }

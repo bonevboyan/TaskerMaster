@@ -13,5 +13,15 @@
         {
             return View();
         }
+
+        public IActionResult AddCard()
+        {
+            return View();
+        }
+
+        public IActionResult AddBucket()
+        {
+            return View();
+        }
     }
 }

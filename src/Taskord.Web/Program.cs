@@ -44,14 +44,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "chat",
-    pattern: "chats/@me/{chat}",
+    name: "personalChat",
+    pattern: "chats/@me/{chatId}",
     defaults: new { controller = "Chats", action = "Personal" });
 
 app.MapControllerRoute(
-    name: "chat",
-    pattern: "chats/{team}/{chat}",
+    name: "chats",
+    pattern: "chats/{teamId}/{chatId}",
     defaults: new { controller = "Chats", action = "ById" });
+
+app.MapControllerRoute(
+    name: "schedule",
+    pattern: "schedule/{teamId}/{action=Board}",
+    defaults: new { controller = "Schedules"});
 
 app.MapControllerRoute(
     name: "default",

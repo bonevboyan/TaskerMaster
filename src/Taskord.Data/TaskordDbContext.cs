@@ -22,6 +22,8 @@
 
         public DbSet<Team> Teams { get; set; }
 
+        public DbSet<AdminTeam> AdminTeams { get; set; }
+
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)
@@ -36,6 +38,8 @@
                 .WithOne()
                 .HasForeignKey<Team>(d => d.ScheduleId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<AdminTeam>().HasKey(x => new { x.TeamId, x.ApplicationUserId });
 
 
             base.OnModelCreating(builder);

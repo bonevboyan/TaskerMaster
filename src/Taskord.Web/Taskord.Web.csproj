@@ -28,4 +28,8 @@
     <ProjectReference Include="..\Taskord.Services\Taskord.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Schedules\" />
+  </ItemGroup>
+
 </Project>
