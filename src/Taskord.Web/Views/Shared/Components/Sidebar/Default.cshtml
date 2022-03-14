@@ -4,19 +4,31 @@
 *@
 @{
 }
-@model IEnumerable<TeamListServiceModel>
-
+@model SidebarViewModel
 
 <div class="wrapper d-flex">
     <div class="sidebar">
         <small class="text-muted pl-3">Teams</small>
         <ul>
-            @foreach(var team in @Model){
+            @foreach(var team in @Model.Teams){
                 <li>
                     <a href="#">
                         <div></div>
                         <img src=@team.ImagePath alt="teamImage">
                         @team.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+     <div class="sidebar">
+        <small class="text-muted pl-3">Chats</small>
+        <ul>
+            @foreach(var chat in @Model.Chats){
+                <li>
+                    <a href="#">
+                        <div></div>
+                        @chat.Name
                     </a>
                 </li>
             }

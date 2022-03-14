@@ -44,7 +44,7 @@
             return chatServiceModel;
         }
 
-        public IEnumerable<ChatListServiceModel> GetChatNames(string userId)
+        public IEnumerable<ChatListServiceModel> GetChatNames(string teamId)
         {
             var chats = data.Chats
                 .Select(x => new ChatListServiceModel

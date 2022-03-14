@@ -6,6 +6,6 @@
     {
         ChatServiceModel GetChat(string chatId);
 
-        IEnumerable<ChatListServiceModel> GetChatNames(string userId);
+        IEnumerable<ChatListServiceModel> GetChatNames(string teamId);
     }
 }

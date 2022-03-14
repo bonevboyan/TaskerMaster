@@ -55,7 +55,8 @@
                 .Select(t => new TeamListServiceModel
                 {
                     ImagePath = t.ImagePath,
-                    Name = t.Name
+                    Name = t.Name,
+                    TeamId = t.Id,
                 })
                 .ToList();
 
