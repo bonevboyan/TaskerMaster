@@ -1,7 +1,9 @@
 ﻿namespace Taskord.Services.Users
 {
+    using Taskord.Services.Users.Models;
+
     public interface IUserService
     {
-        IEnumerable<string> GetUserNames(string teamId);
+        IEnumerable<UserListServiceModel> GetUserList(string teamId);
     }
 }
