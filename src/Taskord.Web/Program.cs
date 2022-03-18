@@ -4,6 +4,7 @@ using Taskord.Data;
 using Taskord.Services.Chats;
 using Taskord.Services.Schedules;
 using Taskord.Services.Teams;
+using Taskord.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IScheduleService, ScheduleService>();
 builder.Services.AddTransient<IChatService, ChatService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -52,6 +54,11 @@ app.MapControllerRoute(
     name: "chats",
     pattern: "chats/{teamId}/{chatId}",
     defaults: new { controller = "Chats", action = "ById" });
+
+app.MapControllerRoute(
+    name: "chats",
+    pattern: "chats/{teamId}/{action}",
+    defaults: new { controller = "Chats"});
 
 app.MapControllerRoute(
     name: "schedule",
