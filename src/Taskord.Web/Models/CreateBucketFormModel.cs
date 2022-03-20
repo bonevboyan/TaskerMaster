@@ -1,6 +1,6 @@
 ﻿namespace Taskord.Web.Models
 {
-    public class CreateCategoryFormModel
+    public class CreateBucketFormModel
     {
     }
 }
