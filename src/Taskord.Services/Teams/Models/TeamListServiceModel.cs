@@ -2,7 +2,7 @@
 {
     public class TeamListServiceModel
     {
-        public string TeamId { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 

@@ -13,7 +13,7 @@
             this.data = data;
         }
 
-        public string Create(string name, string description, string imageUrl)
+        public string Create(string name, string description, string imageUrl, IEnumerable<string> userIds)
         {
             Schedule schedule = new Schedule();
 
@@ -51,12 +51,14 @@
 
         public IEnumerable<TeamListServiceModel> GetTeamList(string userId)
         {
-            var teamList = data.Teams
+            var teamList = data.Users
+                .FirstOrDefault(x => x.Id == userId)
+                .Teams
                 .Select(t => new TeamListServiceModel
                 {
                     ImagePath = t.ImagePath,
                     Name = t.Name,
-                    TeamId = t.Id,
+                    Id = t.Id,
                 })
                 .ToList();
 

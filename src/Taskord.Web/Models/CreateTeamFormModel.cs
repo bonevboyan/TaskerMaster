@@ -15,5 +15,7 @@
 
         [StringLength(DescriptionMaxLength)]
         public string Description { get; set; }
+
+        public IEnumerable<string> UserIds { get; set; }
     }
 }

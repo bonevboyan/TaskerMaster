@@ -8,14 +8,12 @@
 
 <div class="wrapper d-flex">
     <div class="sidebar">
-        <small class="text-muted pl-3">Teams</small>
         <ul>
             @foreach(var team in @Model.Teams){
                 <li>
-                    <a href="#">
-                        <div></div>
+                    <a href="chats/@team.Id">
                         <img src=@team.ImagePath alt="teamImage">
-                        @team.Name
+                        <p >@team.Name</p>
                     </a>
                 </li>
             }
@@ -26,9 +24,8 @@
         <ul>
             @foreach(var chat in @Model.Chats){
                 <li>
-                    <a href="#">
-                        <div></div>
-                        @chat.Name
+                    <a href="chats/@(ViewBag.TeamId ?? "@me" )/@chat.Id">
+                        <p> @chat.Name</p>
                     </a>
                 </li>
             }

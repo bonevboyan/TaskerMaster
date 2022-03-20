@@ -14,14 +14,26 @@
         }
 
 
-        public IEnumerable<UserListServiceModel> GetUserList(string teamId)
+        public IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId)
         {
-            var names = data.ApplicationUsers
+            var members = data.Users
                 .Where(x => x.Teams.Any(t => t.Id == teamId))
-                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName })
+                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
                 .ToList();
 
-            return names;
+            return members;
+        }
+
+
+        public IEnumerable<UserListServiceModel> GetUserFriendsList(string userId)
+        {
+            var friends = data.Users
+                .FirstOrDefault(x => x.UserName == userId)
+                .Connections
+                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
+                .ToList();
+
+            return friends;
         }
     }
 }

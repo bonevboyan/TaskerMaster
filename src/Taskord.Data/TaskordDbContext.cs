@@ -4,9 +4,9 @@
     using Microsoft.EntityFrameworkCore;
     using Taskord.Data.Models;
 
-    public class TaskordDbContext : IdentityDbContext
+    public class TaskordDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<Bucket> Buckets { get; set; }
 

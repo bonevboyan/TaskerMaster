@@ -20,7 +20,7 @@
         public IViewComponentResult Invoke(string userId, string teamId)
         {
             var teams = teamService.GetTeamList(userId);
-            var chatNames = chatService.GetChatNames(teamId);
+            var chatNames = chatService.GetChatList(teamId);
 
             var sidebar = new SidebarViewModel
             {

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
+using Taskord.Data.Models;
 using Taskord.Services.Chats;
 using Taskord.Services.Schedules;
 using Taskord.Services.Teams;
@@ -14,7 +15,7 @@ builder.Services.AddDbContext<TaskordDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TaskordDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -57,7 +58,7 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "chats",
-    pattern: "chats/{teamId}/{action}",
+    pattern: "/{teamId}/{action}",
     defaults: new { controller = "Chats"});
 
 app.MapControllerRoute(

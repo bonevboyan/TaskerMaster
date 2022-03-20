@@ -4,6 +4,6 @@
 
     public interface IUserService
     {
-        IEnumerable<UserListServiceModel> GetUserList(string teamId);
+        IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId);
     }
 }

@@ -4,7 +4,7 @@
 
     public interface ITeamService
     {
-        string Create(string name, string description, string imageUrl);
+        string Create(string name, string description, string imageUrl, IEnumerable<string> userIds);
 
         IEnumerable<TeamListServiceModel> GetTeamList(string userId);
     }

@@ -1,32 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Taskord.Data.Models;
 using Taskord.Services.Teams;
+using Taskord.Services.Users;
 using Taskord.Web.Models;
 
 namespace Taskord.Web.Controllers
 {
     public class TeamsController : Controller
     {
-        private ITeamService teamService;
+        private readonly ITeamService teamService;
+        private readonly IUserService userService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public TeamsController(ITeamService teamService)
+        public TeamsController(ITeamService teamService, IUserService userService, UserManager<ApplicationUser> userManager)
         {
             this.teamService = teamService;
+            this.userService = userService;
+            this.userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Create()
         {
-            return View();
+            var users = userService.GetTeamMembersList(userManager.GetUserId(this.User));
+
+            return this.View(new CreateChatFormModel
+            {
+                UserIds = users
+            });
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Create(CreateTeamFormModel teamFormModel)
+        public IActionResult Create(CreateTeamFormModel team)
         {
             if (!ModelState.IsValid)
             {
-                return View(teamFormModel);
+                return View(team);
             }
 
-            teamService.Create(teamFormModel.Name, teamFormModel.Description, teamFormModel.ImagePath);
+            var users = team == null ? team.UserIds.Select(x => x.Id).ToList() : new List<string>();
+            users.Add(this.userManager.GetUserId(this.User));
+
+            teamService.Create(team.Name, team.Description, team.ImagePath, users);
 
             return Redirect("/Home");
         }

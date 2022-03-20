@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="~/Taskord.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    @await Component.InvokeAsync("Sidebar", new { userId = "David",  teamId = "David"})
+    @await Component.InvokeAsync("Sidebar", new { userId = @ViewBag.UserId,  teamId = @ViewBag.TeamId})
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer id= "footer" class="border-top footer text-muted">
         <div class="container">
             &copy; @DateTime.Now.Year - Taskord
         </div>
