@@ -25,7 +25,7 @@
                 throw new ArgumentException("Team not found!");
             }
 
-            var matchedUsers = data.ApplicationUsers.Where(u => userIds.Any(x => x == u.Id)).ToList();
+            var matchedUsers = data.Users.Where(u => userIds.Any(x => x == u.Id)).ToList();
 
             if (matchedUsers.Count() != userIds.Count())
             {

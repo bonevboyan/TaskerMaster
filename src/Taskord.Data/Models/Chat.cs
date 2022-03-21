@@ -25,7 +25,6 @@
 
         public ICollection<ApplicationUser> Users { get; set; }
 
-        [Required]
         public string TeamId { get; set; }
 
         public Team Team { get; set; }

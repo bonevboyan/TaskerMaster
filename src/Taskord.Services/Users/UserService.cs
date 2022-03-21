@@ -35,5 +35,15 @@
 
             return friends;
         }
+
+        public IEnumerable<UserListServiceModel> GetUsersBySearchTerm(string searchTerm)
+        {
+            var users = data.Users
+                .Where(x => x.UserName.Contains(searchTerm))
+                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
+                .ToList();
+
+            return users;
+        }
     }
 }

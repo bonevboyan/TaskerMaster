@@ -15,6 +15,11 @@ namespace Taskord.Web.Controllers
 
         public IActionResult Index()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.Redirect("/chats/@me");
+            }
+
             return View();
         }
 

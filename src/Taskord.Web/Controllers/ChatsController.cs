@@ -22,8 +22,10 @@
         }
 
         [Authorize]
-        public IActionResult Personal(string chat)
+        public IActionResult Personal(string chatId)
         {
+
+
             return View();
         }
 
