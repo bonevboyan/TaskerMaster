@@ -9,5 +9,9 @@
         IEnumerable<UserListServiceModel> GetUserFriendsList(string userId);
 
         IEnumerable<UserListServiceModel> GetUsersBySearchTerm(string searchTerm);
+
+        IEnumerable<UserListServiceModel> GetUserFriendRequests(string userId);
+
+        IEnumerable<UserListServiceModel> GetUserPendingRequests(string userId);
     }
 }

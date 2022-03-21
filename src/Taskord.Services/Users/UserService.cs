@@ -17,23 +17,32 @@
         public IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId)
         {
             var members = data.Users
-                .Where(x => x.Teams.Any(t => t.Id == teamId))
+                .Where(x => x.UserTeams.Any(t => t.Team.Id == teamId))
                 .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
                 .ToList();
 
             return members;
         }
 
+        public IEnumerable<UserListServiceModel> GetUserFriendRequests(string userId)
+        {
+            throw new NotImplementedException();
+        }
 
         public IEnumerable<UserListServiceModel> GetUserFriendsList(string userId)
         {
             var friends = data.Users
                 .FirstOrDefault(x => x.UserName == userId)
-                .Connections
+                .Friends
                 .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
                 .ToList();
 
             return friends;
+        }
+
+        public IEnumerable<UserListServiceModel> GetUserPendingRequests(string userId)
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<UserListServiceModel> GetUsersBySearchTerm(string searchTerm)

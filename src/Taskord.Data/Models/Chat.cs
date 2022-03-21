@@ -12,9 +12,8 @@
         public Chat()
             : base()
         {
-            this.Id = Guid.NewGuid().ToString();
             this.Messages = new HashSet<Message>();
-            this.Users = new HashSet<ApplicationUser>();
+            this.Users = new HashSet<User>();
         }
 
         [Required]
@@ -23,7 +22,7 @@
 
         public ICollection<Message> Messages { get; set; }
 
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<User> Users { get; set; }
 
         public string TeamId { get; set; }
 

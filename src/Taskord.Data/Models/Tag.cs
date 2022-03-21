@@ -1,6 +1,5 @@
 ﻿namespace Taskord.Data.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Taskord.Data.Models.Enums;
@@ -13,7 +12,6 @@
         public Tag()
             : base()
         {
-            this.Id = Guid.NewGuid().ToString();
             this.Cards = new HashSet<Card>();
         }
 

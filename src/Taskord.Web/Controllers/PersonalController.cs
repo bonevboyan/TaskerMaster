@@ -10,20 +10,20 @@
     public class PersonalController : Controller
     {
         private readonly IUserService userService;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<User> userManager;
 
-        public PersonalController(IUserService userService, UserManager<ApplicationUser> userManager)
+        public PersonalController(IUserService userService, UserManager<User> userManager)
         {
             this.userService = userService;
             this.userManager = userManager;
         }
 
         [Authorize]
-        public IActionResult All()
+        public IActionResult All(string userId)
         {
-            var userId = this.userManager.GetUserId(this.User);
+            var myUserId = this.userManager.GetUserId(this.User);
 
-            var friends = this.userService.GetUserFriendsList(userId);
+            var friends = this.userService.GetUserFriendsList(myUserId);
 
             return View(friends);
         }
@@ -32,6 +32,14 @@
         public IActionResult Search([FromQuery] UserQueryModel query)
         {
             // TODO
+
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Search()
+        {
+            var myUserId = this.userManager.GetUserId(this.User);
 
             return View();
         }

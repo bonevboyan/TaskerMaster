@@ -15,7 +15,7 @@ builder.Services.AddDbContext<TaskordDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TaskordDbContext>();
 builder.Services.AddControllersWithViews();
 
@@ -48,17 +48,17 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "personalChat",
-    pattern: "@me/{action=All}/{id?}",
+    pattern: "@me/{action=All}/{userId}",
     defaults: new { controller = "Personal" });
 
 app.MapControllerRoute(
     name: "chats",
-    pattern: "chats/{teamId}/{chatId}",
-    defaults: new { controller = "Chats", action = "ById" });
+    pattern: "chats/{chatId}",
+    defaults: new { controller = "Chats", action = "Chats" });
 
 app.MapControllerRoute(
     name: "chats",
-    pattern: "/{teamId}/{action}",
+    pattern: "chats/{teamId}/{action}",
     defaults: new { controller = "Chats"});
 
 app.MapControllerRoute(

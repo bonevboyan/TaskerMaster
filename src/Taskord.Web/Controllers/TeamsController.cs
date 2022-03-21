@@ -12,9 +12,9 @@ namespace Taskord.Web.Controllers
     {
         private readonly ITeamService teamService;
         private readonly IUserService userService;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<User> userManager;
 
-        public TeamsController(ITeamService teamService, IUserService userService, UserManager<ApplicationUser> userManager)
+        public TeamsController(ITeamService teamService, IUserService userService, UserManager<User> userManager)
         {
             this.teamService = teamService;
             this.userService = userService;

@@ -12,9 +12,9 @@
     {
         private readonly IChatService chatService;
         private readonly IUserService userService;
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<User> userManager;
 
-        public ChatsController(IChatService chatService, IUserService userService, UserManager<ApplicationUser> userManager)
+        public ChatsController(IChatService chatService, IUserService userService, UserManager<User> userManager)
         {
             this.chatService = chatService;
             this.userService = userService;
@@ -22,22 +22,11 @@
         }
 
         [Authorize]
-        public IActionResult Personal(string chatId)
+        public IActionResult Chats(string chatId)
         {
+            var chat = chatService.GetChat(chatId);
 
-
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult ById(string team, string chat)
-        {
-            if(team == "@me")
-            {
-
-            }
-
-            return View();
+            return View(chat);
         }
 
         [Authorize]

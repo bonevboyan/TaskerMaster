@@ -53,12 +53,12 @@
         {
             var teamList = data.Users
                 .FirstOrDefault(x => x.Id == userId)
-                .Teams
+                .UserTeams
                 .Select(t => new TeamListServiceModel
                 {
-                    ImagePath = t.ImagePath,
-                    Name = t.Name,
-                    Id = t.Id,
+                    ImagePath = t.Team.ImagePath,
+                    Name = t.Team.Name,
+                    Id = t.Team.Id,
                 })
                 .ToList();
 

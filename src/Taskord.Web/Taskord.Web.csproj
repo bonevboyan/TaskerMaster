@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Chats\ById.cshtml" />
+    <Content Remove="Views\Chats\Chats.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Views\Chats\ById.cshtml" />
+    <Compile Include="Views\Chats\Chats.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,18 +1,16 @@
 ﻿namespace Taskord.Data.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Identity;
 
     using static Taskord.Common.DataConstants.User;
 
-    public class ApplicationUser : IdentityUser
+    public class User : IdentityUser
     {
-        public ApplicationUser()
+        public User()
         {
-            this.Id = Guid.NewGuid().ToString();
-            this.Teams = new HashSet<Team>();
+            this.UserTeams = new HashSet<UserTeam>();
             this.Cards = new HashSet<Card>();
             this.Chats = new HashSet<Chat>();
             this.Messages = new HashSet<Message>();
@@ -35,9 +33,7 @@
         [MaxLength(StatusMaxLength)]
         public string StatusDescription { get; set; }
 
-        public ICollection<Team> Teams { get; set; }
-
-        public ICollection<AdminTeam> AdminTeams { get; set; }
+        public ICollection<UserTeam> UserTeams { get; set; }
 
         public ICollection<Card> Cards { get; set; }
 
@@ -45,6 +41,6 @@
 
         public ICollection<Chat> Chats { get; set; }
 
-        public ICollection<ApplicationUser> Connections { get; set; }
+        public ICollection<User> Friends { get; set; }
     }
 }

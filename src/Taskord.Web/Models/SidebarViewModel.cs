@@ -6,7 +6,5 @@
     public class SidebarViewModel
     {
         public IEnumerable<TeamListServiceModel> Teams { get; set; }
-
-        public IEnumerable<ChatListServiceModel> Chats { get; set; }
     }
 }

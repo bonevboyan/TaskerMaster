@@ -1,5 +1,7 @@
 ﻿namespace Taskord.Web.Models
 {
+    using Taskord.Services.Users.Models;
+
     public class UserQueryModel
     {
 
@@ -9,8 +11,6 @@
 
         public int CurrentPage { get; set; } = 1;
 
-        public int TotalCars { get; set; }
-
-        public IEnumerable<CarServiceModel> Users { get; set; }
+        public IEnumerable<UserListServiceModel> Users { get; set; }
     }
 }

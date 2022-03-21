@@ -1,6 +1,5 @@
 ﻿namespace Taskord.Data.Models
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
     using Taskord.Data.Models.Enums;
     using Taskord.Data.Common;
@@ -12,7 +11,6 @@
         public Message()
             : base()
         {
-            this.Id = Guid.NewGuid().ToString();
         }
 
         [Required]
@@ -27,6 +25,6 @@
         [Required]
         public string ApplicationUserId { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
+        public User ApplicationUser { get; set; }
     }
 }

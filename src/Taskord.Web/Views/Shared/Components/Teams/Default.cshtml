@@ -1,0 +1,20 @@
+﻿@using Taskord.Services.Teams.Models
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model SidebarViewModel
+
+<div class="sidebar">
+    <ul>
+        @foreach(var team in @Model.Teams){
+            <li>
+                <a href="chats/@team.Id">
+                    <img src=@team.ImagePath alt="teamImage">
+                    <p>@team.Name</p>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

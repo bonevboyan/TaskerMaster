@@ -4,10 +4,8 @@
     using Microsoft.EntityFrameworkCore;
     using Taskord.Data.Models;
 
-    public class TaskordDbContext : IdentityDbContext<ApplicationUser>
+    public class TaskordDbContext : IdentityDbContext<User>
     {
-        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
         public DbSet<Bucket> Buckets { get; set; }
 
         public DbSet<Card> Cards { get; set; }
@@ -22,8 +20,6 @@
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<AdminTeam> AdminTeams { get; set; }
-
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)
@@ -34,12 +30,18 @@
         {
             builder
                 .Entity<Team>()
-                .HasOne<Schedule>()
-                .WithOne()
-                .HasForeignKey<Team>(d => d.ScheduleId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(x => x.Schedule)
+                .WithOne(x => x.Team)
+                .HasForeignKey<Schedule>(x => x.TeamId);
+                //.HasOne<Schedule>()
+                //.WithOne()
+                //.HasForeignKey<Team>(d => d.ScheduleId)
+                //.OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<AdminTeam>().HasKey(x => new { x.TeamId, x.ApplicationUserId });
+            builder
+                .Entity<UserTeam>()
+                .HasKey(x => new { x.UserId, x.TeamId });
+
 
 
             base.OnModelCreating(builder);

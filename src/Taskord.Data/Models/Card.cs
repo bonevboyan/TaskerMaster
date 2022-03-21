@@ -13,9 +13,8 @@
         public Card()
             : base()
         {
-            this.Id = Guid.NewGuid().ToString();
             this.Tags = new HashSet<Tag>();
-            this.Users = new HashSet<ApplicationUser>();
+            this.Users = new HashSet<User>();
         }
 
         [Required]
@@ -33,6 +32,6 @@
 
         public ICollection<Tag> Tags { get; set; }
 
-        public ICollection<ApplicationUser> Users { get; set; }
+        public ICollection<User> Users { get; set; }
     }
 }
