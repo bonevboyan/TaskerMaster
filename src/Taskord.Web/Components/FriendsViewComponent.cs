@@ -7,7 +7,10 @@
 
     [ViewComponent(Name = "Friends")]
     public class FriendsViewComponent : ViewComponent
-    { 
-
+    {
+        public IViewComponentResult Invoke()
+        {
+            return this.View();
+        }
     }
 }

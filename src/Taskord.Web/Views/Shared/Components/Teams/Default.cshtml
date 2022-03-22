@@ -4,11 +4,11 @@
 *@
 @{
 }
-@model SidebarViewModel
+@model IEnumerable<TeamListServiceModel>
 
 <div class="sidebar">
     <ul>
-        @foreach(var team in @Model.Teams){
+        @foreach(var team in Model){
             <li>
                 <a href="chats/@team.Id">
                     <img src=@team.ImagePath alt="teamImage">

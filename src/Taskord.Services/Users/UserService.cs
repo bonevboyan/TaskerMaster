@@ -32,7 +32,7 @@
         public IEnumerable<UserListServiceModel> GetUserFriendsList(string userId)
         {
             var friends = data.Users
-                .FirstOrDefault(x => x.UserName == userId)
+                .FirstOrDefault(x => x.Id == userId)
                 .Friends
                 .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
                 .ToList();
@@ -45,14 +45,36 @@
             throw new NotImplementedException();
         }
 
-        public IEnumerable<UserListServiceModel> GetUsersBySearchTerm(string searchTerm)
+        public UserQueryServiceModel GetQueryUsers(string searchTerm = null, int currentPage = 1, int usersPerPage = int.MaxValue)
         {
-            var users = data.Users
-                .Where(x => x.UserName.Contains(searchTerm))
-                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
+            var usersQuery = this.data.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                usersQuery = usersQuery
+                    .Where(x => x.UserName.Contains(searchTerm));
+            }
+
+            var totalUsers = usersQuery.Count();
+
+            var users = usersQuery
+                .Select(x => new UserListServiceModel
+                {
+                    Id = x.Id,
+                    Name = x.UserName,
+                    ImagePath = x.ImagePath,    
+                })
+                .Skip((currentPage - 1) * usersPerPage)
+                .Take(usersPerPage)
                 .ToList();
 
-            return users;
+            return new UserQueryServiceModel
+            {
+                TotalUsers = totalUsers,
+                CurrentPage = currentPage,
+                UsersPerPage = usersPerPage,
+                Users = users
+            };
         }
     }
 }

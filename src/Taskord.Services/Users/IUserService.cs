@@ -8,7 +8,7 @@
 
         IEnumerable<UserListServiceModel> GetUserFriendsList(string userId);
 
-        IEnumerable<UserListServiceModel> GetUsersBySearchTerm(string searchTerm);
+        UserQueryServiceModel GetQueryUsers(string searchTerm, int currentPage, int usersPerPage);
 
         IEnumerable<UserListServiceModel> GetUserFriendRequests(string userId);
 

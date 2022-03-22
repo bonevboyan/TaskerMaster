@@ -14,20 +14,17 @@
             this.Cards = new HashSet<Card>();
             this.Chats = new HashSet<Chat>();
             this.Messages = new HashSet<Message>();
+            this.Friends = new HashSet<User>();
         }
 
-        [Required]
         [MaxLength(FirstNameMaxLength)]
         public string FirstName { get; set; }
 
-        [Required]
         [MaxLength(LastNameMaxLength)]
         public string LastName { get; set; }
 
-        [Required]
         public int YearOfBirth { get; set; }
 
-        [Required]
         public string ImagePath { get; set; }
 
         [MaxLength(StatusMaxLength)]

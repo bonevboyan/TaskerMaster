@@ -12,6 +12,10 @@
 
             public const int LastNameMaxLength = 40;
 
+            public const int UsernameMinLength = 3;
+
+            public const int UsernameMaxLength = 100;
+
             public const int StatusMaxLength = 150;
         }
 

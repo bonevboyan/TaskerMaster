@@ -11,6 +11,8 @@
 
         public int CurrentPage { get; set; } = 1;
 
+        public int TotalUsers { get; set; }
+
         public IEnumerable<UserListServiceModel> Users { get; set; }
     }
 }

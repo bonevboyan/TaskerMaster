@@ -48,7 +48,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "personalChat",
-    pattern: "@me/{action=All}/{userId}",
+    pattern: "me/{action=All}/{userId?}",
     defaults: new { controller = "Personal" });
 
 app.MapControllerRoute(

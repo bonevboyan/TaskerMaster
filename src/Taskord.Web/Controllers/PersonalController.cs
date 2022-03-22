@@ -31,17 +31,25 @@
         [Authorize]
         public IActionResult Search([FromQuery] UserQueryModel query)
         {
-            // TODO
+            Console.WriteLine("Gello");
 
-            return View();
+            var queryResult = this.userService.GetQueryUsers(
+                query.SearchTerm,
+                query.CurrentPage,
+                UserQueryModel.UsersPerPage);
+
+            query.TotalUsers = queryResult.TotalUsers;
+            query.Users = queryResult.Users;
+
+            return View(query);
         }
 
-        [Authorize]
-        public IActionResult Search()
-        {
-            var myUserId = this.userManager.GetUserId(this.User);
+        //[Authorize]
+        //public IActionResult Search()
+        //{
+        //    var myUserId = this.userManager.GetUserId(this.User);
 
-            return View();
-        }
+        //    return View();
+        //}
     }
 }

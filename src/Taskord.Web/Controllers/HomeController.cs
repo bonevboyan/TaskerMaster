@@ -6,18 +6,15 @@ namespace Taskord.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
         }
 
         public IActionResult Index()
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return this.Redirect("/chats/@me");
+                return this.Redirect("/me/all");
             }
 
             return View();
