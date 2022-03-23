@@ -24,7 +24,9 @@ namespace Taskord.Web.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            var users = userService.GetTeamMembersList(userManager.GetUserId(this.User));
+            var userId = this.userManager.GetUserId(this.User);
+
+            var users = userService.GetTeamMembersList(userManager.GetUserId(this.User), userId);
 
             return this.View(new CreateChatFormModel
             {

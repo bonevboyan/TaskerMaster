@@ -25,15 +25,32 @@
 
             var friends = this.userService.GetUserFriendsList(myUserId);
 
-            return View(friends);
+            return this.View(friends);
+        }
+
+        [Authorize]
+        public IActionResult SendRequest(string userId)
+        {
+            // TODO
+
+            return this.Redirect("/all");
+        }
+
+        [Authorize]
+        public IActionResult Chats(string userId)
+        {
+            // TODO
+
+            return this.View();
         }
 
         [Authorize]
         public IActionResult Search([FromQuery] UserQueryModel query)
         {
-            Console.WriteLine("Gello");
+            var userId = this.userManager.GetUserId(this.User);
 
             var queryResult = this.userService.GetQueryUsers(
+                userId,
                 query.SearchTerm,
                 query.CurrentPage,
                 UserQueryModel.UsersPerPage);
@@ -41,15 +58,7 @@
             query.TotalUsers = queryResult.TotalUsers;
             query.Users = queryResult.Users;
 
-            return View(query);
+            return this.View(query);
         }
-
-        //[Authorize]
-        //public IActionResult Search()
-        //{
-        //    var myUserId = this.userManager.GetUserId(this.User);
-
-        //    return View();
-        //}
     }
 }

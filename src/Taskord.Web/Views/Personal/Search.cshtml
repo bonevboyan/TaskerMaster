@@ -56,7 +56,14 @@
                 <img class="card-img-top" src="@user.ImagePath">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@user.Name</h5>
-                    <a asp-controller="Personal" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
+                    @if (user.IsFriend)
+                    {
+                        <a asp-controller="Personal" asp-action="Chats" asp-route-id="@user.Id" class="btn btn-primary">Add Friend</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Personal" asp-action="SendRequest" asp-route-id="@user.Id" class="btn btn-secondary">Send Friend Request</a>
+                    }
                 </div>
             </div>
         </div>

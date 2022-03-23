@@ -4,11 +4,11 @@
 
     public interface IUserService
     {
-        IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId);
+        IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId, string userId);
 
         IEnumerable<UserListServiceModel> GetUserFriendsList(string userId);
 
-        UserQueryServiceModel GetQueryUsers(string searchTerm, int currentPage, int usersPerPage);
+        UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 
         IEnumerable<UserListServiceModel> GetUserFriendRequests(string userId);
 

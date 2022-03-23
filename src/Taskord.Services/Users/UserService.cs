@@ -1,6 +1,7 @@
 ﻿namespace Taskord.Services.Users
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Taskord.Data;
     using Taskord.Services.Users.Models;
 
@@ -14,11 +15,17 @@
         }
 
 
-        public IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId)
+        public IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId, string userId)
         {
             var members = data.Users
                 .Where(x => x.UserTeams.Any(t => t.Team.Id == teamId))
-                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
+                .Select(x => new UserListServiceModel 
+                { 
+                    Id = x.Id, 
+                    Name = x.UserName,
+                    ImagePath = x.ImagePath, 
+                    IsFriend = x.Friends.Any(f => f.Id == userId)
+                })
                 .ToList();
 
             return members;
@@ -34,7 +41,13 @@
             var friends = data.Users
                 .FirstOrDefault(x => x.Id == userId)
                 .Friends
-                .Select(x => new UserListServiceModel { Id = x.Id, Name = x.UserName, ImagePath = x.ImagePath })
+                .Select(x => new UserListServiceModel 
+                {
+                    Id = x.Id,
+                    Name = x.UserName, 
+                    ImagePath = x.ImagePath, 
+                    IsFriend = true 
+                })
                 .ToList();
 
             return friends;
@@ -45,7 +58,7 @@
             throw new NotImplementedException();
         }
 
-        public UserQueryServiceModel GetQueryUsers(string searchTerm = null, int currentPage = 1, int usersPerPage = int.MaxValue)
+        public UserQueryServiceModel GetQueryUsers(string userId, string searchTerm = null, int currentPage = 1, int usersPerPage = int.MaxValue)
         {
             var usersQuery = this.data.Users.AsQueryable();
 
@@ -62,7 +75,8 @@
                 {
                     Id = x.Id,
                     Name = x.UserName,
-                    ImagePath = x.ImagePath,    
+                    ImagePath = x.ImagePath,
+                    IsFriend = x.Friends.Any(f => f.Id == userId)
                 })
                 .Skip((currentPage - 1) * usersPerPage)
                 .Take(usersPerPage)

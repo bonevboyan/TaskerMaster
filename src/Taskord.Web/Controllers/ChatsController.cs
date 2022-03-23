@@ -32,7 +32,9 @@
         [Authorize]
         public IActionResult Create(string teamId)
         {
-            var users = userService.GetTeamMembersList(teamId);
+            var userId = this.userManager.GetUserId(this.User);
+
+            var users = userService.GetTeamMembersList(teamId, userId);
 
             return this.View(new CreateChatFormModel
             {
