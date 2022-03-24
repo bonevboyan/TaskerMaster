@@ -20,6 +20,8 @@
 
         public DbSet<Team> Teams { get; set; }
 
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)

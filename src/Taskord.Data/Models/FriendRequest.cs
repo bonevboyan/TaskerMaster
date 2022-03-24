@@ -8,6 +8,7 @@
         public FriendRequest()
             : base()
         {
+            this.State = FriendRequestState.Pending;
         }
 
         public FriendRequestState State { get; set; }

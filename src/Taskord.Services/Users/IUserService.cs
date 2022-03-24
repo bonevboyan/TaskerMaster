@@ -10,8 +10,12 @@
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 
-        IEnumerable<UserListServiceModel> GetUserFriendRequests(string userId);
+        IEnumerable<UserListServiceModel> GetUserReceivedFriendRequests(string userId);
 
-        IEnumerable<UserListServiceModel> GetUserPendingRequests(string userId);
+        IEnumerable<UserListServiceModel> GetUserSentFriendRequests(string userId);
+
+        string SendFriendRequest(string senderId, string receiverId);
+
+        void RespondToFriendRequest(string senderId, string receiverId, bool isAccepted);
     }
 }
