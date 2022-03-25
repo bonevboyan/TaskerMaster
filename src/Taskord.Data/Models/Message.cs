@@ -23,8 +23,8 @@
         public MessageType MessageType { get; set; }
 
         [Required]
-        public string ApplicationUserId { get; set; }
+        public string UserId { get; set; }
 
-        public User ApplicationUser { get; set; }
+        public User User { get; set; }
     }
 }

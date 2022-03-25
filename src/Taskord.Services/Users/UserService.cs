@@ -5,15 +5,20 @@
     using Taskord.Data;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
+    using Taskord.Services.Chats;
     using Taskord.Services.Users.Models;
+
+    using static Taskord.Common.ErrorMessages.User;
 
     public class UserService : IUserService
     {
         private readonly TaskordDbContext data;
+        private readonly IChatService chatService;
 
-        public UserService(TaskordDbContext data)
+        public UserService(TaskordDbContext data, IChatService chatService)
         {
             this.data = data;
+            this.chatService = chatService;
         }
 
 
@@ -113,7 +118,7 @@
 
         public string SendFriendRequest(string senderId, string receiverId)
         {
-            var friendRequest = new FriendRequest
+            var friendRequest = new Friendship
             {
                 SenderId = senderId,
                 ReceiverId = receiverId
@@ -132,12 +137,18 @@
 
             if (request is null)
             {
-                throw new ArgumentException("There is no such friend request.");
+                throw new ArgumentException(InvalidFriendRequest);
             }
 
-            request.State = isAccepted ?
-                FriendRequestState.Accepted :
-                FriendRequestState.Declined;
+            if (isAccepted)
+            {
+                request.State = FriendRequestState.Accepted;
+                this.chatService.CreatePersonalChat(senderId, receiverId);
+            }
+            else
+            {
+                request.State = FriendRequestState.Declined;
+            }
 
             this.data.SaveChanges();
         }

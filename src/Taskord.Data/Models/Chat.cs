@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Taskord.Data.Common;
-
+    using Taskord.Data.Models.Enums;
     using static Taskord.Common.DataConstants.Chat;
 
     public class Chat : BaseModel
@@ -27,5 +27,7 @@
         public string TeamId { get; set; }
 
         public Team Team { get; set; }
+
+        public ChatType ChatType { get; set; }
     }
 }

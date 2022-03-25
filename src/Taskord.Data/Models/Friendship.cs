@@ -3,9 +3,9 @@
     using Taskord.Data.Common;
     using Taskord.Data.Models.Enums;
 
-    public class FriendRequest : BaseModel
+    public class Friendship : BaseModel
     {
-        public FriendRequest()
+        public Friendship()
             : base()
         {
             this.State = FriendRequestState.Pending;
@@ -20,5 +20,9 @@
         public User Receiver { get; set; }
 
         public string ReceiverId { get; set; }
+
+        public Chat Chat { get; set; }
+
+        public string ChatId { get; set; }
     }
 }

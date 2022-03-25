@@ -6,10 +6,12 @@
     {
         ChatServiceModel GetChat(string chatId);
 
-
-
         IEnumerable<ChatListServiceModel> GetChatList(string teamId);
 
         string CreateChat(string teamId, string name, IEnumerable<string> userIds);
+
+        string CreatePersonalChat(string firstUserId, string secondUserId);
+
+        ChatServiceModel GetPersonalChat(string firstUserId, string secondUserId);
     }
 }
