@@ -7,6 +7,7 @@
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
     using Taskord.Services.Users.Models;
+    using Microsoft.EntityFrameworkCore;
 
     using static Taskord.Common.ErrorMessages.User;
 
@@ -40,8 +41,8 @@
 
         public IEnumerable<UserListServiceModel> GetUserReceivedFriendRequests(string userId)
         {
-            var pendingRequests = this.data.FriendRequests
-                .Where(x => x.ReceiverId == userId)
+            var pendingRequests = this.data.Friendships
+                .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Pending)
                 .Select(x => new UserListServiceModel
                 {
                     ImagePath = x.Sender.ImagePath,
@@ -71,8 +72,9 @@
 
         public IEnumerable<UserListServiceModel> GetUserSentFriendRequests(string userId)
         {
-            var pendingRequests = this.data.FriendRequests
-                .Where(x => x.SenderId == userId)
+            var pendingRequests = this.data.Friendships
+                .Include(x => x.Receiver)
+                .Where(x => x.SenderId == userId && x.State == RelationshipState.Pending)
                 .Select(x => new UserListServiceModel
                 {
                     ImagePath = x.Receiver.ImagePath,
@@ -85,7 +87,7 @@
 
         public UserQueryServiceModel GetQueryUsers(string userId, string searchTerm = null, int currentPage = 1, int usersPerPage = int.MaxValue)
         {
-            var usersQuery = this.data.Users.AsQueryable();
+            var usersQuery = this.data.Users.Where(x => x.Id != userId).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -118,21 +120,26 @@
 
         public string SendFriendRequest(string senderId, string receiverId)
         {
+            if(senderId == receiverId)
+            {
+                throw new ArgumentException(InvalidFriendRequestParameters);
+            }
+
             var friendRequest = new Friendship
             {
                 SenderId = senderId,
                 ReceiverId = receiverId
             };
 
-            this.data.FriendRequests.Add(friendRequest);
+            this.data.Friendships.Add(friendRequest);
             this.data.SaveChanges();
 
             return friendRequest.Id;
         }
 
-        public void RespondToFriendRequest(string senderId, string receiverId, bool isAccepted)
+        public void ChangeRelationshipState(string senderId, string receiverId, RelationshipState state)
         {
-            var request = this.data.FriendRequests
+            var request = this.data.Friendships
                 .FirstOrDefault(x => x.SenderId == senderId && x.ReceiverId == receiverId);
 
             if (request is null)
@@ -140,14 +147,11 @@
                 throw new ArgumentException(InvalidFriendRequest);
             }
 
-            if (isAccepted)
+            request.State = state;
+
+            if (state == RelationshipState.Accepted)
             {
-                request.State = FriendRequestState.Accepted;
                 this.chatService.CreatePersonalChat(senderId, receiverId);
-            }
-            else
-            {
-                request.State = FriendRequestState.Declined;
             }
 
             this.data.SaveChanges();

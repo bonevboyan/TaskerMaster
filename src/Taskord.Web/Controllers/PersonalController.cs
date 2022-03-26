@@ -4,6 +4,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Taskord.Data.Models;
+    using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
     using Taskord.Services.Users;
     using Taskord.Web.Models;
@@ -38,7 +39,25 @@
 
             this.userService.SendFriendRequest(myUserId, userId);
 
-            return this.Redirect("/all");
+            return this.Redirect("/me/all");
+        }
+
+        [Authorize]
+        public IActionResult AcceptRequest(string userId)
+        {
+            return this.ChangeRelationshipState(userId, RelationshipState.Accepted);
+        }
+
+        [Authorize]
+        public IActionResult DeclineRequest(string userId)
+        {
+            return this.ChangeRelationshipState(userId, RelationshipState.Declined);
+        }
+
+        [Authorize]
+        public IActionResult WithdrawRequest(string userId)
+        {
+            return this.ChangeRelationshipState(userId, RelationshipState.Withdrawn);
         }
 
         [Authorize]
@@ -68,6 +87,8 @@
             return this.View(query);
         }
 
+
+        [Authorize]
         public IActionResult Requests()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -79,6 +100,15 @@
             };
 
             return this.View(requests);
+        }
+
+        private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
+        {
+            var myUserId = this.userManager.GetUserId(this.User);
+
+            this.userService.ChangeRelationshipState(myUserId, userId, state);
+
+            return this.Redirect("/me/all");
         }
     }
 }

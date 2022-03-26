@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Users
 {
+    using Taskord.Data.Models.Enums;
     using Taskord.Services.Users.Models;
 
     public interface IUserService
@@ -16,6 +17,6 @@
 
         string SendFriendRequest(string senderId, string receiverId);
 
-        void RespondToFriendRequest(string senderId, string receiverId, bool isAccepted);
+        void ChangeRelationshipState(string senderId, string receiverId, RelationshipState isAccepted);
     }
 }

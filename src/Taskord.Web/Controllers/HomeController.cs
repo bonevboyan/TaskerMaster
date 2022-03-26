@@ -17,12 +17,7 @@ namespace Taskord.Web.Controllers
                 return this.Redirect("/me/all");
             }
 
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            return this.View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

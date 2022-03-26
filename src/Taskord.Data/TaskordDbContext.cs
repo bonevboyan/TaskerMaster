@@ -20,7 +20,7 @@
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<Friendship> FriendRequests { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
 
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
