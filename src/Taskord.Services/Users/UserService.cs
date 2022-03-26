@@ -46,7 +46,8 @@
                 .Select(x => new UserListServiceModel
                 {
                     ImagePath = x.Sender.ImagePath,
-                    Name = x.Sender.UserName
+                    Name = x.Sender.UserName,
+                    Id = x.Sender.Id
                 })
                 .ToList();
 
@@ -78,7 +79,8 @@
                 .Select(x => new UserListServiceModel
                 {
                     ImagePath = x.Receiver.ImagePath,
-                    Name = x.Receiver.UserName
+                    Name = x.Receiver.UserName,
+                    Id = x.Receiver.Id
                 })
                 .ToList();
 

@@ -102,11 +102,12 @@
             return this.View(requests);
         }
 
+        [Authorize]
         private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
-            this.userService.ChangeRelationshipState(myUserId, userId, state);
+            this.userService.ChangeRelationshipState(userId, myUserId, state);
 
             return this.Redirect("/me/all");
         }

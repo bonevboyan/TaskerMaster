@@ -9,10 +9,10 @@
         public Friendship()
             : base()
         {
-            this.State = FriendRequestState.Pending;
+            this.State = RelationshipState.Pending;
         }
 
-        public FriendRequestState State { get; set; }
+        public RelationshipState State { get; set; }
 
         public User Sender { get; set; }
 

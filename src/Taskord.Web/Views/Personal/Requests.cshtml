@@ -1,4 +1,5 @@
-﻿@model FriendRequestsViewModel
+﻿@using Taskord.Data.Models.Enums
+@model FriendRequestsViewModel
 
 <div class="row">
     @foreach (var user in Model.ReceivedRequests)
@@ -8,7 +9,8 @@
                 <img class="card-img-top" src="@user.ImagePath">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@user.Name</h5>
-                    <a asp-controller="Personal" asp-action="Chats" asp-route-userId="@user.Id" class="btn btn-primary">Accept Friend Request</a>
+                    <a asp-controller="Personal" asp-action="AcceptRequest" asp-route-userId="@user.Id" class="btn btn-primary">Accept</a>
+                    <a asp-controller="Personal" asp-action="DeclineRequest" asp-route-userId="@user.Id" class="btn btn-primary">Decline</a>
                 </div>
             </div>
         </div>

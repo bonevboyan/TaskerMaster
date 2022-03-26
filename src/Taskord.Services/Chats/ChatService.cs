@@ -98,7 +98,9 @@
                 throw new ArgumentException(InvalidUsers);
             }
 
-            var chatName = string.Format($"{users[0].UserName} and {users[1].UserName}'s chat");
+            //var chatName = string.Format($"{users[0].UserName} and {users[1].UserName}'s chat");
+
+            var chatName = string.Format($"chat1");
 
             var chat = new Chat
             {
