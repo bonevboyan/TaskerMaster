@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Chats
 {
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
     using Taskord.Data;
@@ -50,11 +51,12 @@
 
         public ChatServiceModel GetChat(string chatId)
         {
-            var chat = data.Chats
+            var chat = this.data.Chats
                 .Find(chatId);
 
-            ChatServiceModel chatServiceModel = new ChatServiceModel
+            return new ChatServiceModel
             {
+                Id = chat.Id,
                 Name = chat.Name,
                 Members = chat.Users
                     .Select(u => new ChatMemberServiceModel
@@ -66,15 +68,14 @@
                     .Select(m => new ChatMessageServiceModel
                     {
                         Content = m.Content,
+                        DateTime = m.CreatedOn.ToString("MM/dd HH:mm"),
                         Sender = new ChatMemberServiceModel
                         {
                             Username = m.User.UserName,
                             ImagePath = m.User.ImagePath
                         }
                     })
-            };
-
-            return chatServiceModel;
+            }; ;
         }
 
         public IEnumerable<ChatListServiceModel> GetChatList(string teamId)
@@ -118,34 +119,89 @@
 
         public ChatServiceModel GetPersonalChat(string firstUserId, string secondUserId)
         {
-            var chat = this.data.Chats
-                .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId) 
-                    && x.Users.Any(u => u.Id == secondUserId) 
+            var chat = new Chat();
+
+            if (secondUserId is null)
+            {
+                chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId)
                     && x.ChatType == ChatType.Personal);
+            }
+            else
+            {
+                chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId)
+                    && x.Users.Any(u => u.Id == secondUserId)
+                    && x.ChatType == ChatType.Personal);
+            }
 
             if(chat is null)
             {
                 throw new ArgumentException(InvalidChatParticipants);
             }
 
-            return new ChatServiceModel
+            var messages = this.data.Messages
+                .Include(x => x.User)
+                .Where(x => x.ChatId == chat.Id)
+                .ToList();
+
+            var chatModel = new ChatServiceModel
             {
-                Messages = chat.Messages.Select(x => new ChatMessageServiceModel
-                {
-                    Content = x.Content,
-                    Sender = new ChatMemberServiceModel
+                Id = chat.Id,
+                Messages = messages
+                    .OrderBy(x => x.CreatedOn)
+                    .Select(x => new ChatMessageServiceModel
                     {
-                        ImagePath = x.User.ImagePath,
-                        Username = x.User.UserName
-                    }
-                }),
+                        Content = x.Content,
+                        DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+                        IsOwn = x.UserId == firstUserId,
+                        Sender = new ChatMemberServiceModel
+                        {
+                            ImagePath = x.User.ImagePath,
+                            Username = x.User.UserName
+                        }
+                    }).ToList(),
                 Members = chat.Users.Select(x => new ChatMemberServiceModel
                 {
                     ImagePath = x.ImagePath,
                     Username = x.UserName
-                }),
+                }).ToList(),
                 Name = chat.Name
             };
+
+            return chatModel;
+        }
+
+        public string SendMessage(string chatId, string userId, string content)
+        {   
+            var chat = this.data.Chats
+                .Include(x => x.Users)
+                .FirstOrDefault(x => x.Id == chatId);
+
+            if(chat is null)
+            {
+                throw new ArgumentException(InvalidChat);
+            }
+
+            if(!chat.Users.Any(x => x.Id == userId))
+            {
+                throw new ArgumentException(UserNotInChat);
+            }
+
+            var message = new Message
+            {
+                UserId = userId,
+                Content = content,
+                ChatId = chatId
+            };
+
+            this.data.Messages.Add(message);
+
+            this.data.SaveChanges();
+
+            return message.Id;
         }
     }
 }

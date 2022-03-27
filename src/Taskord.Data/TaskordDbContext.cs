@@ -44,6 +44,12 @@
                 .Entity<UserTeam>()
                 .HasKey(x => new { x.UserId, x.TeamId });
 
+            builder
+                .Entity<Friendship>()
+                .HasOne(x => x.Receiver)
+                .WithMany(x => x.Friendships)
+                .HasForeignKey(x => x.ReceiverId);
+
 
 
             base.OnModelCreating(builder);

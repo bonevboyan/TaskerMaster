@@ -13,9 +13,13 @@
         {
             public const string InvalidTeam = "Team not found!";
 
+            public const string InvalidChat = "Chat not found!";
+
             public const string InvalidUsers = "User Ids not found!";
 
             public const string InvalidChatParticipants = "A chat between these two users doesn't exist.";
+
+            public const string UserNotInChat = "The user does not participate in this chat.";
         }
     }
 }

@@ -1,89 +1,60 @@
+body {
+    margin-top: 20px;
+}
+
+.rounded-circle {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.chat-online {
+    color: #34ce57
+}
+
+.chat-offline {
+    color: #e4606d
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    max-height: 450px;
+    overflow-y: scroll
+}
+
+.chat-message-left,
+.chat-message-right {
+    display: flex;
+    flex-shrink: 0
+}
+
+.chat-message-left {
+    margin-right: auto
+}
+
+.chat-message-right {
+    flex-direction: row-reverse;
+    margin-left: auto
+}
+
+.py-3 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.px-4 {
+    padding-right: 1.5rem !important;
+    padding-left: 1.5rem !important;
+}
+
+.flex-grow-0 {
+    flex-grow: 0 !important;
+}
+
+.border-top {
+    border-top: 1px solid #dee2e6 !important;
+}
 
 body {
     background: #f3f5f9
-}
-
-.wrapper {
-    position: relative;
-    white-space: nowrap;
-    font-size: 0;
-}
-
-#footer {
-    position: absolute;
-    bottom: 0;
-}
-
-.sidebar {
-    width: 10%;
-    height: 100vh;
-    background: #000000e0;
-    padding: 20px 0;
-    display: inline-block;
-    white-space: normal;
-}
-
-
-.text-muted {
-    color: #adb5bd !important;
-    margin-left: 10px;
-}
-
-ul {
-    padding-bottom: 20px
-}
-
-ul li a img {
-    background: #66BB6A;
-    margin-left: auto;
-    margin-right: auto;
-    justify-content: center;
-    top: 0;
-    border: none;
-    width: 40px
-}
-
-ul li a p{
-    display: flow;
-
-}
-
-.sidebar ul li {
-    padding: 10px
-}
-
-.sidebar ul li a {
-    color: #fff;
-    display: block;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-.sidebar ul li a .fas {
-    width: 30px;
-    color: #bdb8d7 !important
-}
-
-i.fas.fa-home:hover,
-i.fas.fa-file-invoice:hover,
-i.fas.fa-video:hover,
-i.fas.fa-id-badge:hover,
-i.fas.fa-external-link-alt:hover,
-i.fas.fa-code:hover,
-i.far.fa-calendar-alt:hover,
-i.far.fa-credit-card:hover {
-    color: #304FFE !important
-}
-
-.sidebar ul li a .far {
-    width: 30px;
-    color: #bdb8d7 !important
-}
-
-.sidebar ul li:hover {
-    background: #000
-}
-
-.sidebar ul li a:hover {
-    text-decoration: none
 }

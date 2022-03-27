@@ -24,9 +24,9 @@
         [Authorize]
         public IActionResult Chats(string chatId)
         {
-            var chat = chatService.GetChat(chatId);
+            var chat = this.chatService.GetChat(chatId);
 
-            return View(chat);
+            return this.View(chat);
         }
 
         [Authorize]
@@ -34,7 +34,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var users = userService.GetTeamMembersList(teamId, userId);
+            var users = this.userService.GetTeamMembersList(teamId, userId);
 
             return this.View(new CreateChatFormModel
             {

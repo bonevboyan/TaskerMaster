@@ -13,5 +13,7 @@
         string CreatePersonalChat(string firstUserId, string secondUserId);
 
         ChatServiceModel GetPersonalChat(string firstUserId, string secondUserId);
+
+        string SendMessage(string chatId, string userId, string content);
     }
 }

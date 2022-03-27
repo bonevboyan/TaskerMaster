@@ -9,24 +9,25 @@
     <link rel="stylesheet" href="~/Taskord.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="wrapper d-flex">
-        @await Component.InvokeAsync("Teams")
-        @RenderSection("Chats", false);
-        @RenderSection("Friends", false);
-    </div>
+    @*@await Component.InvokeAsync("Teams")*@
 
-    
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main class="content">
+        <div class="container p-0">
 
-    <div class="wrapper d-flex">
-        @RenderSection("Members", false);
-    </div>
+            <h1 class="h3 mb-3">Messages</h1>
 
-    <footer id= "footer" class="border-top footer text-muted">
+            <div class="card">
+                <div class="row g-0">
+                    @RenderSection("Friends", false)
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </main>
+
+    @RenderSection("Members", false)
+
+    <footer id="footer" class="border-top footer text-muted">
         <div class="container">
             &copy; @DateTime.Now.Year - Taskord
         </div>

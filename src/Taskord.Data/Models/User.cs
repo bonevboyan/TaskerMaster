@@ -14,7 +14,7 @@
             this.Cards = new HashSet<Card>();
             this.Chats = new HashSet<Chat>();
             this.Messages = new HashSet<Message>();
-            this.Friends = new HashSet<User>();
+            this.Friendships = new HashSet<Friendship>();
         }
 
         [MaxLength(FirstNameMaxLength)]
@@ -38,6 +38,6 @@
 
         public ICollection<Chat> Chats { get; set; }
 
-        public ICollection<User> Friends { get; set; }
+        public ICollection<Friendship> Friendships { get; set; }
     }
 }

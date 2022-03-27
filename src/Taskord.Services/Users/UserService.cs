@@ -32,7 +32,7 @@
                     Id = x.Id, 
                     Name = x.UserName,
                     ImagePath = x.ImagePath, 
-                    IsFriend = x.Friends.Any(f => f.Id == userId)
+                    IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
                 })
                 .ToList();
 
@@ -56,17 +56,29 @@
 
         public IEnumerable<UserListServiceModel> GetUserFriendsList(string userId)
         {
-            var friends = this.data.Users
-                .FirstOrDefault(x => x.Id == userId)
-                .Friends
-                .Select(x => new UserListServiceModel 
+            var friends = this.data.Friendships
+                .Include(x => x.Receiver)
+                .Where(x => x.SenderId == userId && x.State == RelationshipState.Accepted)
+                .Select(x => new UserListServiceModel
                 {
-                    Id = x.Id,
-                    Name = x.UserName, 
-                    ImagePath = x.ImagePath, 
-                    IsFriend = true 
+                    ImagePath = x.Receiver.ImagePath,
+                    Name = x.Receiver.UserName,
+                    Id = x.Receiver.Id
+                })
+                .ToList(); 
+
+            var friendsReceived = this.data.Friendships
+                .Include(x => x.Sender)
+                .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Accepted)
+                .Select(x => new UserListServiceModel
+                {
+                    ImagePath = x.Sender.ImagePath,
+                    Name = x.Sender.UserName,
+                    Id = x.Sender.Id
                 })
                 .ToList();
+
+            friends.AddRange(friendsReceived);
 
             return friends;
         }
@@ -105,7 +117,7 @@
                     Id = x.Id,
                     Name = x.UserName,
                     ImagePath = x.ImagePath,
-                    IsFriend = x.Friends.Any(f => f.Id == userId)
+                    IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
                 })
                 .Skip((currentPage - 1) * usersPerPage)
                 .Take(usersPerPage)
