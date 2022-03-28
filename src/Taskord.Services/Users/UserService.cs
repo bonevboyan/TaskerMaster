@@ -58,29 +58,39 @@
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
-                .Where(x => x.SenderId == userId && x.State == RelationshipState.Accepted)
-                .Select(x => new UserListServiceModel
+                .Include(x => x.Sender)
+                .Include(x => x.Chat)
+                .ThenInclude(x => x.Messages)
+                .Where(x => x.State == RelationshipState.Accepted)
+                .ToList();
+                //.OrderByDescending(x => x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn);
+
+
+            var sentFriends = friends
+                .Where(x => x.SenderId == userId)
+                .Select(x => new UserFriendListServiceModel
                 {
                     ImagePath = x.Receiver.ImagePath,
                     Name = x.Receiver.UserName,
-                    Id = x.Receiver.Id
+                    Id = x.Receiver.Id,
+                    LastMessageSent = x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn
                 })
                 .ToList(); 
 
-            var friendsReceived = this.data.Friendships
-                .Include(x => x.Sender)
+            var receivedFriends = this.data.Friendships
                 .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Accepted)
-                .Select(x => new UserListServiceModel
+                .Select(x => new UserFriendListServiceModel
                 {
                     ImagePath = x.Sender.ImagePath,
                     Name = x.Sender.UserName,
-                    Id = x.Sender.Id
+                    Id = x.Sender.Id,
+                    LastMessageSent = x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn
                 })
                 .ToList();
 
-            friends.AddRange(friendsReceived);
+            sentFriends.AddRange(receivedFriends);
 
-            return friends;
+            return sentFriends.OrderByDescending(x => x.LastMessageSent);
         }
 
         public IEnumerable<UserListServiceModel> GetUserSentFriendRequests(string userId)
@@ -165,7 +175,9 @@
 
             if (state == RelationshipState.Accepted)
             {
-                this.chatService.CreatePersonalChat(senderId, receiverId);
+                var chatId = this.chatService.CreatePersonalChat(senderId, receiverId);
+
+                request.ChatId = chatId;
             }
 
             this.data.SaveChanges();

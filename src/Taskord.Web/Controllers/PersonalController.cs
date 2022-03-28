@@ -23,23 +23,13 @@
         }
 
         [Authorize]
-        public IActionResult All()
-        {
-            var myUserId = this.userManager.GetUserId(this.User);
-
-            var friends = this.userService.GetUserFriendsList(myUserId);
-
-            return this.View(friends);
-        }
-
-        [Authorize]
         public IActionResult SendRequest(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
             this.userService.SendFriendRequest(myUserId, userId);
 
-            return this.Redirect("/me/all");
+            return this.Redirect("/me/chats");
         }
 
         [Authorize]
@@ -109,7 +99,7 @@
 
             this.userService.ChangeRelationshipState(userId, myUserId, state);
 
-            return this.Redirect("/me/all");
+            return this.Redirect("/me/chats");
         }
     }
 }

@@ -28,11 +28,19 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main class="content">
+        <div class="container p-0">
+            @*<h1 class="h3 mb-3">Messages</h1>*@
+            <div class="card">
+                <div class="row g-0">
+                    @RenderSection("Teams", false)
+                    @RenderSection("Friends", false)
+                    @RenderBody()
+                    @RenderSection("Members", false)
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer id= "footer" class="border-top footer text-muted">
         <div class="container">

@@ -125,6 +125,8 @@
             {
                 chat = this.data.Chats
                     .Include(x => x.Users)
+                    .ThenInclude(x => x.Messages)
+                    .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
                     .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId)
                     && x.ChatType == ChatType.Personal);
             }
