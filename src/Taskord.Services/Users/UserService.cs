@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
 
     using static Taskord.Common.ErrorMessages.User;
+    using Taskord.Services.Chats.Models;
 
     public class UserService : IUserService
     {
@@ -27,11 +28,11 @@
         {
             var members = this.data.Users
                 .Where(x => x.UserTeams.Any(t => t.Team.Id == teamId))
-                .Select(x => new UserListServiceModel 
-                { 
-                    Id = x.Id, 
+                .Select(x => new UserListServiceModel
+                {
+                    Id = x.Id,
                     Name = x.UserName,
-                    ImagePath = x.ImagePath, 
+                    ImagePath = x.ImagePath,
                     IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
                 })
                 .ToList();
@@ -54,7 +55,7 @@
             return pendingRequests;
         }
 
-        public IEnumerable<UserListServiceModel> GetUserFriendsList(string userId)
+        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -62,35 +63,31 @@
                 .Include(x => x.Chat)
                 .ThenInclude(x => x.Messages)
                 .Where(x => x.State == RelationshipState.Accepted)
+                .OrderByDescending(x => x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn)
                 .ToList();
-                //.OrderByDescending(x => x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn);
-
 
             var sentFriends = friends
                 .Where(x => x.SenderId == userId)
-                .Select(x => new UserFriendListServiceModel
-                {
-                    ImagePath = x.Receiver.ImagePath,
-                    Name = x.Receiver.UserName,
-                    Id = x.Receiver.Id,
-                    LastMessageSent = x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn
-                })
-                .ToList(); 
+                .Select(x => x.Receiver)
+                .ToList();
 
-            var receivedFriends = this.data.Friendships
-                .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Accepted)
-                .Select(x => new UserFriendListServiceModel
-                {
-                    ImagePath = x.Sender.ImagePath,
-                    Name = x.Sender.UserName,
-                    Id = x.Sender.Id,
-                    LastMessageSent = x.Chat.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn
-                })
+            var receivedFriends = friends
+                .Where(x => x.ReceiverId == userId)
+                .Select(x => x.Sender)
                 .ToList();
 
             sentFriends.AddRange(receivedFriends);
 
-            return sentFriends.OrderByDescending(x => x.LastMessageSent);
+            var allFriends = sentFriends.Select(x => new UserFriendListServiceModel
+            {
+                ImagePath = x.ImagePath,
+                Name = x.UserName,
+                Id = x.Id,
+                LastMessageSent = this.GetLastMessage(userId, x.Id),
+                IsRead = this.IsChatRead(userId, x.Id),
+            }).ToList();
+
+            return allFriends;
         }
 
         public IEnumerable<UserListServiceModel> GetUserSentFriendRequests(string userId)
@@ -144,7 +141,7 @@
 
         public string SendFriendRequest(string senderId, string receiverId)
         {
-            if(senderId == receiverId)
+            if (senderId == receiverId)
             {
                 throw new ArgumentException(InvalidFriendRequestParameters);
             }
@@ -181,6 +178,46 @@
             }
 
             this.data.SaveChanges();
+        }
+
+        private ChatMessageServiceModel GetLastMessage(string userId, string secondUserId)
+        {
+
+            var chatId = this.data.Chats.FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.Users.Any(u => u.Id == secondUserId)
+                        && x.ChatType == ChatType.Personal).Id;
+
+            var messages = this.data.Messages
+                   .Include(x => x.User)
+                   .Where(x => x.ChatId == chatId)
+                   .ToList();
+
+            return messages.OrderBy(x => x.CreatedOn)
+                .Select(x => new ChatMessageServiceModel
+                {
+                    Content = x.Content,
+                    DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+                    IsOwn = x.UserId == userId,
+                    Sender = new ChatMemberServiceModel
+                    {
+                        ImagePath = x.User.ImagePath,
+                        Username = x.User.UserName
+                    }
+                }).FirstOrDefault();
+        }
+
+        private bool IsChatRead(string userId, string secondUserId)
+        {
+            var chat = this.data.Chats
+                .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                    && x.Users.Any(u => u.Id == secondUserId)
+                    && x.ChatType == ChatType.Personal);
+
+            var chatUsers = this.data.ChatUsers.ToList();
+
+            var chatUser = chatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
+
+            return chatUser.IsRead;
         }
     }
 }

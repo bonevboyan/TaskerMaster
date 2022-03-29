@@ -22,6 +22,8 @@
 
         public DbSet<Friendship> Friendships { get; set; }
 
+        public DbSet<ChatUser> ChatUsers { get; set; }
+
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)
@@ -35,14 +37,14 @@
                 .HasOne(x => x.Schedule)
                 .WithOne(x => x.Team)
                 .HasForeignKey<Schedule>(x => x.TeamId);
-                //.HasOne<Schedule>()
-                //.WithOne()
-                //.HasForeignKey<Team>(d => d.ScheduleId)
-                //.OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Entity<UserTeam>()
                 .HasKey(x => new { x.UserId, x.TeamId });
+
+            builder
+                .Entity<ChatUser>()
+                .HasKey(x => new { x.ChatId, x.UserId });
 
             builder
                 .Entity<Friendship>()
@@ -50,7 +52,10 @@
                 .WithMany(x => x.Friendships)
                 .HasForeignKey(x => x.ReceiverId);
 
-
+            builder
+                .Entity<User>()
+                .HasMany(x => x.Chats)
+                .WithMany(x => x.Users);
 
             base.OnModelCreating(builder);
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Taskord.Data;
 
@@ -11,9 +12,10 @@ using Taskord.Data;
 namespace Taskord.Data.Migrations
 {
     [DbContext(typeof(TaskordDbContext))]
-    partial class TaskordDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329161819_Added-ChatUser_Table")]
+    partial class AddedChatUser_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,21 +52,6 @@ namespace Taskord.Data.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("CardUser");
-                });
-
-            modelBuilder.Entity("ChatUser", b =>
-                {
-                    b.Property<string>("ChatsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ChatsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -523,6 +510,9 @@ namespace Taskord.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("ChatId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -587,6 +577,8 @@ namespace Taskord.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChatId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -636,21 +628,6 @@ namespace Taskord.Data.Migrations
                     b.HasOne("Taskord.Data.Models.Card", null)
                         .WithMany()
                         .HasForeignKey("CardsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Taskord.Data.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ChatUser", b =>
-                {
-                    b.HasOne("Taskord.Data.Models.Chat", null)
-                        .WithMany()
-                        .HasForeignKey("ChatsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -803,6 +780,13 @@ namespace Taskord.Data.Migrations
                     b.Navigation("Team");
                 });
 
+            modelBuilder.Entity("Taskord.Data.Models.User", b =>
+                {
+                    b.HasOne("Taskord.Data.Models.Chat", null)
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId");
+                });
+
             modelBuilder.Entity("Taskord.Data.Models.UserTeam", b =>
                 {
                     b.HasOne("Taskord.Data.Models.Team", "Team")
@@ -832,6 +816,8 @@ namespace Taskord.Data.Migrations
                     b.Navigation("ChatUsers");
 
                     b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Taskord.Data.Models.Schedule", b =>

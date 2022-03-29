@@ -99,9 +99,7 @@
                 throw new ArgumentException(InvalidUsers);
             }
 
-            //var chatName = string.Format($"{users[0].UserName} and {users[1].UserName}'s chat");
-
-            var chatName = string.Format($"chat1");
+            var chatName = "Personal Chat";
 
             var chat = new Chat
             {
@@ -110,16 +108,34 @@
                 Name = chatName
             };
 
+            var chatUser = new ChatUser
+            {
+                ChatId = chat.Id,
+                UserId = firstUserId,
+                IsRead = false
+            };
+
+            var secondChatUser = new ChatUser
+            {
+                ChatId = chat.Id,
+                UserId = secondUserId,
+                IsRead = false
+            };
+
             this.data.Chats.Add(chat);
+            this.data.ChatUsers.Add(chatUser);
+            this.data.ChatUsers.Add(secondChatUser);
 
             this.data.SaveChanges();
 
             return chat.Id;
         }
 
-        public ChatServiceModel GetPersonalChat(string firstUserId, string secondUserId)
+        public ChatServiceModel GetPersonalChat(string userId, string secondUserId)
         {
             var chat = new Chat();
+
+            var friend = new User();
 
             if (secondUserId is null)
             {
@@ -127,22 +143,34 @@
                     .Include(x => x.Users)
                     .ThenInclude(x => x.Messages)
                     .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
-                    .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId)
-                    && x.ChatType == ChatType.Personal);
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.ChatType == ChatType.Personal);
+
+                if (chat is null)
+                {
+                    return null;
+                }
             }
             else
             {
                 chat = this.data.Chats
                     .Include(x => x.Users)
-                    .FirstOrDefault(x => x.Users.Any(u => u.Id == firstUserId)
-                    && x.Users.Any(u => u.Id == secondUserId)
-                    && x.ChatType == ChatType.Personal);
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.Users.Any(u => u.Id == secondUserId)
+                        && x.ChatType == ChatType.Personal);
+
+                if (chat is null)
+                {
+                    throw new ArgumentException(InvalidChatParticipants);
+                }
+                
             }
 
-            if(chat is null)
-            {
-                throw new ArgumentException(InvalidChatParticipants);
-            }
+            friend = chat.Users.FirstOrDefault(x => x.Id != userId);
+
+            var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
+            chatUser.IsRead = true;
+            this.data.SaveChanges();
 
             var messages = this.data.Messages
                 .Include(x => x.User)
@@ -158,7 +186,7 @@
                     {
                         Content = x.Content,
                         DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
-                        IsOwn = x.UserId == firstUserId,
+                        IsOwn = x.UserId == userId,
                         Sender = new ChatMemberServiceModel
                         {
                             ImagePath = x.User.ImagePath,
@@ -170,7 +198,7 @@
                     ImagePath = x.ImagePath,
                     Username = x.UserName
                 }).ToList(),
-                Name = chat.Name
+                Name = friend.UserName
             };
 
             return chatModel;
@@ -199,9 +227,17 @@
                 ChatId = chatId
             };
 
+            var chatUsers = this.data.ChatUsers.Where(x => x.UserId != userId && x.ChatId == chat.Id).ToList();
+            foreach (var chatUser in chatUsers)
+            {
+                chatUser.IsRead = false;
+            }
+
             this.data.Messages.Add(message);
 
             this.data.SaveChanges();
+
+            var isRead = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id).IsRead;
 
             return message.Id;
         }

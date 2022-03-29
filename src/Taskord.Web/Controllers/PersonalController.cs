@@ -51,7 +51,7 @@
         }
 
         [Authorize]
-        public IActionResult Chats(string userId)
+        public async Task<IActionResult> Chats(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
@@ -96,8 +96,16 @@
         private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
         {
             var myUserId = this.userManager.GetUserId(this.User);
+            
+            if(state == RelationshipState.Withdrawn)
+            {
+                this.userService.ChangeRelationshipState(myUserId, userId, state);
+            }
+            else
+            {
+                this.userService.ChangeRelationshipState(userId, myUserId, state);
+            }
 
-            this.userService.ChangeRelationshipState(userId, myUserId, state);
 
             return this.Redirect("/me/chats");
         }
