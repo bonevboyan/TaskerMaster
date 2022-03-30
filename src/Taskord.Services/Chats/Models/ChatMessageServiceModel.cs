@@ -2,6 +2,8 @@
 {
     public class ChatMessageServiceModel
     {
+        public string Id { get; set; }
+
         public string Content { get; set; }
 
         public string DateTime { get; set; }

@@ -57,6 +57,8 @@
 
             var chat = this.chatService.GetPersonalChat(myUserId, userId);
 
+            var isTrue = chat.Messages.LastOrDefault()?.Id;
+
             return this.View(chat);
         }
 

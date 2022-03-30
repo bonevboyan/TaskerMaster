@@ -21,13 +21,14 @@
                 <div class="flex-grow-1 ml-3">
                     @if (user.IsRead)
                     {
-                        <p>@user.Name</p>
+                        <h6>@user.Name</h6>
                     }
                     else
                     {
-                        <p><strong>@user.Name></strong></p>
+                        <h6><strong>@user.Name</strong></h6>
+                        <span class="dot">New</span>
                     }
-                    <div class="small">
+                    <div class="small fst-italic">
                         <span class="fas fa-circle chat-online"></span>
                         @if(user.LastMessageSent != null)
                         {

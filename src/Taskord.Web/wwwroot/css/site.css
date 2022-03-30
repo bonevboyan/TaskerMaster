@@ -15,6 +15,15 @@ body {
     color: #e4606d
 }
 
+.dot {
+    height: 25px;
+    width: 39px;
+    background-color: lawngreen;
+    border-radius: 10%;
+    display: inline-block;
+    text-align: center;
+}
+
 .chat-messages {
     display: flex;
     flex-direction: column;
@@ -57,4 +66,44 @@ body {
 
 body {
     background: #f3f5f9
+}
+
+.divider { /* minor cosmetics */
+    color: red;
+    display: table;
+    font-size: 24px;
+    text-align: center;
+    width: 75%; /* divider width */
+    margin: 1px auto; /* spacing above/below */
+}
+
+.divider span {
+    display: table-cell;
+    position: relative;
+}
+
+.divider span:first-child, .divider span:last-child {
+    width: 50%;
+    top: 10px; /* adjust vertical align */
+    -moz-background-size: 100% 2px; /* line width */
+    background-size: 100% 2px; /* line width */
+    background-position: 0 0, 0 100%;
+    background-repeat: no-repeat;
+}
+
+
+.divider span:nth-child(2) {
+    color: red;
+    padding: 0px 14px;
+    width: auto;
+    white-space: nowrap;
+}
+
+.section-title-hr {
+    width: initial;
+    height: 1px;
+    border: 1px solid rgb(255, 111, 0);
+    background-color: red;
+    display: block;
+    opacity: 1;
 }

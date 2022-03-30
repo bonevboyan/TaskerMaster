@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
+        public string LastReadMessageId { get; set; }
+
         public IEnumerable<ChatMemberServiceModel> Members { get; set; }
 
         public IEnumerable<ChatMessageServiceModel> Messages { get; set; }

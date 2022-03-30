@@ -112,14 +112,14 @@
             {
                 ChatId = chat.Id,
                 UserId = firstUserId,
-                IsRead = false
+                LastReadMessageId = null
             };
 
             var secondChatUser = new ChatUser
             {
                 ChatId = chat.Id,
                 UserId = secondUserId,
-                IsRead = false
+                LastReadMessageId = null
             };
 
             this.data.Chats.Add(chat);
@@ -150,6 +150,8 @@
                 {
                     return null;
                 }
+
+                secondUserId = chat.Users.FirstOrDefault(x => x.Id != userId).Id;
             }
             else
             {
@@ -169,8 +171,6 @@
             friend = chat.Users.FirstOrDefault(x => x.Id != userId);
 
             var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
-            chatUser.IsRead = true;
-            this.data.SaveChanges();
 
             var messages = this.data.Messages
                 .Include(x => x.User)
@@ -180,10 +180,12 @@
             var chatModel = new ChatServiceModel
             {
                 Id = chat.Id,
+                LastReadMessageId = chatUser.LastReadMessageId,
                 Messages = messages
                     .OrderBy(x => x.CreatedOn)
                     .Select(x => new ChatMessageServiceModel
                     {
+                        Id = x.Id,
                         Content = x.Content,
                         DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
                         IsOwn = x.UserId == userId,
@@ -200,6 +202,9 @@
                 }).ToList(),
                 Name = friend.UserName
             };
+
+            chatUser.LastReadMessageId = this.GetLastMessage(userId, secondUserId)?.Id;
+            this.data.SaveChanges();
 
             return chatModel;
         }
@@ -227,19 +232,44 @@
                 ChatId = chatId
             };
 
-            var chatUsers = this.data.ChatUsers.Where(x => x.UserId != userId && x.ChatId == chat.Id).ToList();
-            foreach (var chatUser in chatUsers)
-            {
-                chatUser.IsRead = false;
-            }
+            var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
+            chatUser.LastReadMessageId = message.Id;
 
             this.data.Messages.Add(message);
 
             this.data.SaveChanges();
 
-            var isRead = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id).IsRead;
+            //var isRead = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id).IsRead;
 
             return message.Id;
+        }
+
+        public ChatMessageServiceModel GetLastMessage(string userId, string secondUserId)
+        {
+
+            var chatId = this.data.Chats.FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.Users.Any(u => u.Id == secondUserId)
+                        && x.ChatType == ChatType.Personal).Id;
+
+            var messages = this.data.Messages
+                   .Include(x => x.User)
+                   .Where(x => x.ChatId == chatId)
+                   .ToList();
+
+            return messages
+                .OrderByDescending(x => x.CreatedOn)
+                .Select(x => new ChatMessageServiceModel
+                {
+                    Id = x.Id,
+                    Content = x.Content,
+                    DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+                    IsOwn = x.UserId == userId,
+                    Sender = new ChatMemberServiceModel
+                    {
+                        ImagePath = x.User.ImagePath,
+                        Username = x.User.UserName
+                    }
+                }).FirstOrDefault();
         }
     }
 }

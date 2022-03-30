@@ -15,5 +15,7 @@
         ChatServiceModel GetPersonalChat(string firstUserId, string secondUserId);
 
         string SendMessage(string chatId, string userId, string content);
+
+        ChatMessageServiceModel GetLastMessage(string userId, string secondUserId);
     }
 }

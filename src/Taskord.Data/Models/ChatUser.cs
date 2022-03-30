@@ -1,7 +1,5 @@
 ﻿namespace Taskord.Data.Models
 {
-    using Taskord.Data.Common;
-
     public class ChatUser
     {
         public string ChatId { get; set; }
@@ -12,6 +10,8 @@
 
         public User User { get; set; }
 
-        public bool IsRead { get; set; }
+        //public bool IsRead { get; set; }
+
+        public string LastReadMessageId { get; set; }
     }
 }
