@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Taskord.Web.styles.css" asp-append-version="true" />
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3 text-white">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 text-white">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Taskord</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -21,15 +22,27 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item dropdown">
+                            @*<li class="nav-item dropdown">
                                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     @await Component.InvokeAsync("Teams")
                                 </ul>
-                            </li>
+                            </li>*@
 
                             <li class="nav-item">
-                                <a asp-controller="Personal" asp-action="Chats" class="nav-link text-dark">Personal Chats</a>
+                                <a asp-controller="Chats" asp-action="Get" asp-route-teamId="me" class="nav-link text-dark">Personal Chats</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a asp-controller="Personal" asp-action="Search" class="nav-link text-dark">Search</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a asp-controller="Personal" asp-action="Requests" class="nav-link text-dark">Requests</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a asp-controller="Teams" asp-action="Create" class="nav-link text-dark">Create Team</a>
                             </li>
                         }
                         else
@@ -53,7 +66,7 @@
             <div class="card">
                 <div class="row g-0">
                     @*@RenderSection("Teams", false)*@
-                    @RenderSection("Friends", false)
+                    @RenderSection("Sidebar", false)
                     @RenderBody()
                     @RenderSection("Members", false)
                 </div>

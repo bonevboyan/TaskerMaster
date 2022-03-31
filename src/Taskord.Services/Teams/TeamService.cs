@@ -2,6 +2,7 @@
 {
     using Taskord.Data;
     using Taskord.Data.Models;
+    using Taskord.Data.Models.Enums;
     using Taskord.Services.Teams.Models;
 
     public class TeamService : ITeamService
@@ -13,22 +14,21 @@
             this.data = data;
         }
 
-        public string Create(string name, string description, string imageUrl, IEnumerable<string> userIds)
+        public string Create(string name, string description, string imageUrl, string userId)
         {
-            Schedule schedule = new Schedule();
+            var schedule = new Schedule();
 
             schedule.Buckets.Add(new Bucket
             {
                 Name = "To Do",
             });
+
             schedule.Buckets.Add(new Bucket
             {
                 Name = "Done",
             });
 
-            data.Schedules.Add(schedule);
-
-            Team team = new Team
+            var team = new Team
             {
                 Name = name,
                 Description = description,
@@ -36,22 +36,40 @@
                 ScheduleId = schedule.Id,
             };
 
-            Chat chat = new Chat
+            var chat = new Chat
             {
-                Name = "General"
+                Name = "General",
+                ChatType = ChatType.Team
             };
 
-            team.Chats.Add(chat);
+            var userTeam = new UserTeam
+            {
+                Role = TeamRole.Admin,
+                UserId = userId,
+                TeamId = team.Id,
+            };
 
-            data.Teams.Add(team);
-            data.SaveChanges();
+            var chatUser = new ChatUser
+            {
+                LastReadMessageId = null,
+                ChatId = chat.Id,
+                UserId = userId
+            };
+
+            chat.Users.Add(this.data.Users.FirstOrDefault(x => x.Id == userId));
+            team.Chats.Add(chat);
+            team.UserTeams.Add(userTeam);
+            this.data.Schedules.Add(schedule);
+            this.data.ChatUsers.Add(chatUser);
+            this.data.Teams.Add(team);
+            this.data.SaveChanges();
 
             return team.Id;
         }
 
         public IEnumerable<TeamListServiceModel> GetTeamList(string userId)
         {
-            var teamList = data.Users
+            var teamList = this.data.Users
                 .FirstOrDefault(x => x.Id == userId)
                 .UserTeams
                 .Select(t => new TeamListServiceModel

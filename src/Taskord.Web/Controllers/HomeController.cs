@@ -14,7 +14,7 @@ namespace Taskord.Web.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return this.Redirect("/me/chats");
+                return this.Redirect("/chats/me");
             }
 
             return this.View();

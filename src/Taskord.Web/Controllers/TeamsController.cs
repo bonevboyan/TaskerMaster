@@ -26,11 +26,19 @@ namespace Taskord.Web.Controllers
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var users = this.userService.GetTeamMembersList(this.userManager.GetUserId(this.User), userId);
+            var users = this.userService.GetUserFriendsList(userId);
 
-            return this.View(new CreateChatFormModel
+            var bools = new List<bool>(users.Count());
+
+            foreach (var user in users)
             {
-                UserIds = users
+                bools.Add(false);
+            }
+
+            return this.View(new CreateTeamFormModel
+            {
+                UserIds = users,
+                SelectedUserIds = bools
             });
         }
 
@@ -38,15 +46,14 @@ namespace Taskord.Web.Controllers
         [HttpPost]
         public IActionResult Create(CreateTeamFormModel team)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
-                return View(team);
+                return this.View(team);
             }
 
-            var users = team == null ? team.UserIds.Select(x => x.Id).ToList() : new List<string>();
-            users.Add(this.userManager.GetUserId(this.User));
+            var userId = this.userManager.GetUserId(this.User);
 
-            this.teamService.Create(team.Name, team.Description, team.ImagePath, users);
+            this.teamService.Create(team.Name, team.Description, team.ImagePath, userId);
 
             return this.Redirect("/Home");
         }

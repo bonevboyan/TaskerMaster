@@ -29,7 +29,7 @@
 
             this.userService.SendFriendRequest(myUserId, userId);
 
-            return this.Redirect("/me/chats");
+            return this.Redirect("/chats/me");
         }
 
         [Authorize]
@@ -51,7 +51,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Chats(string userId)
+        public IActionResult Chats(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
@@ -107,7 +107,7 @@
             }
 
 
-            return this.Redirect("/me/chats");
+            return this.Redirect("/chats/me");
         }
     }
 }

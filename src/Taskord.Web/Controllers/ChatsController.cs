@@ -24,9 +24,11 @@
         [Authorize]
         public IActionResult Get(string teamId, string chatId)
         {
-            var chat = this.chatService.GetTeamChat(teamId, chatId);
+            var userId = this.userManager.GetUserId(this.User);
 
-            return this.View(chat);
+            var chat = teamId == "me" ? this.chatService.GetPersonalChat(userId, chatId) : this.chatService.GetTeamChat(userId, chatId, chatId);
+
+            return this.View("Chats", chat);
         }
 
         [Authorize]

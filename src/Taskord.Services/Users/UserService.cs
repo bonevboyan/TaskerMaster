@@ -55,7 +55,7 @@
             return pendingRequests;
         }
 
-        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId, string chatId)
+        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId, string chatId = null)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -94,8 +94,8 @@
                     ImagePath = x.User.ImagePath,
                     Name = x.User.UserName,
                     Id = x.User.Id,
-                    LastMessageSent = this.chatService.GetLastMessage(userId, x.User.Id),
-                    IsRead = this.IsChatRead(userId, x.User.Id),
+                    LastMessageSent = this.chatService.GetLastMessage(userId, x.ChatId),
+                    IsRead = this.chatService.IsChatRead(userId, x.ChatId),
                     IsSelected = x.ChatId == chatId
                 }).ToList();
 
@@ -202,24 +202,6 @@
                 .State;
 
             return state;
-        }
-
-
-
-        private bool IsChatRead(string userId, string secondUserId)
-        {
-            var chat = this.data.Chats
-                .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
-                    && x.Users.Any(u => u.Id == secondUserId)
-                    && x.ChatType == ChatType.Personal);
-
-            var chatUsers = this.data.ChatUsers.ToList();
-
-            var chatUser = chatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
-
-            var lastMessageId = this.chatService.GetLastMessage(userId, secondUserId)?.Id;
-
-            return chatUser.LastReadMessageId == lastMessageId;
         }
     }
 }

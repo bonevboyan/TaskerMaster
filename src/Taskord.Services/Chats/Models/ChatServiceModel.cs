@@ -8,6 +8,10 @@
 
         public string LastReadMessageId { get; set; }
 
+        public bool IsPersonal { get; set; }
+
+        public string TeamId { get; set; }
+
         public IEnumerable<ChatMemberServiceModel> Members { get; set; }
 
         public IEnumerable<ChatMessageServiceModel> Messages { get; set; }

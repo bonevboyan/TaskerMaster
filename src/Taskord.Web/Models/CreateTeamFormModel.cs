@@ -18,5 +18,7 @@
         public string Description { get; set; }
 
         public IEnumerable<UserListServiceModel> UserIds { get; set; }
+
+        public IEnumerable<bool> SelectedUserIds { get; set; }
     }
 }
