@@ -17,11 +17,11 @@
             this.userManager = userManager;
         }
 
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string chatId)
         {
             var userId = this.userManager.GetUserId(this.Request.HttpContext.User);
 
-            var friends = this.userService.GetUserFriendsList(userId);
+            var friends = this.userService.GetUserFriendsList(userId, chatId);
 
             return this.View(friends);
         }

@@ -53,13 +53,13 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "chats",
-    pattern: "chats/{chatId}",
-    defaults: new { controller = "Chats", action = "Chats" });
+    pattern: "chats/{teamId}/{chatId}",
+    defaults: new { controller = "Chats", action = "Get" });
 
 app.MapControllerRoute(
-    name: "chats",
-    pattern: "chats/{teamId}/{action}",
-    defaults: new { controller = "Chats"});
+    name: "teams",
+    pattern: "teams/{teamId}/{action}/{id?}",
+    defaults: new { controller = "Teams"});
 
 app.MapControllerRoute(
     name: "schedule",
@@ -69,6 +69,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

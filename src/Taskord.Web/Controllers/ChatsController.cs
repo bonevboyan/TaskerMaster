@@ -22,9 +22,9 @@
         }
 
         [Authorize]
-        public IActionResult Chats(string chatId)
+        public IActionResult Get(string teamId, string chatId)
         {
-            var chat = this.chatService.GetChat(chatId);
+            var chat = this.chatService.GetTeamChat(teamId, chatId);
 
             return this.View(chat);
         }
@@ -54,7 +54,7 @@
             var users = chat == null ? chat.UserIds.Select(x => x.Id).ToList() : new List<string>();
             users.Add(userId);
 
-            string newChatId = chatService.CreateChat(teamId, chat.Name, users);
+            string newChatId = this.chatService.CreateChat(teamId, chat.Name, users);
 
             return this.Redirect($"chats/{teamId}/{newChatId}");
         }

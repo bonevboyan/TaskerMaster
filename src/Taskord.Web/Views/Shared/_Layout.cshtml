@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary border-bottom box-shadow mb-3 text-white">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Taskord</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -19,9 +19,29 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Teams" asp-action="Create">Add Team</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    @await Component.InvokeAsync("Teams")
+                                </ul>
+                            </li>
+
+                            <li class="nav-item">
+                                <a asp-controller="Personal" asp-action="Chats" class="nav-link text-dark">Personal Chats</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contacts">Contacts</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -30,10 +50,9 @@
     </header>
     <main class="content">
         <div class="container p-0">
-            @*<h1 class="h3 mb-3">Messages</h1>*@
             <div class="card">
                 <div class="row g-0">
-                    @RenderSection("Teams", false)
+                    @*@RenderSection("Teams", false)*@
                     @RenderSection("Friends", false)
                     @RenderBody()
                     @RenderSection("Members", false)
@@ -42,11 +61,11 @@
         </div>
     </main>
 
-    <footer id= "footer" class="border-top footer text-muted">
+    @* <footer id="footer" class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now.Year - Taskord
+        &copy; @DateTime.Now.Year - Taskord
         </div>
-    </footer>
+        </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

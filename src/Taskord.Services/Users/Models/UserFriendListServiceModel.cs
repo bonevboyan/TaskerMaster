@@ -7,5 +7,7 @@
         public ChatMessageServiceModel LastMessageSent { get; set; }
 
         public bool IsRead { get; set; }
+
+        public bool IsSelected { get; set; }
     }
 }

@@ -6,6 +6,8 @@
     {
         public User User { get; set; }
 
+        public string ChatId { get; set; }
+
         public DateTime? CreatedOn { get; set; }
     }
 }

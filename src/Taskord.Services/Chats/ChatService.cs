@@ -49,7 +49,7 @@
             return chat.Id;
         }
 
-        public ChatServiceModel GetChat(string chatId)
+        public ChatServiceModel GetTeamChat(string teamId, string chatId)
         {
             var chat = this.data.Chats
                 .Find(chatId);
@@ -75,7 +75,87 @@
                             ImagePath = m.User.ImagePath
                         }
                     })
-            }; ;
+            };
+        }
+
+        public ChatServiceModel GetPersonalChat(string userId, string secondUserId)
+        {
+            var chat = new Chat();
+
+            var friend = new User();
+
+            if (secondUserId is null)
+            {
+                chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .ThenInclude(x => x.Messages)
+                    .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.ChatType == ChatType.Personal);
+
+                if (chat is null)
+                {
+                    return null;
+                }
+
+                secondUserId = chat.Users.FirstOrDefault(x => x.Id != userId).Id;
+            }
+            else
+            {
+                chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
+                        && x.Users.Any(u => u.Id == secondUserId)
+                        && x.ChatType == ChatType.Personal);
+
+                if (chat is null)
+                {
+                    throw new ArgumentException(InvalidChatParticipants);
+                }
+
+            }
+
+            friend = chat.Users.FirstOrDefault(x => x.Id != userId);
+
+            var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
+
+            //var messages = this.data.Messages
+            //    .Include(x => x.User)
+            //    .Where(x => x.ChatId == chat.Id)
+            //    .ToList();
+
+            //var chatModel = GetChat()
+
+            var chatModel = new ChatServiceModel
+            {
+                Id = chat.Id,
+                LastReadMessageId = chatUser.LastReadMessageId,
+                Messages = chat.Messages
+                    .OrderBy(x => x.CreatedOn)
+                    .Select(x => new ChatMessageServiceModel
+                    {
+                        Id = x.Id,
+                        Content = x.Content,
+                        DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+                        IsOwn = x.UserId == userId,
+                        Sender = new ChatMemberServiceModel
+                        {
+                            ImagePath = x.User.ImagePath,
+                            Username = x.User.UserName
+                        }
+                    }).ToList(),
+                Members = chat.Users.Select(x => new ChatMemberServiceModel
+                {
+                    ImagePath = x.ImagePath,
+                    Username = x.UserName
+                }).ToList(),
+                Name = friend.UserName
+            };
+
+            chatUser.LastReadMessageId = this.GetLastMessage(userId, secondUserId)?.Id;
+            this.data.SaveChanges();
+
+            return chatModel;
         }
 
         public IEnumerable<ChatListServiceModel> GetChatList(string teamId)
@@ -129,84 +209,6 @@
             this.data.SaveChanges();
 
             return chat.Id;
-        }
-
-        public ChatServiceModel GetPersonalChat(string userId, string secondUserId)
-        {
-            var chat = new Chat();
-
-            var friend = new User();
-
-            if (secondUserId is null)
-            {
-                chat = this.data.Chats
-                    .Include(x => x.Users)
-                    .ThenInclude(x => x.Messages)
-                    .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
-                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
-                        && x.ChatType == ChatType.Personal);
-
-                if (chat is null)
-                {
-                    return null;
-                }
-
-                secondUserId = chat.Users.FirstOrDefault(x => x.Id != userId).Id;
-            }
-            else
-            {
-                chat = this.data.Chats
-                    .Include(x => x.Users)
-                    .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
-                        && x.Users.Any(u => u.Id == secondUserId)
-                        && x.ChatType == ChatType.Personal);
-
-                if (chat is null)
-                {
-                    throw new ArgumentException(InvalidChatParticipants);
-                }
-                
-            }
-
-            friend = chat.Users.FirstOrDefault(x => x.Id != userId);
-
-            var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
-
-            var messages = this.data.Messages
-                .Include(x => x.User)
-                .Where(x => x.ChatId == chat.Id)
-                .ToList();
-
-            var chatModel = new ChatServiceModel
-            {
-                Id = chat.Id,
-                LastReadMessageId = chatUser.LastReadMessageId,
-                Messages = messages
-                    .OrderBy(x => x.CreatedOn)
-                    .Select(x => new ChatMessageServiceModel
-                    {
-                        Id = x.Id,
-                        Content = x.Content,
-                        DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
-                        IsOwn = x.UserId == userId,
-                        Sender = new ChatMemberServiceModel
-                        {
-                            ImagePath = x.User.ImagePath,
-                            Username = x.User.UserName
-                        }
-                    }).ToList(),
-                Members = chat.Users.Select(x => new ChatMemberServiceModel
-                {
-                    ImagePath = x.ImagePath,
-                    Username = x.UserName
-                }).ToList(),
-                Name = friend.UserName
-            };
-
-            chatUser.LastReadMessageId = this.GetLastMessage(userId, secondUserId)?.Id;
-            this.data.SaveChanges();
-
-            return chatModel;
         }
 
         public string SendMessage(string chatId, string userId, string content)
@@ -271,5 +273,57 @@
                     }
                 }).FirstOrDefault();
         }
+
+        //private ChatServiceModel GetChat()
+        //{
+        //    var chatModel = new ChatServiceModel
+        //    {
+        //        Id = chat.Id,
+        //        LastReadMessageId = chatUser.LastReadMessageId,
+        //        Messages = messages
+        //            .OrderBy(x => x.CreatedOn)
+        //            .Select(x => new ChatMessageServiceModel
+        //            {
+        //                Id = x.Id,
+        //                Content = x.Content,
+        //                DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+        //                IsOwn = x.UserId == userId,
+        //                Sender = new ChatMemberServiceModel
+        //                {
+        //                    ImagePath = x.User.ImagePath,
+        //                    Username = x.User.UserName
+        //                }
+        //            }).ToList(),
+        //        Members = chat.Users.Select(x => new ChatMemberServiceModel
+        //        {
+        //            ImagePath = x.ImagePath,
+        //            Username = x.UserName
+        //        }).ToList(),
+        //        Name = friend.UserName
+        //    };
+
+        //    new ChatServiceModel
+        //    {
+        //        Id = chat.Id,
+        //        Name = chat.Name,
+        //        Members = chat.Users
+        //            .Select(u => new ChatMemberServiceModel
+        //            {
+        //                Username = u.UserName,
+        //                ImagePath = u.ImagePath
+        //            }),
+        //        Messages = chat.Messages
+        //            .Select(m => new ChatMessageServiceModel
+        //            {
+        //                Content = m.Content,
+        //                DateTime = m.CreatedOn.ToString("MM/dd HH:mm"),
+        //                Sender = new ChatMemberServiceModel
+        //                {
+        //                    Username = m.User.UserName,
+        //                    ImagePath = m.User.ImagePath
+        //                }
+        //            })
+        //    }
+        //}
     }
 }

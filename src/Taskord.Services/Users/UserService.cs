@@ -33,7 +33,7 @@
                     Id = x.Id,
                     Name = x.UserName,
                     ImagePath = x.ImagePath,
-                    IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
+                    //IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
                 })
                 .ToList();
 
@@ -55,7 +55,7 @@
             return pendingRequests;
         }
 
-        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId)
+        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId, string chatId)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -66,19 +66,21 @@
                 .ToList();
 
             var sentFriends = friends
-                .Where(x => x.SenderId == userId)
+                .Where(x => x.SenderId == userId && x.State == RelationshipState.Accepted)
                 .Select(x => new LastMessageServiceModel 
                 { 
                     User = x.Receiver, 
+                    ChatId = x.ChatId,
                     CreatedOn = x.Chat.Messages.Any() ? x.Chat.Messages.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn : x.Chat.CreatedOn
                 })
                 .ToList();
 
             var receivedFriends = friends
-                .Where(x => x.ReceiverId == userId)
+                .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Accepted)
                 .Select(x => new LastMessageServiceModel
                 {
                     User = x.Sender,
+                    ChatId = x.ChatId,
                     CreatedOn = x.Chat.Messages.Any() ? x.Chat.Messages.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn : x.Chat.CreatedOn
                 })
                 .ToList();
@@ -94,6 +96,7 @@
                     Id = x.User.Id,
                     LastMessageSent = this.chatService.GetLastMessage(userId, x.User.Id),
                     IsRead = this.IsChatRead(userId, x.User.Id),
+                    IsSelected = x.ChatId == chatId
                 }).ToList();
 
             return allFriends;
@@ -136,7 +139,7 @@
                     Id = x.Id,
                     Name = x.UserName,
                     ImagePath = x.ImagePath,
-                    IsFriend = this.IsUserFriend(x.Id, userId)
+                    RelationshipState = this.GetRelationshipState(x.Id, userId)
                 })
                 .Skip((currentPage - 1) * usersPerPage)
                 .Take(usersPerPage);
@@ -191,13 +194,14 @@
             this.data.SaveChanges();
         }
 
-        private bool IsUserFriend(string userId, string secondUserId)
+        private RelationshipState? GetRelationshipState(string userId, string secondUserId)
         {
-            var friendship = this.data.Friendships
-                .FirstOrDefault(x => (x.SenderId == userId && x.ReceiverId == secondUserId
-                    || x.ReceiverId == userId && x.SenderId == secondUserId) && x.State == RelationshipState.Accepted);
+            var state = this.data.Friendships
+                .FirstOrDefault(x => (x.SenderId == userId && x.ReceiverId == secondUserId)
+                    || (x.ReceiverId == userId && x.SenderId == secondUserId))?
+                .State;
 
-            return friendship != null;
+            return state;
         }
 
 

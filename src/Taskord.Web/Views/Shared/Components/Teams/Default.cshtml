@@ -1,15 +1,30 @@
 ﻿@using Taskord.Services.Teams.Models
 @model IEnumerable<TeamListServiceModel>
 
-<div class="sidebar">
-    <ul>
-        @foreach(var team in Model){
-            <li>
-                <a href="chats/@team.Id">
-                    <img src=@team.ImagePath alt="teamImage">
-                    <p>@team.Name</p>
-                </a>
-            </li>
-        }
-    </ul>
-</div>
+@foreach (var team in Model)
+{
+    <li>
+        <a href="chats/@team.Id">
+            <img src=@team.ImagePath alt="teamImage">
+            <p>@team.Name</p>
+        </a>
+    </li>
+}
+
+@foreach(var team in Model)
+{
+    <li>
+        <a href="#">Page 1-2</a>
+        <a asp-controller="Chats" asp-action="Chats" class="nav-link text-dark">Personal Chats</a>
+    </li>
+}
+
+
+
+<li>
+    <a href="#">Page 1-2</a>
+</li>
+
+<li>
+    <a href="#">Page 1-3</a>
+</li>

@@ -147,7 +147,7 @@
     }
 
     @section Friends {
-        @await Component.InvokeAsync("Friends")
+        @await Component.InvokeAsync("Friends", new { chatId = Model.Id} )
     }
 }
 else
