@@ -2,7 +2,7 @@
 {
     using Taskord.Services.Chats.Models;
 
-    public class UserFriendListServiceModel : UserListServiceModel
+    public class FriendsChatListServiceModel : UserListServiceModel
     {
         public ChatMessageServiceModel LastMessageSent { get; set; }
 

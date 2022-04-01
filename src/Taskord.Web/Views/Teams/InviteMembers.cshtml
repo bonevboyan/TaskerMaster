@@ -1,0 +1,55 @@
+﻿@model InviteMembersViewModel
+
+<div class="card">
+    <div class="card-horizontal">
+        <div class="img-square-wrapper">
+            <img class="" src="@Model.Team.ImagePath">
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Name: @Model.Team.Name</h4>
+            <p class="card-text fst-italic">Description: @Model.Team.Description</p>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-center">Add Your Friends to @Model.Team.Name</h2>
+
+<div class="row">
+    @foreach (var user in Model.Friends)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@user.ImagePath">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@user.Name</h5>
+                    @*<a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id" class="btn btn-secondary">Withdraw</a>*@
+                    <a class="sendInvite btn btn-info" id="@user.Id">Send Invite</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        let buttons = document.getElementsByClassName('sendInvite');
+
+        [...buttons].forEach(x => {
+            x.addEventListener('click' , (event) => {
+                sendInvite(x.id);
+            })
+        });
+
+        async function sendInvite(id) {
+            const response = await fetch('/api/teams', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ TeamId: '@Model.Team.Id', UserId: id})
+            });
+
+            if (response.ok) {
+                location.reload();
+            }
+        }
+    </script>
+}

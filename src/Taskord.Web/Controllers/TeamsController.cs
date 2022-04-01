@@ -24,22 +24,7 @@ namespace Taskord.Web.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            var userId = this.userManager.GetUserId(this.User);
-
-            var users = this.userService.GetUserFriendsList(userId);
-
-            var bools = new List<bool>(users.Count());
-
-            foreach (var user in users)
-            {
-                bools.Add(false);
-            }
-
-            return this.View(new CreateTeamFormModel
-            {
-                UserIds = users,
-                SelectedUserIds = bools
-            });
+            return this.View(new CreateTeamFormModel());
         }
 
         [Authorize]
@@ -53,9 +38,44 @@ namespace Taskord.Web.Controllers
 
             var userId = this.userManager.GetUserId(this.User);
 
-            this.teamService.Create(team.Name, team.Description, team.ImagePath, userId);
+            var teamId = this.teamService.Create(team.Name, team.Description, team.ImagePath, userId);
 
-            return this.Redirect("/Home");
+            return this.Redirect($"Teams/{teamId}/InviteMembers");
+        }
+
+        [Authorize]
+        public IActionResult InviteMembers(string teamId)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if(!this.teamService.IsAdmin(userId, teamId))
+            {
+                return this.Unauthorized();
+            }
+
+            var team = this.teamService.GetTeam(teamId);
+            var friends = this.userService.GetInviteFriendsList(userId);
+
+            return this.View(new InviteMembersViewModel
+            {
+                Friends = friends,
+                Team = team
+            });
+        }
+
+        [Authorize]
+        public IActionResult ManageMembers(string teamId)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!this.teamService.IsAdmin(userId, teamId))
+            {
+                return this.Unauthorized();
+            }
+
+            var team = this.teamService.GetTeam(teamId);
+
+            return this.View(team);
         }
     }
 }

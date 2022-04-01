@@ -55,14 +55,13 @@
             return pendingRequests;
         }
 
-        public IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId, string chatId = null)
+        public IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId = null)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
                 .Include(x => x.Sender)
                 .Include(x => x.Chat)
                 .ThenInclude(x => x.Messages)
-                .Where(x => x.State == RelationshipState.Accepted)
                 .ToList();
 
             var sentFriends = friends
@@ -89,7 +88,7 @@
 
             var allFriends = sentFriends
                 .OrderByDescending(x => x.CreatedOn)
-                .Select(x => new UserFriendListServiceModel
+                .Select(x => new FriendsChatListServiceModel
                 {
                     ImagePath = x.User.ImagePath,
                     Name = x.User.UserName,
@@ -97,6 +96,36 @@
                     LastMessageSent = this.chatService.GetLastMessage(userId, x.ChatId),
                     IsRead = this.chatService.IsChatRead(userId, x.ChatId),
                     IsSelected = x.ChatId == chatId
+                }).ToList();
+
+            return allFriends;
+        }
+
+        public IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId)
+        {
+            var friends = this.data.Friendships
+                .Include(x => x.Receiver)
+                .Include(x => x.Sender)
+                .ToList();
+
+            var sentFriends = friends
+                .Where(x => x.SenderId == userId && x.State == RelationshipState.Accepted)
+                .Select(x => x.Receiver)
+                .ToList();
+
+            var receivedFriends = friends
+                .Where(x => x.ReceiverId == userId && x.State == RelationshipState.Accepted)
+                .Select(x => x.Sender)
+                .ToList();
+
+            sentFriends.AddRange(receivedFriends);
+
+            var allFriends = sentFriends
+                .Select(x => new UserInviteListServiceModel
+                {
+                    ImagePath = x.ImagePath,
+                    Name = x.UserName,
+                    Id = x.Id
                 }).ToList();
 
             return allFriends;

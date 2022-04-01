@@ -24,6 +24,9 @@
 
         public DbSet<ChatUser> ChatUsers { get; set; }
 
+        public DbSet<TeamInvite> TeamInvites { get; set; }
+
+        public DbSet<UserTeam> UserTeams { get; set; }
 
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)
@@ -50,6 +53,12 @@
                 .Entity<Friendship>()
                 .HasOne(x => x.Receiver)
                 .WithMany(x => x.Friendships)
+                .HasForeignKey(x => x.ReceiverId); 
+            
+            builder
+                .Entity<TeamInvite>()
+                .HasOne(x => x.Receiver)
+                .WithMany(x => x.TeamInvites)
                 .HasForeignKey(x => x.ReceiverId);
 
             builder

@@ -82,5 +82,42 @@
 
             return teamList;
         }
+
+        public TeamListServiceModel GetTeam(string teamId)
+        {
+            var team = this.data.Teams
+                .FirstOrDefault(x => x.Id == teamId);
+
+            return new TeamListServiceModel
+            {
+                Id = team.Id,
+                Name = team.Name,
+                ImagePath = team.ImagePath,
+                Description = team.Description
+            };
+        }
+
+        public bool IsAdmin(string userId, string teamId)
+        {
+            var userTeam = this.data.UserTeams
+                .FirstOrDefault(x => x.TeamId == teamId && x.UserId == userId);
+
+            return userTeam?.Role == TeamRole.Admin;
+        }
+
+        public string SendTeamInvite(string teamId, string senderId, string receiverId)
+        {
+            var invite = new TeamInvite
+            {
+                SenderId = senderId,
+                ReceiverId = receiverId,
+                TeamId = teamId
+            };
+
+            this.data.TeamInvites.Add(invite);
+            this.data.SaveChanges();
+
+            return invite.Id;
+        }
     }
 }

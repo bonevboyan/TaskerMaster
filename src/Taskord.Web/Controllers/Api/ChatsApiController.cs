@@ -1,6 +1,5 @@
 ﻿namespace Taskord.Web.Controllers.Api
 {
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Taskord.Data.Models;
@@ -21,7 +20,7 @@
         }
 
         [HttpPost]
-        public void SendMessage(MessagePostModel message)
+        public void InviteMember(MessagePostModel message)
         {
             var userId = this.userManager.GetUserId(this.User);
 

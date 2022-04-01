@@ -7,7 +7,9 @@
     {
         IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId, string userId);
 
-        IEnumerable<UserFriendListServiceModel> GetUserFriendsList(string userId, string chatId = null);
+        IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId = null);
+
+        IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId);
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 

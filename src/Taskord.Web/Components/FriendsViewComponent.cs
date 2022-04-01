@@ -21,7 +21,7 @@
         {
             var userId = this.userManager.GetUserId(this.Request.HttpContext.User);
 
-            var friends = this.userService.GetUserFriendsList(userId, chatId);
+            var friends = this.userService.GetFriendsChatList(userId, chatId);
 
             return this.View(friends);
         }
