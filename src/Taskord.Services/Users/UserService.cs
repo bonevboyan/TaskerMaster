@@ -188,6 +188,15 @@
                 throw new ArgumentException(InvalidFriendRequestParameters);
             }
 
+            var relationship = this.data.Friendships
+                .FirstOrDefault(x => x.SenderId == senderId && x.ReceiverId == receiverId 
+                || x.ReceiverId == senderId && x.SenderId == receiverId);
+
+            if (relationship != null && relationship.State != RelationshipState.Withdrawn)
+            {
+                throw new ArgumentException(FriendshipAlreadyExists);
+            }
+
             var friendRequest = new Friendship
             {
                 SenderId = senderId,

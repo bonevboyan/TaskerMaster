@@ -1,12 +1,13 @@
 ﻿namespace Taskord.Web.Controllers.Api
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Taskord.Data.Models;
     using Taskord.Services.Chats;
     using Taskord.Web.Models.Api;
 
-    [Route("api/me")]
+    [Route("api/chats")]
     [ApiController]
     public class ChatsApiController : ControllerBase
     {
@@ -19,6 +20,7 @@
             this.userManager = userManager;
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult InviteMember(MessagePostModel message)
         {

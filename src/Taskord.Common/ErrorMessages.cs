@@ -6,6 +6,8 @@
         {
             public const string InvalidFriendRequest = "There is no such friend request.";
 
+            public const string FriendshipAlreadyExists = "A relationship between these users already exists.";
+
             public const string InvalidFriendRequestParameters = "You can't send an friend request to yourself!"; 
         }
 

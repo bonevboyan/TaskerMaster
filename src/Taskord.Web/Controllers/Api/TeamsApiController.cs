@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Web.Controllers.Api
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Taskord.Data.Models;
@@ -19,6 +20,7 @@
             this.userManager = userManager;
         }
 
+        [Authorize]
         [HttpPost]
         [Route("api/teams/inviteMember")]
         public IActionResult InviteMember(InviteMemberPostModel invitation)
@@ -43,6 +45,7 @@
             return this.Ok();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("api/teams/respondToInvite")]
         public IActionResult RespondToInvite(RespondToInvitePostModel response)
@@ -58,6 +61,7 @@
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route("api/teams/withdrawInvite")]
         public IActionResult WithdrawInvite(WithdrawInvitePostModel withdraw)
@@ -78,6 +82,18 @@
             {
                 return this.NotFound();
             }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/teams/teamInvitesCount")]
+        public string GetTeamInvitesCount()
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            var count = this.teamService.GetTeamInvites(userId).Count();
+
+            return count.ToString();
         }
     }
 }

@@ -64,14 +64,63 @@
                     }
                     else if(user.RelationshipState == RelationshipState.Pending)
                     {
-                        <a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id" class="btn btn-secondary">Withdraw</a>
+                        @*<a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id" class="btn btn-secondary">Withdraw</a>*@
+                        <a class="addFriend btn btn-info" id="@user.Id" style="visibility: hidden;">Add Friend</a>
+                        <a class="withdrawRequest btn btn-secondary" id="@user.Id">Withdraw</a>
                     }
                     else
                     {
-                        <a asp-controller="Personal" asp-action="SendRequest" asp-route-userId="@user.Id" class="btn btn-warning">Add Friend</a>
+                        @*<a asp-controller="Personal" asp-action="SendRequest" asp-route-userId="@user.Id" class="btn btn-warning">Add Friend</a>*@
+                        <a class="addFriend btn btn-info" id="@user.Id">Add Friend</a>
+                        <a class="withdrawRequest btn btn-secondary" id="@user.Id" style="visibility: hidden;">Withdraw</a>
                     }
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script type="module">
+        let addBtns = document.getElementsByClassName('addFriend');
+        let withdrawBtns = document.getElementsByClassName('withdrawRequest');
+
+        [...withdrawBtns].forEach(x => {
+            x.addEventListener('click' , (event) => {
+                withdrawRequest(x.id);
+            });
+
+            async function withdrawRequest(userId, teamId) {
+                const response = await fetch('/api/me/withdrawFriendRequest', {
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ UserId: userId})
+                });
+
+                if (response.ok) {
+                    x.parentElement.querySelector('.addFriend').style.visibility = 'visible';
+                    x.style.visibility = 'hidden'
+                }
+            }
+        });
+
+        [...addBtns].forEach(x => {
+            x.addEventListener('click' , (event) => {
+                sendRequest(x.id);
+            });
+
+            async function sendRequest(id) {
+                const response = await fetch('/api/me/sendFriendRequest', {
+                    method: 'post',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ UserId: id})
+                });
+
+                if (response.ok) {
+                    x.parentElement.querySelector('.withdrawRequest').style.visibility = 'visible';
+                    x.style.visibility = 'hidden'
+                }
+            }
+        });
+    </script>
+}

@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Net;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
@@ -37,7 +38,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.BadRequest(ex);
+                return this.StatusCode((int) HttpStatusCode.BadRequest, ex.Message);
             }
 
         }
