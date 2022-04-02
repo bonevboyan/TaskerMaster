@@ -13,7 +13,6 @@
         {
             this.UserTeams = new HashSet<UserTeam>();
             this.Chats = new HashSet<Chat>();
-            this.TeamInvites = new HashSet<TeamInvite>();
         }
 
         [Required]
@@ -34,7 +33,5 @@
         public ICollection<UserTeam> UserTeams { get; set; }
 
         public ICollection<Chat> Chats { get; set; }
-
-        public ICollection<TeamInvite> TeamInvites { get; set; }
     }
 }

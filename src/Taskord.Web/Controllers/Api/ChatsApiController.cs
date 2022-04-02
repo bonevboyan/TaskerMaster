@@ -20,11 +20,21 @@
         }
 
         [HttpPost]
-        public void InviteMember(MessagePostModel message)
+        public IActionResult InviteMember(MessagePostModel message)
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            this.chatService.SendMessage(message.ChatId, userId, message.Content);
+            try
+            {
+                this.chatService.SendMessage(message.ChatId, userId, message.Content);
+
+                return this.Ok();
+            }
+            catch(ArgumentException ex)
+            {
+                return this.BadRequest(ex);
+            }
+
         }
     }
 }

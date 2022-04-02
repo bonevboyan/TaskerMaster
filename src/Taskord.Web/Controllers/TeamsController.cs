@@ -40,7 +40,7 @@ namespace Taskord.Web.Controllers
 
             var teamId = this.teamService.Create(team.Name, team.Description, team.ImagePath, userId);
 
-            return this.Redirect($"Teams/{teamId}/InviteMembers");
+            return this.Redirect($"/Teams/{teamId}/InviteMembers");
         }
 
         [Authorize]
@@ -54,7 +54,7 @@ namespace Taskord.Web.Controllers
             }
 
             var team = this.teamService.GetTeam(teamId);
-            var friends = this.userService.GetInviteFriendsList(userId);
+            var friends = this.userService.GetInviteFriendsList(userId, teamId);
 
             return this.View(new InviteMembersViewModel
             {

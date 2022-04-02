@@ -7,6 +7,6 @@
     {
         public TeamListServiceModel Team { get; set; }
 
-        public IEnumerable<UserListServiceModel> Friends { get; set; }
+        public IEnumerable<UserInviteListServiceModel> Friends { get; set; }
     }
 }

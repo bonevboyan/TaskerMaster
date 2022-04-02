@@ -1,4 +1,5 @@
-﻿@model InviteMembersViewModel
+﻿@using Taskord.Web.Models
+@model InviteMembersViewModel
 
 <div class="card">
     <div class="card-horizontal">
@@ -22,8 +23,16 @@
                 <img class="card-img-top" src="@user.ImagePath">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@user.Name</h5>
-                    @*<a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id" class="btn btn-secondary">Withdraw</a>*@
-                    <a class="sendInvite btn btn-info" id="@user.Id">Send Invite</a>
+                    @if (user.IsInvited)
+                    {
+                        <a class="sendInvite btn btn-info" id="@user.Id" hidden>Send Invite</a>
+                        <a class="withdrawInvite btn btn-secondary" id="@user.Id">Withdraw</a>
+                    }
+                    else
+                    {
+                        <a class="sendInvite btn btn-info" id="@user.Id">Send Invite</a>
+                        <a class="withdrawInvite btn btn-secondary" id="@user.Id" style="visibility: hidden;">Withdraw</a>
+                    }
                 </div>
             </div>
         </div>
@@ -31,25 +40,46 @@
 </div>
 
 @section Scripts {
-    <script>
-        let buttons = document.getElementsByClassName('sendInvite');
+<script type="module">
+    let inviteBtns = document.getElementsByClassName('sendInvite');
+    let withdrawBtns = document.getElementsByClassName('withdrawInvite');
 
-        [...buttons].forEach(x => {
-            x.addEventListener('click' , (event) => {
-                sendInvite(x.id);
-            })
+    [...withdrawBtns].forEach(x => {
+        x.addEventListener('click' , (event) => {
+            withdrawInvite(x.id, '@Model.Team.Id');
+        });
+
+        async function withdrawInvite(userId, teamId) {
+            const response = await fetch('/api/teams/withdrawInvite', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ TeamId: teamId, UserId: userId})
+            });
+
+            if (response.ok) {
+                x.parentElement.querySelector('.sendInvite').style.visibility = 'visible';
+                x.style.visibility = 'hidden'
+            }
+        }
+    });
+
+    [...inviteBtns].forEach(x => {
+        x.addEventListener('click' , (event) => {
+            sendInvite(x.id);
         });
 
         async function sendInvite(id) {
-            const response = await fetch('/api/teams', {
+            const response = await fetch('/api/teams/inviteMember', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ TeamId: '@Model.Team.Id', UserId: id})
             });
 
             if (response.ok) {
-                location.reload();
+                x.parentElement.querySelector('.withdrawInvite').style.visibility = 'visible';
+                x.style.visibility = 'hidden'
             }
         }
-    </script>
+    });
+</script>
 }

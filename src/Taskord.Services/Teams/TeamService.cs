@@ -1,9 +1,14 @@
 ﻿namespace Taskord.Services.Teams
 {
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
     using Taskord.Data;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Teams.Models;
+    using Taskord.Services.Users.Models;
+
+    using static Taskord.Common.ErrorMessages.Team;
 
     public class TeamService : ITeamService
     {
@@ -45,6 +50,7 @@
             var userTeam = new UserTeam
             {
                 Role = TeamRole.Admin,
+                State = RelationshipState.Accepted,
                 UserId = userId,
                 TeamId = team.Id,
             };
@@ -107,17 +113,96 @@
 
         public string SendTeamInvite(string teamId, string senderId, string receiverId)
         {
-            var invite = new TeamInvite
-            {
-                SenderId = senderId,
-                ReceiverId = receiverId,
-                TeamId = teamId
-            };
+            var userTeam = this.data.UserTeams.FirstOrDefault(x => x.TeamId == teamId && x.InviterId == senderId && x.UserId == receiverId);
 
-            this.data.TeamInvites.Add(invite);
+            if (userTeam is null)
+            {
+                var invite = new UserTeam
+                {
+                    InviterId = senderId,
+                    UserId = receiverId,
+                    TeamId = teamId
+                };
+
+                this.data.UserTeams.Add(invite);
+                this.data.SaveChanges();
+
+                return invite.Id;
+            }
+            else if(userTeam.State == RelationshipState.Withdrawn)
+            {
+                userTeam.State = RelationshipState.Pending;
+                this.data.SaveChanges();
+
+                return userTeam.Id;
+            }
+            else
+            {
+                throw new ArgumentException(InviteExists);
+            }
+        }
+
+        public IEnumerable<TeamInviteServiceModel> GetTeamInvites(string userId)
+        {
+            var invites = this.data.UserTeams
+                .Include(x => x.Team)
+                .Include(x => x.Inviter)
+                .Where(x => x.UserId == userId && x.State == RelationshipState.Pending)
+                .Select(x => new TeamInviteServiceModel
+                {
+                    Id = x.Id,
+                    Team = new TeamListServiceModel
+                    {
+                        Name = x.Team.Name,
+                        Id = x.Team.Id,
+                        Description = x.Team.Description,
+                        ImagePath = x.Team.ImagePath
+                    },
+                    Sender = new UserListServiceModel
+                    {
+                        Id = x.Inviter.Id,
+                        ImagePath = x.Inviter.ImagePath,
+                        Name = x.Inviter.UserName,
+                    }
+                })
+                .ToList();
+
+            return invites;
+        }
+
+        public string RespondToTeamInvite(string teamInviteId, bool isAccepted)
+        {
+            var userTeam = this.data.UserTeams.FirstOrDefault(x => x.Id == teamInviteId);
+
+            if (userTeam == null)
+            {
+                throw new ArgumentException(InvalidTeamInvite);
+            }
+
+            if (isAccepted)
+            {
+                userTeam.Role = TeamRole.Member;
+            }
+
+            userTeam.State = isAccepted ? RelationshipState.Accepted : RelationshipState.Declined;
             this.data.SaveChanges();
 
-            return invite.Id;
+            return userTeam.Id;
+        }
+
+        public string WithdrawTeamInvite(string teamId, string userId)
+        {
+            var userTeam = this.data.UserTeams.FirstOrDefault(x => x.TeamId == teamId && x.UserId == userId);
+
+            if (userTeam == null)
+            {
+                throw new ArgumentException(InvalidTeamInvite);
+            }
+
+            userTeam.State = RelationshipState.Withdrawn;
+            this.data.SaveChanges();
+
+            return userTeam.Id;
         }
     }
 }

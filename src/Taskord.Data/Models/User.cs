@@ -42,7 +42,5 @@
         public ICollection<Chat> Chats { get; set; }
 
         public ICollection<Friendship> Friendships { get; set; }
-
-        public ICollection<TeamInvite> TeamInvites { get; set; }
     }
 }

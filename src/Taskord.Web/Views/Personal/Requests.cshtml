@@ -1,59 +1,105 @@
 ﻿@using Taskord.Data.Models.Enums
-@model FriendRequestsViewModel
+@using Taskord.Web.Models
+@model RequestsViewModel
 
-@if (Model.ReceivedRequests.Count() == 0 && Model.SentRequests.Count() == 0)
+<h1 class="text-center">Received Friend Requests: @Model.ReceivedRequests.Count()</h1>
+<div class="row">
+    @foreach (var user in Model.ReceivedRequests)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@user.ImagePath">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@user.Name</h5>
+                    <a asp-controller="Personal" asp-action="AcceptRequest" asp-route-userId="@user.Id"
+                   class="btn btn-success">Accept</a>
+                    <a asp-controller="Personal" asp-action="DeclineRequest" asp-route-userId="@user.Id"
+                   class="btn btn-danger">Decline</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h1 class="text-center">Sent Friend Requests: @Model.SentRequests.Count()</h1>
+<div class="row">
+    @foreach (var user in Model.SentRequests)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@user.ImagePath">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">@user.Name</h5>
+                    <a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id"
+                   class="btn btn-secondary">Withdraw</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+<h1 class="text-center" id="teamInviteCount">Received Team Invites: @Model.TeamInvites.Count()</h1>
+<div class="row">
+    @foreach (var invite in Model.TeamInvites)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@invite.Team.ImagePath">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-center">Team Name: @invite.Team.Name</h5>
+                    <h5 class="card-title text-center">Sender Name: @invite.Sender.Name</h5>
+                    <a id="@invite.Id" class="btn btn-success acceptTeamInviteBtn">Accept</a>
+                    <a id="@invite.Id" class="btn btn-danger declineTeamInviteBtn">Decline</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr />
+
+@if (Model.ReceivedRequests.Count() == 0 && Model.SentRequests.Count() == 0 && Model.TeamInvites.Count() == 0)
 {
     <a asp-controller="Personal" asp-action="Search" class="btn btn-primary btn-lg btn-block">Search for friends here</a>
 }
-else
-{
-    <h1 class="text-center">Received Friend Requests: @Model.ReceivedRequests.Count()</h1>
-    @if (Model.ReceivedRequests.Count() == 0)
-    {
-        <h3 class="text-center fst-italic fw-lighter">None</h3>
-    }
-    else
-    {
-        <div class="row">
-            @foreach (var user in Model.ReceivedRequests)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-3">
-                        <img class="card-img-top" src="@user.ImagePath">
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-center">@user.Name</h5>
-                            <a asp-controller="Personal" asp-action="AcceptRequest" asp-route-userId="@user.Id" class="btn btn-success">Accept</a>
-                            <a asp-controller="Personal" asp-action="DeclineRequest" asp-route-userId="@user.Id" class="btn btn-danger">Decline</a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
 
-    <hr />
+@section Scripts{
+    <script type="module">
+        let acceptBtns = document.querySelectorAll('.acceptTeamInviteBtn');
+        let declineBtns = document.querySelectorAll('.declineTeamInviteBtn');
 
-    <h1 class="text-center">Sent Friend Requests: @Model.SentRequests.Count()</h1>
-    @if (Model.SentRequests.Count() == 0)
-    {
-        <h3 class="text-center fst-italic fw-lighter">None</h3>
-    }
-    else
-    {
-        <div class="row">
-            @foreach (var user in Model.SentRequests)
-            {
-                <div class="col-md-4">
-                    <div class="card mb-3">
-                        <img class="card-img-top" src="@user.ImagePath">
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-center">@user.Name</h5>
-                            <a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id" class="btn btn-secondary">Withdraw</a>
-                        </div>
-                    </div>
-                </div>
+        [...acceptBtns].forEach(x => {
+            x.addEventListener('click', e => {
+                let id = x.id;
+                respondToInvite(id, true, x, 'Received Team Invites', @Model.TeamInvites.Count());
+            });
+        });
+
+        [...declineBtns].forEach(x => {
+            x.addEventListener('click', e => {
+                let id = x.id;
+                respondToInvite(id, false, 'Received Team Invites', @Model.TeamInvites.Count());
+            });
+        });
+        
+
+        async function respondToInvite(id, state, btn, str, count) {
+            const response = await fetch('/api/teams/respondToInvite', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ TeamInviteId: id, IsAccepted: state })
+            });
+
+            if (response.ok) {
+                btn.parentElement.parentElement.parentElement.remove();
+                let countLabel = document.getElementById('teamInviteCount');
+
+                countLabel.textContent = `${str}: ${count - 1}`;
             }
-        </div>
-    }
+        }
+    </script>
 }
-

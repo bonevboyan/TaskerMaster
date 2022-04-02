@@ -10,7 +10,6 @@
     using Microsoft.EntityFrameworkCore;
 
     using static Taskord.Common.ErrorMessages.User;
-    using Taskord.Services.Chats.Models;
 
     public class UserService : IUserService
     {
@@ -32,8 +31,7 @@
                 {
                     Id = x.Id,
                     Name = x.UserName,
-                    ImagePath = x.ImagePath,
-                    //IsFriend = x.Friendships.Any(f => (f.SenderId == userId || f.ReceiverId == userId) && f.State == RelationshipState.Accepted)
+                    ImagePath = x.ImagePath
                 })
                 .ToList();
 
@@ -101,7 +99,7 @@
             return allFriends;
         }
 
-        public IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId)
+        public IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId = null)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -125,7 +123,8 @@
                 {
                     ImagePath = x.ImagePath,
                     Name = x.UserName,
-                    Id = x.Id
+                    Id = x.Id,
+                    IsInvited = this.IsUserInvited(x.Id, teamId)
                 }).ToList();
 
             return allFriends;
@@ -231,6 +230,11 @@
                 .State;
 
             return state;
+        }
+
+        private bool IsUserInvited(string userId, string teamId)
+        {
+            return this.data.UserTeams.Any(x => x.UserId == userId && x.TeamId == teamId && x.State == RelationshipState.Pending);
         }
     }
 }

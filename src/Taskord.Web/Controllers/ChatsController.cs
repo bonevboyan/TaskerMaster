@@ -26,9 +26,16 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var chat = teamId == "me" ? this.chatService.GetPersonalChat(userId, chatId) : this.chatService.GetTeamChat(userId, chatId, chatId);
+            try
+            {
+                var chat = teamId == "me" ? this.chatService.GetPersonalChat(userId, chatId) : this.chatService.GetTeamChat(userId, chatId, chatId);
 
-            return this.View("Chats", chat);
+                return this.View("Chats", chat);
+            }
+            catch (ArgumentException ex)
+            {
+                return this.BadRequest(ex);
+            }
         }
 
         [Authorize]
@@ -56,9 +63,17 @@
             var users = chat == null ? chat.UserIds.Select(x => x.Id).ToList() : new List<string>();
             users.Add(userId);
 
-            string newChatId = this.chatService.CreateChat(teamId, chat.Name, users);
+            try
+            {
+                string newChatId = this.chatService.CreateChat(teamId, chat.Name, users);
 
-            return this.Redirect($"chats/{teamId}/{newChatId}");
+                return this.Redirect($"chats/{teamId}/{newChatId}");
+            }
+            catch(ArgumentException ex)
+            {
+                return this.BadRequest(ex);
+            }
+
         }
     }
 }

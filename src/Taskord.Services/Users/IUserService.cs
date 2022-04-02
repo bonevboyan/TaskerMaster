@@ -9,7 +9,7 @@
 
         IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId = null);
 
-        IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId);
+        IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId = null);
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 

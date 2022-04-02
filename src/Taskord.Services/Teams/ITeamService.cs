@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Teams
 {
+    using Taskord.Data.Models.Enums;
     using Taskord.Services.Teams.Models;
 
     public interface ITeamService
@@ -13,5 +14,11 @@
         bool IsAdmin(string userId, string teamId);
 
         string SendTeamInvite(string teamId, string senderId, string receiverId);
+
+        IEnumerable<TeamInviteServiceModel> GetTeamInvites(string userId);
+
+        string RespondToTeamInvite(string teamInviteId, bool isAccepted);
+
+        string WithdrawTeamInvite(string teamId, string userId);
     }
 }
