@@ -27,13 +27,17 @@
                     @if (Model.ChatType == ChatType.Team)
                     {
                         <div>
-                            <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary btn-lg mr-1 px-3 manageMembersBtn">Manage Chat Members</a>
+                            <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Chat Members</a>
                         </div>
                     }
                     <div>
-                        <a asp-controller="Teams" asp-action="ManageMemberRoles" asp-route-teamId="@Model.TeamId" class="btn btn-primary btn-lg mr-1 px-3">Manage Member Roles</a>
+                        <a asp-controller="Teams" asp-action="ManageMemberRoles" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Member Roles</a>
                     </div>
+
                 }
+                <div>
+                    <a asp-controller="Teams" asp-action="InviteMembers" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Invite Members</a>
+                </div>
             </div>
         </div>
 

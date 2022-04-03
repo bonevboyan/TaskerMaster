@@ -51,11 +51,6 @@ namespace Taskord.Web.Controllers
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if(!this.teamService.IsAdmin(userId, teamId))
-            {
-                return this.Unauthorized();
-            }
-
             var team = this.teamService.GetTeam(teamId);
             var friends = this.userService.GetInviteFriendsList(userId, teamId);
 

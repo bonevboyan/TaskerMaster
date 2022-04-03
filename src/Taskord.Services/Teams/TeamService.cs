@@ -77,6 +77,8 @@
         public IEnumerable<TeamServiceModel> GetTeamList(string userId)
         {
             var teamList = this.data.Users
+                .Include(x => x.UserTeams)
+                .ThenInclude(x => x.Team)
                 .FirstOrDefault(x => x.Id == userId)
                 .UserTeams
                 .Select(t => new TeamServiceModel
