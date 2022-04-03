@@ -95,5 +95,30 @@
 
             return count.ToString();
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/teams/manageChatUser")]
+        public IActionResult ManageChatUser(ManageChatUserPostModel chatUser)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!this.teamService.IsAdmin(userId, chatUser.TeamId))
+            {
+                return this.Unauthorized();
+            }
+
+            try
+            {
+                this.teamService.ManageChatUser(chatUser.UserId, chatUser.ChatId, chatUser.TeamId);
+            }
+            catch (ArgumentException ex)
+            {
+                return this.BadRequest(ex);
+            }
+
+
+            return this.Ok();
+        }
     }
 }

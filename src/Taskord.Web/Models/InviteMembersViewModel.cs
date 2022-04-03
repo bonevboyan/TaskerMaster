@@ -5,7 +5,7 @@
 
     public class InviteMembersViewModel
     {
-        public TeamListServiceModel Team { get; set; }
+        public TeamServiceModel Team { get; set; }
 
         public IEnumerable<UserInviteListServiceModel> Friends { get; set; }
     }

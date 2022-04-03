@@ -6,6 +6,7 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Teams.Models;
+    using Taskord.Services.Users;
     using Taskord.Services.Users.Models;
 
     using static Taskord.Common.ErrorMessages.Team;
@@ -44,7 +45,7 @@
             var chat = new Chat
             {
                 Name = "General",
-                ChatType = ChatType.Team
+                ChatType = ChatType.General
             };
 
             var userTeam = new UserTeam
@@ -73,12 +74,12 @@
             return team.Id;
         }
 
-        public IEnumerable<TeamListServiceModel> GetTeamList(string userId)
+        public IEnumerable<TeamServiceModel> GetTeamList(string userId)
         {
             var teamList = this.data.Users
                 .FirstOrDefault(x => x.Id == userId)
                 .UserTeams
-                .Select(t => new TeamListServiceModel
+                .Select(t => new TeamServiceModel
                 {
                     ImagePath = t.Team.ImagePath,
                     Name = t.Team.Name,
@@ -89,12 +90,12 @@
             return teamList;
         }
 
-        public TeamListServiceModel GetTeam(string teamId)
+        public TeamServiceModel GetTeam(string teamId)
         {
             var team = this.data.Teams
                 .FirstOrDefault(x => x.Id == teamId);
 
-            return new TeamListServiceModel
+            return new TeamServiceModel
             {
                 Id = team.Id,
                 Name = team.Name,
@@ -151,7 +152,7 @@
                 .Select(x => new TeamInviteServiceModel
                 {
                     Id = x.Id,
-                    Team = new TeamListServiceModel
+                    Team = new TeamServiceModel
                     {
                         Name = x.Team.Name,
                         Id = x.Team.Id,
@@ -172,7 +173,10 @@
 
         public string RespondToTeamInvite(string teamInviteId, bool isAccepted)
         {
-            var userTeam = this.data.UserTeams.FirstOrDefault(x => x.Id == teamInviteId);
+            var userTeam = this.data.UserTeams
+                .Include(x => x.Team)
+                .ThenInclude(x => x.Chats)
+                .FirstOrDefault(x => x.Id == teamInviteId);
 
             if (userTeam == null)
             {
@@ -182,6 +186,21 @@
             if (isAccepted)
             {
                 userTeam.Role = TeamRole.Member;
+
+                var chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers)
+                    .FirstOrDefault(x => x.TeamId == userTeam.TeamId && x.ChatType == ChatType.General);
+
+                var chatUser = new ChatUser
+                {
+                    UserId = userTeam.UserId,
+                    ChatId = chat.Id,
+                    LastReadMessageId = null
+                };
+
+                chat.Users.Add(this.data.Users.FirstOrDefault(x => x.Id == userTeam.UserId));
+                chat.ChatUsers.Add(chatUser);
             }
 
             userTeam.State = isAccepted ? RelationshipState.Accepted : RelationshipState.Declined;
@@ -203,6 +222,66 @@
             this.data.SaveChanges();
 
             return userTeam.Id;
+        }
+
+        public void ManageChatUser(string userId, string chatId, string teamId)
+        {
+            var chatUser = this.data.ChatUsers
+                .FirstOrDefault(x => x.UserId == userId && x.ChatId == chatId);
+
+            if (chatUser is null)
+            {
+                if(this.IsUserInvited(userId, teamId) != RelationshipState.Accepted)
+                {
+                    throw new ArgumentException(UserNotInTeam);
+                }
+
+                var chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers)
+                    .FirstOrDefault(x => x.Id == chatId);
+
+                if(chat is null)
+                {
+                    throw new ArgumentException(InvalidChat);
+                }
+
+                var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
+
+                chatUser = new ChatUser
+                {
+                    ChatId = chatId,
+                    UserId = userId,
+                    LastReadMessageId = null
+                };
+
+                chat.ChatUsers.Add(chatUser);
+                chat.Users.Add(user);
+            }
+            else
+            {
+                var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
+
+                var chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers)
+                    .FirstOrDefault(x => x.Id == chatId);
+
+                if(chat.ChatType == ChatType.General)
+                {
+                    throw new ArgumentException(CantRemoveFromGeneral);
+                }
+
+                chat.ChatUsers.Remove(chatUser);
+                chat.Users.Remove(user);
+            }
+
+            this.data.SaveChanges();
+        }
+
+        public RelationshipState? IsUserInvited(string userId, string teamId)
+        {
+            return this.data.UserTeams.FirstOrDefault(x => x.UserId == userId && x.TeamId == teamId)?.State;
         }
     }
 }

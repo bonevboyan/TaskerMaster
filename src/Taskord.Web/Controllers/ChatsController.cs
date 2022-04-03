@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using System.Net;
     using Taskord.Data.Models;
     using Taskord.Services.Chats;
     using Taskord.Services.Users;
@@ -28,28 +29,37 @@
 
             try
             {
-                var chat = teamId == "me" ? this.chatService.GetPersonalChat(userId, chatId) : this.chatService.GetTeamChat(userId, chatId, chatId);
+                if(teamId == "me")
+                {
+                    var chat = this.chatService.GetPersonalChat(userId, chatId);
 
-                return this.View("Chats", chat);
+                    return this.View("Chats", chat);
+                }
+                else
+                {
+                    var chat = this.chatService.GetTeamChat(userId, teamId, chatId);
+
+                    return this.View("Chats", chat);
+                }
             }
             catch (ArgumentException ex)
             {
-                return this.BadRequest(ex);
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }
         }
 
-        [Authorize]
-        public IActionResult Create(string teamId)
-        {
-            var userId = this.userManager.GetUserId(this.User);
+        //[Authorize]
+        //public IActionResult Create(string teamId)
+        //{
+        //    var userId = this.userManager.GetUserId(this.User);
 
-            var users = this.userService.GetTeamMembersList(teamId, userId);
+        //    var users = this.userService.GetTeamMembersList(teamId, userId);
 
-            return this.View(new CreateChatFormModel
-            {
-                UserIds = users
-            });
-        }
+        //    return this.View(new CreateChatFormModel
+        //    {
+        //        UserIds = users
+        //    });
+        //}
 
         [Authorize]
         [HttpPost]

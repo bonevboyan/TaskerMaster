@@ -10,28 +10,43 @@
     using Microsoft.EntityFrameworkCore;
 
     using static Taskord.Common.ErrorMessages.User;
+    using Taskord.Services.Teams;
 
     public class UserService : IUserService
     {
         private readonly TaskordDbContext data;
         private readonly IChatService chatService;
+        private readonly ITeamService teamService;
 
-        public UserService(TaskordDbContext data, IChatService chatService)
+        public UserService(TaskordDbContext data, IChatService chatService, ITeamService teamService)
         {
             this.data = data;
             this.chatService = chatService;
+            this.teamService = teamService;
         }
 
 
-        public IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId, string userId)
+        public IEnumerable<UserTeamChatManageListServiceModel> GetTeamMembersList(string userId, string teamId, string chatId)
         {
-            var members = this.data.Users
-                .Where(x => x.UserTeams.Any(t => t.Team.Id == teamId))
-                .Select(x => new UserListServiceModel
+            var teamMembers = this.data.UserTeams
+                .Include(x => x.User)
+                .Include(x => x.Team)
+                .Where(x => x.TeamId == teamId)
+                .ToList();
+
+            if (!teamMembers.Any())
+            {
+                throw new ArgumentException(InvalidTeamId);
+            }
+
+            var members = teamMembers
+                .Where(x => x.UserId != userId)
+                .Select(x => new UserTeamChatManageListServiceModel
                 {
-                    Id = x.Id,
-                    Name = x.UserName,
-                    ImagePath = x.ImagePath
+                    Id = x.UserId,
+                    Name = x.User.UserName,
+                    ImagePath = x.User.ImagePath,
+                    IsInChat = this.chatService.IsUserInChat(x.UserId, chatId)
                 })
                 .ToList();
 
@@ -53,7 +68,7 @@
             return pendingRequests;
         }
 
-        public IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId = null)
+        public IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -99,7 +114,7 @@
             return allFriends;
         }
 
-        public IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId = null)
+        public IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId)
         {
             var friends = this.data.Friendships
                 .Include(x => x.Receiver)
@@ -124,8 +139,10 @@
                     ImagePath = x.ImagePath,
                     Name = x.UserName,
                     Id = x.Id,
-                    IsInvited = this.IsUserInvited(x.Id, teamId)
-                }).ToList();
+                    State = this.teamService.IsUserInvited(x.Id, teamId) ?? RelationshipState.Withdrawn
+                })
+                .Where(x => x.State != RelationshipState.Accepted)
+                .ToList();
 
             return allFriends;
         }
@@ -239,11 +256,6 @@
                 .State;
 
             return state;
-        }
-
-        private bool IsUserInvited(string userId, string teamId)
-        {
-            return this.data.UserTeams.Any(x => x.UserId == userId && x.TeamId == teamId && x.State == RelationshipState.Pending);
         }
     }
 }

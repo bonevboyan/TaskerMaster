@@ -1,6 +1,6 @@
 ﻿namespace Taskord.Services.Teams.Models
 {
-    public class TeamListServiceModel
+    public class TeamServiceModel
     {
         public string Id { get; set; }
 

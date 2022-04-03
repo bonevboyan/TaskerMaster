@@ -19,5 +19,7 @@
         ChatMessageServiceModel GetLastMessage(string userId, string chatId);
 
         bool IsChatRead(string userId, string chatId);
+
+        bool IsUserInChat(string userId, string chatId);
     }
 }

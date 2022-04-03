@@ -1,5 +1,7 @@
 ﻿namespace Taskord.Services.Chats.Models
 {
+    using Taskord.Data.Models.Enums;
+
     public class ChatServiceModel
     {
         public string Id { get; set; }
@@ -8,7 +10,9 @@
 
         public string LastReadMessageId { get; set; }
 
-        public bool IsPersonal { get; set; }
+        public ChatType ChatType { get; set; }
+
+        public bool IsAdmin { get; set; }
 
         public string TeamId { get; set; }
 

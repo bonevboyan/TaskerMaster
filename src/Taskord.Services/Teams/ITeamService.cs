@@ -7,9 +7,9 @@
     {
         string Create(string name, string description, string imageUrl, string userId);
 
-        IEnumerable<TeamListServiceModel> GetTeamList(string userId);
+        IEnumerable<TeamServiceModel> GetTeamList(string userId);
 
-        TeamListServiceModel GetTeam(string teamId);
+        TeamServiceModel GetTeam(string teamId);
 
         bool IsAdmin(string userId, string teamId);
 
@@ -20,5 +20,9 @@
         string RespondToTeamInvite(string teamInviteId, bool isAccepted);
 
         string WithdrawTeamInvite(string teamId, string userId);
+
+        void ManageChatUser(string userId, string chatId, string teamId);
+
+        RelationshipState? IsUserInvited(string userId, string teamId);
     }
 }

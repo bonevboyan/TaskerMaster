@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Taskord.Data.Models;
+using Taskord.Services.Chats;
 using Taskord.Services.Teams;
 using Taskord.Services.Users;
 using Taskord.Web.Models;
@@ -12,13 +13,15 @@ namespace Taskord.Web.Controllers
     {
         private readonly ITeamService teamService;
         private readonly IUserService userService;
+        private readonly IChatService chatService;
         private readonly UserManager<User> userManager;
 
-        public TeamsController(ITeamService teamService, IUserService userService, UserManager<User> userManager)
+        public TeamsController(ITeamService teamService, IUserService userService, UserManager<User> userManager, IChatService chatService)
         {
             this.teamService = teamService;
             this.userService = userService;
             this.userManager = userManager;
+            this.chatService = chatService;
         }
 
         [Authorize]
@@ -64,7 +67,7 @@ namespace Taskord.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult ManageMembers(string teamId)
+        public IActionResult ManageChatMembers(string teamId, string chatId)
         {
             var userId = this.userManager.GetUserId(this.User);
 
@@ -74,8 +77,16 @@ namespace Taskord.Web.Controllers
             }
 
             var team = this.teamService.GetTeam(teamId);
-
-            return this.View(team);
+            var teamMembers = this.userService.GetTeamMembersList(userId, teamId, chatId);
+            var chat = this.chatService.GetTeamChat(userId, teamId, chatId);
+            
+            return this.View(new ManageChatViewModel
+            {
+                Users = teamMembers,
+                Team = team,
+                ChatName = chat.Name,
+                ChatId = chat.Id
+            });
         }
     }
 }

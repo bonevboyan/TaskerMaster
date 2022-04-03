@@ -5,11 +5,11 @@
 
     public interface IUserService
     {
-        IEnumerable<UserListServiceModel> GetTeamMembersList(string teamId, string userId);
+        IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId);
 
-        IEnumerable<FriendsChatListServiceModel> GetFriendsChatList(string userId, string chatId = null);
+        IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId);
 
-        IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId = null);
+        IEnumerable<UserTeamChatManageListServiceModel> GetTeamMembersList(string userId, string teamId, string chatId);
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 

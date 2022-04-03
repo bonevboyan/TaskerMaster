@@ -7,16 +7,18 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats.Models;
-
+    using Taskord.Services.Teams;
     using static Taskord.Common.ErrorMessages.Chat;
 
     public class ChatService : IChatService
     {
         private readonly TaskordDbContext data;
+        private readonly ITeamService teamService;
 
-        public ChatService(TaskordDbContext data)
+        public ChatService(TaskordDbContext data, ITeamService teamService)
         {
             this.data = data;
+            this.teamService = teamService;
         }
 
         public string CreateChat(string teamId, string name, IEnumerable<string> userIds)
@@ -52,19 +54,20 @@
         {
             var chats = this.data.Chats
                     .Include(x => x.Messages)
+                    .ThenInclude(x => x.User)
                     .Include(x => x.Users);
 
             var chat = new Chat();
 
-            if(chatId is null)
+            if (chatId is null)
             {
                 chat = chats
                     .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
-                    .FirstOrDefault(x => x.TeamId == teamId 
-                        && x.ChatType == ChatType.Team 
+                    .FirstOrDefault(x => x.TeamId == teamId
+                        && (x.ChatType == ChatType.Team || x.ChatType == ChatType.General)
                         && x.Users.Any(u => u.Id == userId));
 
-                if(chat is null)
+                if (chat is null)
                 {
                     return null;
                 }
@@ -74,7 +77,7 @@
                 chat = chats
                     .FirstOrDefault(x => x.Id == chatId);
 
-                if(chat is null)
+                if (chat is null || chat.TeamId != teamId)
                 {
                     throw new ArgumentException(InvalidChat);
                 }
@@ -82,7 +85,8 @@
 
             var chatModel = this.GetChat(userId, chat);
             chatModel.Name = chat.Name;
-            chatModel.IsPersonal = false;
+            chatModel.ChatType = chat.ChatType;
+            chatModel.IsAdmin = this.teamService.IsAdmin(userId, teamId);
 
             return chatModel;
         }
@@ -129,7 +133,7 @@
 
             var chatModel = this.GetChat(userId, chat);
             chatModel.Name = friend.UserName;
-            chatModel.IsPersonal = true;
+            chatModel.ChatType = chat.ChatType;
 
             return chatModel;
         }
@@ -138,6 +142,9 @@
         {
             var chats = this.data.Chats
                 .Include(x => x.Users)
+                .ToList();
+
+            var chatList = chats
                 .Where(x => x.TeamId == teamId && x.Users.Any(x => x.Id == userId))
                 .Select(x => new ChatListServiceModel
                 {
@@ -149,7 +156,7 @@
                 })
                 .ToList();
 
-            return chats;
+            return chatList;
         }
 
         public string CreatePersonalChat(string firstUserId, string secondUserId)
@@ -194,17 +201,17 @@
         }
 
         public string SendMessage(string chatId, string userId, string content)
-        {   
+        {
             var chat = this.data.Chats
                 .Include(x => x.Users)
                 .FirstOrDefault(x => x.Id == chatId);
 
-            if(chat is null)
+            if (chat is null)
             {
                 throw new ArgumentException(InvalidChat);
             }
 
-            if(!chat.Users.Any(x => x.Id == userId))
+            if (!chat.Users.Any(x => x.Id == userId))
             {
                 throw new ArgumentException(UserNotInChat);
             }
@@ -253,6 +260,11 @@
         {
             var chatUser = this.data.ChatUsers.FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
 
+            if (chatUser is null)
+            {
+                throw new ArgumentException(UserNotInChat);
+            }
+
             var chatModel = new ChatServiceModel
             {
                 Id = chat.Id,
@@ -293,6 +305,11 @@
             var lastMessageId = this.GetLastMessage(userId, chatId)?.Id;
 
             return chatUser.LastReadMessageId == lastMessageId;
+        }
+
+        public bool IsUserInChat(string userId, string chatId)
+        {
+            return this.data.ChatUsers.Any(x => x.UserId == userId && x.ChatId == chatId);
         }
     }
 }

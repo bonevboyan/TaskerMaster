@@ -6,6 +6,8 @@
     {
         public string TeamId { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public IEnumerable<ChatListServiceModel> Chats { get; set; }
     }
 }

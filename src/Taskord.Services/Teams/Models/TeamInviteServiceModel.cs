@@ -6,7 +6,7 @@
     {
         public string Id { get; set; }
 
-        public TeamListServiceModel Team { get; set; }
+        public TeamServiceModel Team { get; set; }
 
         public UserListServiceModel Sender { get; set; }
     }

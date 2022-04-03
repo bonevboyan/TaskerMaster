@@ -1,0 +1,73 @@
+﻿@using Taskord.Services.Users.Models
+@model ManageChatViewModel
+
+<partial name="_TeamPartial" model="Model.Team"/>
+
+<h2 class="text-center">Add Your Friends to @Model.ChatName</h2>
+
+<div class="row">
+    @if (Model.Users.Any())
+    {
+        @foreach (var user in Model.Users)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img class="card-img-top" src="@user.ImagePath">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-center">@user.Name</h5>
+                        @if (user.IsInChat)
+                        {
+                            <button class="addBtn btn btn-success" id="@user.Id" disabled>Add to Chat</button>
+                            <button class="removeBtn btn btn-danger" id="@user.Id">Remove from Chat</button>
+                        }
+                        else
+                        {
+                            <button class="addBtn btn btn-success" id="@user.Id">Add to Chat</button>
+                            <button class="removeBtn btn btn-danger" id="@user.Id" disabled>Remove from Chat</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <a asp-controller="Teams" asp-action="InviteMembers" asp-route-teamId="@Model.Team.Id" class="btn btn-primary btn-lg btn-block">Only you  are in the team! Invite your friends here.</a>
+    }
+</div>
+
+@section Scripts {
+    <script type="module">
+        let addBtns = document.getElementsByClassName('addBtn');
+        let removeBtns = document.getElementsByClassName('removeBtn');
+
+        [...removeBtns].forEach(x => {
+            x.addEventListener('click' , (event) => {
+                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'addBtn');
+            });
+        });
+
+        [...addBtns].forEach(x => {
+            x.addEventListener('click' , (event) => {
+                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'removeBtn');
+            });
+        });
+
+        async function manageChatUser(userId, chatId, teamId, btn, otherId) {
+            const response = await fetch('/api/teams/manageChatUser', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ TeamId: teamId, UserId: userId, ChatId: chatId})
+            });
+
+            console.log(btn);
+
+            if (response.ok) {
+                let otherBtn = btn.parentElement.querySelector(`.${otherId}`);
+                otherBtn.disabled = !otherBtn.disabled;
+                btn.disabled = !btn.disabled;
+            }
+        }
+    </script>
+}

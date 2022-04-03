@@ -1,41 +1,40 @@
-﻿@using Taskord.Web.Models
+﻿@using Taskord.Data.Models.Enums
+@using Taskord.Web.Models
 @model InviteMembersViewModel
 
-<div class="card">
-    <div class="card-horizontal">
-        <div class="img-square-wrapper">
-            <img class="" src="@Model.Team.ImagePath">
-        </div>
-        <div class="card-body">
-            <h4 class="card-title">Name: @Model.Team.Name</h4>
-            <p class="card-text fst-italic">Description: @Model.Team.Description</p>
-        </div>
-    </div>
-</div>
+<partial name="_TeamPartial" model="Model.Team"/>
 
 <h2 class="text-center">Add Your Friends to @Model.Team.Name</h2>
 
 <div class="row">
-    @foreach (var user in Model.Friends)
+    @if (Model.Friends.Any())
     {
-        <div class="col-md-4">
-            <div class="card mb-3">
-                <img class="card-img-top" src="@user.ImagePath">
-                <div class="card-body text-center">
-                    <h5 class="card-title text-center">@user.Name</h5>
-                    @if (user.IsInvited)
-                    {
-                        <a class="sendInvite btn btn-info" id="@user.Id" style="visibility: hidden;">Send Invite</a>
-                        <a class="withdrawInvite btn btn-secondary" id="@user.Id">Withdraw</a>
-                    }
-                    else
-                    {
-                        <a class="sendInvite btn btn-info" id="@user.Id">Send Invite</a>
-                        <a class="withdrawInvite btn btn-secondary" id="@user.Id" style="visibility: hidden;">Withdraw</a>
-                    }
+        @foreach (var user in Model.Friends)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img class="card-img-top" src="@user.ImagePath">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-center">@user.Name</h5>
+                        @if (user.State == RelationshipState.Withdrawn)
+                        {
+                            <button class="sendInvite btn btn-info" id="@user.Id" >Send Invite</button>
+                            <button class="withdrawInvite btn btn-secondary" id="@user.Id" disabled>Withdraw</button>
+                        }
+                        else
+                        {
+                            <button class="sendInvite btn btn-info" id="@user.Id" disabled>Send Invite</button>
+                            <button class="withdrawInvite btn btn-secondary" id="@user.Id" >Withdraw</button>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+
+    }
+    else
+    {
+        <a asp-controller="Personal" asp-action="Requests" class="btn btn-primary btn-lg btn-block">All of your friends is in the team! Check out your friend requests here.</a>
     }
 </div>
 
@@ -57,8 +56,8 @@
                 });
 
                 if (response.ok) {
-                    x.parentElement.querySelector('.sendInvite').style.visibility = 'visible';
-                    x.style.visibility = 'hidden'
+                    x.parentElement.querySelector('.sendInvite').disabled = false;
+                    x.disabled = true;
                 }
             }
         });
@@ -76,8 +75,8 @@
                 });
 
                 if (response.ok) {
-                    x.parentElement.querySelector('.withdrawInvite').style.visibility = 'visible';
-                    x.style.visibility = 'hidden'
+                    x.parentElement.querySelector('.withdrawInvite').disabled = false;
+                    x.disabled = true;
                 }
             }
         });
