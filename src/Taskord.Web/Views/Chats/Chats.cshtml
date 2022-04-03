@@ -114,7 +114,7 @@
                     return;
                 }
 
-                const response = await fetch('/api/chats', {
+                const response = await fetch('/api/chats/sendMessage', {
                     method: 'post',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ChatId: '@Model.Id', Content: value })

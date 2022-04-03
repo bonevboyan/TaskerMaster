@@ -61,29 +61,29 @@
         //    });
         //}
 
-        [Authorize]
-        [HttpPost]
-        public IActionResult Create(string teamId, CreateChatFormModel chat)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(chat);
-            }
-            var userId = this.userManager.GetUserId(this.User);
-            var users = chat == null ? chat.UserIds.Select(x => x.Id).ToList() : new List<string>();
-            users.Add(userId);
+        //[Authorize]
+        //[HttpPost]
+        //public IActionResult Create(string teamId, CreateChatFormModel chat)
+        //{
+        //    if (!this.ModelState.IsValid)
+        //    {
+        //        return this.View(chat);
+        //    }
+        //    var userId = this.userManager.GetUserId(this.User);
+        //    var users = chat == null ? chat.UserIds.Select(x => x.Id).ToList() : new List<string>();
+        //    users.Add(userId);
 
-            try
-            {
-                string newChatId = this.chatService.CreateChat(teamId, chat.Name, users);
+        //    try
+        //    {
+        //        string newChatId = this.chatService.CreateChat(teamId, chat.Name, users);
 
-                return this.Redirect($"chats/{teamId}/{newChatId}");
-            }
-            catch(ArgumentException ex)
-            {
-                return this.BadRequest(ex);
-            }
+        //        return this.Redirect($"chats/{teamId}/{newChatId}");
+        //    }
+        //    catch(ArgumentException ex)
+        //    {
+        //        return this.BadRequest(ex);
+        //    }
 
-        }
+        //}
     }
 }

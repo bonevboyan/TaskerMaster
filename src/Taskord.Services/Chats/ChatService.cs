@@ -21,7 +21,7 @@
             this.teamService = teamService;
         }
 
-        public string CreateChat(string teamId, string name, IEnumerable<string> userIds)
+        public string CreateTeamChat(string teamId, string name)
         {
             var team = this.data.Teams.FirstOrDefault(x => x.Id == teamId);
 
@@ -30,19 +30,27 @@
                 throw new ArgumentException(InvalidTeam);
             }
 
-            var matchedUsers = this.data.Users.Where(u => userIds.Any(x => x == u.Id)).ToList();
-
-            if (matchedUsers.Count != userIds.Count())
-            {
-                throw new ArgumentException(InvalidUsers);
-            }
+            var users = this.data.UserTeams
+                .Where(x => x.Role == TeamRole.Admin && x.TeamId == teamId)
+                .Select(x => x.User)
+                .ToList();
 
             var chat = new Chat
             {
                 Name = name,
-                Users = matchedUsers,
+                Users = users,
                 ChatType = ChatType.Team
             };
+
+            foreach (var user in users)
+            {
+                chat.ChatUsers.Add(new ChatUser
+                {
+                    UserId = user.Id,
+                    ChatId = chat.Id,
+                    LastReadMessageId = null
+                });
+            }
 
             team.Chats.Add(chat);
             this.data.SaveChanges();
@@ -142,17 +150,19 @@
         {
             var chats = this.data.Chats
                 .Include(x => x.Users)
+                .Include(x => x.Messages)
                 .ToList();
 
             var chatList = chats
+                .OrderByDescending(x => x.Messages.Any() ? x.Messages.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn : x.CreatedOn)
                 .Where(x => x.TeamId == teamId && x.Users.Any(x => x.Id == userId))
                 .Select(x => new ChatListServiceModel
                 {
                     Id = x.Id,
                     Name = x.Name,
                     IsSelected = x.Id == selectedChatId,
-                    IsRead = this.IsChatRead(userId, selectedChatId),
-                    LastMessageSent = this.GetLastMessage(userId, selectedChatId)
+                    IsRead = this.IsChatRead(userId, x.Id),
+                    LastMessageSent = this.GetLastMessage(userId, x.Id)
                 })
                 .ToList();
 
@@ -240,20 +250,22 @@
                    .Where(x => x.ChatId == chatId)
                    .ToList();
 
-            return messages
+            var message = messages
                 .OrderByDescending(x => x.CreatedOn)
-                .Select(x => new ChatMessageServiceModel
+                .FirstOrDefault();
+
+            return  message is null ? null : new ChatMessageServiceModel
+            {
+                Id = message.Id,
+                Content = message.Content,
+                DateTime = message.CreatedOn.ToString("MM/dd HH:mm"),
+                IsOwn = message.UserId == userId,
+                Sender = new ChatMemberServiceModel
                 {
-                    Id = x.Id,
-                    Content = x.Content,
-                    DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
-                    IsOwn = x.UserId == userId,
-                    Sender = new ChatMemberServiceModel
-                    {
-                        ImagePath = x.User.ImagePath,
-                        Username = x.User.UserName
-                    }
-                }).FirstOrDefault();
+                    ImagePath = message.User.ImagePath,
+                    Username = message.User.UserName
+                }
+            };
         }
 
         private ChatServiceModel GetChat(string userId, Chat chat)

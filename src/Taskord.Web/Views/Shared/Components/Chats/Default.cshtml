@@ -47,12 +47,36 @@
 
     @if (Model.IsAdmin)
     {
-        <a asp-controller="Chats" asp-action="Create" asp-route-teamId="@Model.TeamId" class="list-group-item list-group-item-action border-0">
-            <div class="d-flex align-items-start">
-                <h6>Add New Chat</h6>
+        <div class="flex-grow-0 py-3 px-4 border-top">
+            <div class="input-group">
+                <input id="chatNameField" type="text" class="form-control" placeholder="Add new chat">
+                <button id="createChatBtn" class="btn btn-primary">Create</button>
             </div>
-        </a>
+        </div>
     }
 
     <hr class="d-block d-lg-none mt-1 mb-0">
 </div>
+
+<script>
+    document.getElementById('createChatBtn').addEventListener('click' , (event) => {
+        let name = document.getElementById('chatNameField').value;
+        createChat(name);
+    });
+
+    async function createChat(name) {
+        if (name == '') {
+            return;
+        }
+
+        const response = await fetch('/api/chats/addChat', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Name: name, TeamId: '@Model.TeamId' })
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    }
+</script>
