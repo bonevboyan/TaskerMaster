@@ -20,6 +20,10 @@ body {
     flex: 1 1 auto;
 }
 
+.manageMembersBtn{
+    margin-right: 20px;
+}
+
 .card {
     margin: 20px;
     width: auto;

@@ -229,6 +229,13 @@
             var chatUser = this.data.ChatUsers
                 .FirstOrDefault(x => x.UserId == userId && x.ChatId == chatId);
 
+            var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
+
+            var chat = this.data.Chats
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers)
+                    .FirstOrDefault(x => x.Id == chatId);
+
             if (chatUser is null)
             {
                 if(this.IsUserInvited(userId, teamId) != RelationshipState.Accepted)
@@ -236,17 +243,10 @@
                     throw new ArgumentException(UserNotInTeam);
                 }
 
-                var chat = this.data.Chats
-                    .Include(x => x.Users)
-                    .Include(x => x.ChatUsers)
-                    .FirstOrDefault(x => x.Id == chatId);
-
                 if(chat is null)
                 {
                     throw new ArgumentException(InvalidChat);
                 }
-
-                var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
 
                 chatUser = new ChatUser
                 {
@@ -260,12 +260,6 @@
             }
             else
             {
-                var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
-
-                var chat = this.data.Chats
-                    .Include(x => x.Users)
-                    .Include(x => x.ChatUsers)
-                    .FirstOrDefault(x => x.Id == chatId);
 
                 if(chat.ChatType == ChatType.General)
                 {
@@ -282,6 +276,53 @@
         public RelationshipState? IsUserInvited(string userId, string teamId)
         {
             return this.data.UserTeams.FirstOrDefault(x => x.UserId == userId && x.TeamId == teamId)?.State;
+        }
+
+        public void ManageMemberRole(string userId, string teamId, TeamRole role)
+        {
+            var userTeam = this.data.UserTeams.FirstOrDefault(x => x.UserId == userId && x.TeamId == teamId);
+
+            if(userTeam is null)
+            {
+                throw new ArgumentException(UserNotInTeam);
+            }
+
+            if(userTeam.Role == role)
+            {
+                return;
+            }
+
+            userTeam.Role = role;
+
+            if(role == TeamRole.Admin)
+            {
+                var chats = this.data.Chats
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers)
+                    .Where(x => x.TeamId == teamId).ToList();
+
+                foreach (var chat in chats)
+                {
+                    var chatUser = this.data.ChatUsers
+                        .FirstOrDefault(x => x.UserId == userId && x.ChatId == chat.Id);
+
+                    if(chatUser is null)
+                    {
+                        chatUser = new ChatUser
+                        {
+                            ChatId = chat.Id,
+                            UserId = userId,
+                            LastReadMessageId = null
+                        };
+
+                        var user = this.data.Users.FirstOrDefault(x => x.Id == userId);
+
+                        chat.ChatUsers.Add(chatUser);
+                        chat.Users.Add(user);
+                    };
+                }
+            }
+            this.data.SaveChanges();
         }
     }
 }

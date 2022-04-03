@@ -1,9 +1,10 @@
-﻿@using Taskord.Services.Users.Models
-@model ManageChatViewModel
+﻿@using Taskord.Data.Models.Enums
+@using Taskord.Services.Users.Models
+@model ManageTeamRolesViewModel
 
 <partial name="_TeamPartial" model="Model.Team"/>
 
-<h2 class="text-center">Manage Chat Participants in @Model.ChatName</h2>
+<h2 class="text-center">Manage Member Roles in @Model.Team.Name</h2>
 
 <div class="row">
     @if (Model.Users.Any())
@@ -15,15 +16,15 @@
                     <img class="card-img-top" src="@user.ImagePath">
                     <div class="card-body text-center">
                         <h5 class="card-title text-center">@user.Name</h5>
-                        @if (user.IsInChat)
+                        @if (user.Role == TeamRole.Admin)
                         {
-                            <button class="addBtn btn btn-success" id="@user.Id" disabled>Add to Chat</button>
-                            <button class="removeBtn btn btn-danger" id="@user.Id">Remove from Chat</button>
+                            <button class="makeBtn btn btn-info" id="@user.Id" disabled>Make Admin</button>
+                            <button class="removeBtn btn btn-light" id="@user.Id">Remove Admin</button>
                         }
                         else
                         {
-                            <button class="addBtn btn btn-success" id="@user.Id">Add to Chat</button>
-                            <button class="removeBtn btn btn-danger" id="@user.Id" disabled>Remove from Chat</button>
+                            <button class="makeBtn btn btn-info" id="@user.Id">Make Admin</button>
+                            <button class="removeBtn btn btn-light" id="@user.Id" disabled>Remove Admin</button>
                         }
                     </div>
                 </div>
@@ -39,26 +40,26 @@
 
 @section Scripts {
     <script type="module">
-        let addBtns = document.getElementsByClassName('addBtn');
+        let addBtns = document.getElementsByClassName('makeBtn');
         let removeBtns = document.getElementsByClassName('removeBtn');
 
         [...removeBtns].forEach(x => {
             x.addEventListener('click' , (event) => {
-                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'addBtn');
+                manageUserRole(x.id, '@Model.Team.Id', x, 'makeBtn', 0);
             });
         });
 
         [...addBtns].forEach(x => {
             x.addEventListener('click' , (event) => {
-                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'removeBtn');
+                manageUserRole(x.id, '@Model.Team.Id', x, 'removeBtn', 1);
             });
         });
 
-        async function manageChatUser(userId, chatId, teamId, btn, otherId) {
-            const response = await fetch('/api/teams/manageChatUser', {
+        async function manageUserRole(userId, teamId, btn, otherId, role) {
+            const response = await fetch('/api/teams/manageMemberRole', {
                 method: 'post',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ TeamId: teamId, UserId: userId, ChatId: chatId})
+                body: JSON.stringify({ TeamId: teamId, UserId: userId, Role: role})
             });
 
             if (response.ok) {

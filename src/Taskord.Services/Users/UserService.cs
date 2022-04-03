@@ -26,7 +26,7 @@
         }
 
 
-        public IEnumerable<UserTeamChatManageListServiceModel> GetTeamMembersList(string userId, string teamId, string chatId)
+        public IEnumerable<UserTeamChatManageListServiceModel> GetTeamChatMembersList(string userId, string teamId, string chatId)
         {
             var teamMembers = this.data.UserTeams
                 .Include(x => x.User)
@@ -256,6 +256,33 @@
                 .State;
 
             return state;
+        }
+
+        public IEnumerable<UserManageRolesServiceModel> GetRoleManageTeamMembersList(string userId, string teamId)
+        {
+            var teamMembers = this.data.UserTeams
+                .Include(x => x.User)
+                .Include(x => x.Team)
+                .Where(x => x.TeamId == teamId)
+                .ToList();
+
+            if (!teamMembers.Any())
+            {
+                throw new ArgumentException(InvalidTeamId);
+            }
+
+            var members = teamMembers
+                .Where(x => x.UserId != userId)
+                .Select(x => new UserManageRolesServiceModel
+                {
+                    Id = x.UserId,
+                    Name = x.User.UserName,
+                    ImagePath = x.User.ImagePath,
+                    Role = x.Role
+                })
+                .ToList();
+
+            return members;
         }
     }
 }

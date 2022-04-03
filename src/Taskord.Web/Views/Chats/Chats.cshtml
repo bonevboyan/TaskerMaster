@@ -13,7 +13,7 @@
         <div class="py-2 px-4 border-bottom d-none d-lg-block">
             <div class="d-flex align-items-center py-1">
                 @if (Model.ChatType == ChatType.Personal)
-                {   
+                {
                     <div class="position-relative">
                         <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
                     </div>
@@ -22,10 +22,16 @@
                     <strong>@Model.Name</strong>
                     <div class="text-muted small"><em>@(Model.ChatType == ChatType.Personal ? "Personal chat" : "Team chat")</em></div>
                 </div>
-                @if (Model.ChatType == ChatType.Team && Model.IsAdmin)
+                @if (Model.IsAdmin)
                 {
+                    @if (Model.ChatType == ChatType.Team)
+                    {
+                        <div>
+                            <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary btn-lg mr-1 px-3 manageMembersBtn">Manage Chat Members</a>
+                        </div>
+                    }
                     <div>
-                        <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary btn-lg mr-1 px-3">Manage Chat Members</a>
+                        <a asp-controller="Teams" asp-action="ManageMemberRoles" asp-route-teamId="@Model.TeamId" class="btn btn-primary btn-lg mr-1 px-3">Manage Member Roles</a>
                     </div>
                 }
             </div>
@@ -33,14 +39,14 @@
 
         <div class="position-relative">
             <div class="chat-messages p-4">
-                @if(Model.Messages.Count() == 0)
+                @if (Model.Messages.Count() == 0)
                 {
                     <h3 class="text-center">You are now connected</h3>
                     <button id="helloBtn" class="btn btn-primary btn-lg">Say "Hello"</button>
                 }
                 else
                 {
-                    @if(Model.LastReadMessageId == Model.Messages.LastOrDefault()?.Id)
+                    @if (Model.LastReadMessageId == Model.Messages.LastOrDefault()?.Id)
                     {
                         @foreach (var message in Model.Messages)
                         {
@@ -71,7 +77,7 @@
                                 </div>
                             </div>
 
-                            @if(message.Id == Model.LastReadMessageId)
+                            @if (message.Id == Model.LastReadMessageId)
                             {
                                 <span></span>
                                 <div class="divider">
@@ -83,7 +89,7 @@
                         }
                     }
                 }
-                
+
             </div>
         </div>
 
@@ -96,35 +102,35 @@
     </div>
 
     @section Scripts {
-        <script>
-            const element = document.querySelector('.chat-messages');
-            element.scrollTop = element.scrollHeight;
+<script>
+    const element = document.querySelector('.chat-messages');
+    element.scrollTop = element.scrollHeight;
 
-            document.getElementById('sendBtn').addEventListener('click' , (event) => {
-                let value = document.getElementById('inputField').value;
-                sendMessage(value);
-            });            
-            
-            document.getElementById('helloBtn').addEventListener('click' , (event) => {
-                sendMessage('Hello!');
-            });
+    document.getElementById('sendBtn').addEventListener('click' , (event) => {
+        let value = document.getElementById('inputField').value;
+        sendMessage(value);
+    });
 
-            async function sendMessage(value) {
-                if (value == '') {
-                    return;
-                }
+    document.getElementById('helloBtn').addEventListener('click' , (event) => {
+        sendMessage('Hello!');
+    });
 
-                const response = await fetch('/api/chats/sendMessage', {
-                    method: 'post',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ChatId: '@Model.Id', Content: value })
-                });
+    async function sendMessage(value) {
+        if (value == '') {
+            return;
+        }
 
-                if (response.ok) {
-                    location.reload();
-                }
-            }
-        </script>
+        const response = await fetch('/api/chats/sendMessage', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ChatId: '@Model.Id', Content: value })
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    }
+</script>
     }
 
     @section Sidebar {

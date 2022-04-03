@@ -76,6 +76,7 @@
             try
             {
                 this.teamService.WithdrawTeamInvite(withdraw.TeamId, withdraw.UserId);
+
                 return this.Ok();
             }
             catch (ArgumentException)
@@ -111,14 +112,37 @@
             try
             {
                 this.teamService.ManageChatUser(chatUser.UserId, chatUser.ChatId, chatUser.TeamId);
+
+                return this.Ok();
             }
             catch (ArgumentException ex)
             {
                 return this.BadRequest(ex);
             }
+        }
 
+        [Authorize]
+        [HttpPost]
+        [Route("api/teams/manageMemberRole")]
+        public IActionResult ManageMemberRoles(ManageMemberRolesPostModel manageRole)
+        {
+            var userId = this.userManager.GetUserId(this.User);
 
-            return this.Ok();
+            if (!this.teamService.IsAdmin(userId, manageRole.TeamId))
+            {
+                return this.Unauthorized();
+            }
+
+            try
+            {
+                this.teamService.ManageMemberRole(manageRole.UserId, manageRole.TeamId, manageRole.Role);
+
+                return this.Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return this.BadRequest(ex);
+            }
         }
     }
 }

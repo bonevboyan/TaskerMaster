@@ -23,6 +23,8 @@
 
         void ManageChatUser(string userId, string chatId, string teamId);
 
+        void ManageMemberRole(string userId, string teamId, TeamRole role);
+
         RelationshipState? IsUserInvited(string userId, string teamId);
     }
 }

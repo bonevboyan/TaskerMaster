@@ -9,7 +9,9 @@
 
         IEnumerable<UserInviteListServiceModel> GetInviteFriendsList(string userId, string teamId);
 
-        IEnumerable<UserTeamChatManageListServiceModel> GetTeamMembersList(string userId, string teamId, string chatId);
+        IEnumerable<UserTeamChatManageListServiceModel> GetTeamChatMembersList(string userId, string teamId, string chatId);
+
+        IEnumerable<UserManageRolesServiceModel> GetRoleManageTeamMembersList(string userId, string teamId);
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 

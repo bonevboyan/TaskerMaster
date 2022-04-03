@@ -77,7 +77,7 @@ namespace Taskord.Web.Controllers
             }
 
             var team = this.teamService.GetTeam(teamId);
-            var teamMembers = this.userService.GetTeamMembersList(userId, teamId, chatId);
+            var teamMembers = this.userService.GetTeamChatMembersList(userId, teamId, chatId);
             var chat = this.chatService.GetTeamChat(userId, teamId, chatId);
             
             return this.View(new ManageChatViewModel
@@ -88,5 +88,27 @@ namespace Taskord.Web.Controllers
                 ChatId = chat.Id
             });
         }
+
+        [Authorize]
+        public IActionResult ManageMemberRoles(string teamId)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!this.teamService.IsAdmin(userId, teamId))
+            {
+                return this.Unauthorized();
+            }
+
+            var team = this.teamService.GetTeam(teamId);
+            var teamMembers = this.userService.GetRoleManageTeamMembersList(userId, teamId);
+
+            return this.View(new ManageTeamRolesViewModel
+            {
+                Team = team,
+                Users = teamMembers
+            });
+        }
+
+
     }
 }
