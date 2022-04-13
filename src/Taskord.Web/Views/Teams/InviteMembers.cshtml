@@ -13,7 +13,7 @@
         {
             <div class="col-md-4">
                 <div class="card mb-3">
-                    <img class="card-img-top" src="@user.ImagePath">
+                    <img class="card-img-top" src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                     <div class="card-body text-center">
                         <h5 class="card-title text-center">@user.Name</h5>
                         @if (user.State == RelationshipState.Withdrawn)
@@ -34,7 +34,7 @@
     }
     else
     {
-        <a asp-controller="Personal" asp-action="Requests" class="btn btn-primary btn-lg btn-block">All of your friends is in the team! Check out your friend requests here.</a>
+        <a asp-controller="Personal" asp-action="Requests" class="btn btn-primary btn-lg btn-block">All of your friends are in the team! Check out your friend requests here.</a>
     }
 </div>
 

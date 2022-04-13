@@ -17,8 +17,8 @@
 
         public ScheduleBoardServiceModel GetBoard(string teamId)
         {
-            var team = GetTeamFromId(teamId);
-            var buckets = data.Schedules.Find(team.ScheduleId).Buckets;
+            var team = this.GetTeamFromId(teamId);
+            var buckets = this.data.Schedules.Find(team.ScheduleId).Buckets;
 
             ScheduleBoardServiceModel boardCardServiceModel = new ScheduleBoardServiceModel
             {

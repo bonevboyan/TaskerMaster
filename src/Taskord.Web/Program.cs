@@ -15,14 +15,26 @@ builder.Services.AddDbContext<TaskordDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<TaskordDbContext>();
+//builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<TaskordDbContext>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IScheduleService, ScheduleService>();
 builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<IUserService, UserService>();
+
+builder.Services
+    .AddDefaultIdentity<User>(options =>
+    {
+        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = false;
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<TaskordDbContext>();
 
 var app = builder.Build();
 

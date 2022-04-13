@@ -2,26 +2,35 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Taskord.Services.Schedules;
     using Taskord.Web.Models;
 
     public class SchedulesController : Controller
     {
-        [Authorize]
-        public IActionResult Calendar()
+        private readonly IScheduleService scheduleService;
+
+        public SchedulesController(IScheduleService scheduleService)
         {
-            return View();
+            this.scheduleService = scheduleService;
         }
 
         [Authorize]
-        public IActionResult Board()
+        public IActionResult Calendar()
         {
-            return View();
+            return this.View();
+        }
+
+        [Authorize]
+        public IActionResult Board(string teamId)
+        {
+            var board = this.scheduleService.GetBoard(teamId);
+            return this.View(board);
         }
 
         [Authorize]
         public IActionResult AddCard()
         {
-            return View();
+            return this.View();
         }
 
         [Authorize]

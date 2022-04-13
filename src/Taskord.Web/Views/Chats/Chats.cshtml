@@ -12,32 +12,29 @@
     <div class="col-12 col-lg-7 col-xl-9">
         <div class="py-2 px-4 border-bottom d-none d-lg-block">
             <div class="d-flex align-items-center py-1">
-                @if (Model.ChatType == ChatType.Personal)
-                {
-                    <div class="position-relative">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
-                    </div>
-                }
                 <div class="flex-grow-1 pl-3">
                     <strong>@Model.Name</strong>
                     <div class="text-muted small"><em>@(Model.ChatType == ChatType.Personal ? "Personal chat" : "Team chat")</em></div>
                 </div>
-                @if (Model.IsAdmin)
+                @if(Model.ChatType != ChatType.Personal)
                 {
-                    @if (Model.ChatType == ChatType.Team)
+                    @if (Model.IsAdmin)
                     {
+                        @if (Model.ChatType == ChatType.Team)
+                        {
+                            <div>
+                                <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Chat Members</a>
+                            </div>
+                        }
                         <div>
-                            <a asp-controller="Teams" asp-action="ManageChatMembers" asp-route-teamId="@Model.TeamId" asp-route-chatId="@Model.Id" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Chat Members</a>
+                            <a asp-controller="Teams" asp-action="ManageMemberRoles" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Member Roles</a>
                         </div>
+
                     }
                     <div>
-                        <a asp-controller="Teams" asp-action="ManageMemberRoles" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Manage Member Roles</a>
+                        <a asp-controller="Teams" asp-action="InviteMembers" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Invite Members</a>
                     </div>
-
                 }
-                <div>
-                    <a asp-controller="Teams" asp-action="InviteMembers" asp-route-teamId="@Model.TeamId" class="btn btn-primary mr-1 px-3 manageMembersBtn">Invite Members</a>
-                </div>
             </div>
         </div>
 
@@ -56,7 +53,8 @@
                         {
                             <div class="@(message.IsOwn ? "chat-message-right" : "chat-message-left") pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="@message.Sender.Username" width="40" height="40">
+                                    <img src="@message.Sender.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1" width="40" height="40">
+
                                     <div class="text-muted small text-nowrap mt-2">@message.DateTime</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
@@ -72,7 +70,7 @@
                         {
                             <div class="@(message.IsOwn ? "chat-message-right" : "chat-message-left") pb-4">
                                 <div>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="@message.Sender.Username" width="40" height="40">
+                                    <img src="@message.Sender.ImagePath" onerror="this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1" width="40" height="40">
                                     <div class="text-muted small text-nowrap mt-2">@message.DateTime</div>
                                 </div>
                                 <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
@@ -109,6 +107,12 @@
 <script>
     const element = document.querySelector('.chat-messages');
     element.scrollTop = element.scrollHeight;
+
+    document.getElementById('inputField').addEventListener("keyup", (event) => {
+        if (event.keyCode === 13) {
+            document.getElementById("sendBtn").click();
+        }
+    });
 
     document.getElementById('sendBtn').addEventListener('click' , (event) => {
         let value = document.getElementById('inputField').value;

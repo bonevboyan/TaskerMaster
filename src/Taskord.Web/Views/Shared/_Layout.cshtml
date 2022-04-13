@@ -70,7 +70,6 @@
         <div class="container p-0">
             <div class="card">
                 <div class="row g-0">
-                    @*@RenderSection("Teams", false)*@
                     @RenderSection("Sidebar", false)
                     @RenderBody()
                     @RenderSection("Members", false)
@@ -79,11 +78,6 @@
         </div>
     </main>
 
-    @* <footer id="footer" class="border-top footer text-muted">
-        <div class="container">
-        &copy; @DateTime.Now.Year - Taskord
-        </div>
-        </footer>*@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="~/js/site.js" asp-append-version="true"></script>
