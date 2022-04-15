@@ -11,14 +11,15 @@
     using Taskord.Services.Users;
     using Taskord.Web.Models;
 
-    public class PersonalController : Controller
+    [Authorize]
+    public class UserController : Controller
     {
         private readonly IUserService userService;
         private readonly IChatService chatService;
         private readonly ITeamService teamService;
         private readonly UserManager<User> userManager;
 
-        public PersonalController(IUserService userService, UserManager<User> userManager, IChatService chatService, ITeamService teamService)
+        public UserController(IUserService userService, UserManager<User> userManager, IChatService chatService, ITeamService teamService)
         {
             this.teamService = teamService;
             this.chatService = chatService;
@@ -26,7 +27,6 @@
             this.userManager = userManager;
         }
 
-        [Authorize]
         public IActionResult SendRequest(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
@@ -43,25 +43,21 @@
 
         }
 
-        [Authorize]
         public IActionResult AcceptRequest(string userId)
         {
             return this.ChangeRelationshipState(userId, RelationshipState.Accepted);
         }
 
-        [Authorize]
         public IActionResult DeclineRequest(string userId)
         {
             return this.ChangeRelationshipState(userId, RelationshipState.Declined);
         }
 
-        [Authorize]
         public IActionResult WithdrawRequest(string userId)
         {
             return this.ChangeRelationshipState(userId, RelationshipState.Withdrawn);
         }
 
-        [Authorize]
         public IActionResult Chats(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
@@ -78,7 +74,6 @@
 
         }
 
-        [Authorize]
         public IActionResult Search([FromQuery] UserQueryModel query)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -95,8 +90,6 @@
             return this.View(query);
         }
 
-
-        [Authorize]
         public IActionResult Requests()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -111,7 +104,11 @@
             return this.View(requests);
         }
 
-        [Authorize]
+        public IActionResult Profile(string userId)
+        {
+            return this.View();
+        }
+
         private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
         {
             var myUserId = this.userManager.GetUserId(this.User);

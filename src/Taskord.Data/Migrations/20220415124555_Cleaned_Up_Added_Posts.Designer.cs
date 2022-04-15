@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Taskord.Data;
 
@@ -11,9 +12,10 @@ using Taskord.Data;
 namespace Taskord.Data.Migrations
 {
     [DbContext(typeof(TaskordDbContext))]
-    partial class TaskordDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220415124555_Cleaned_Up_Added_Posts")]
+    partial class Cleaned_Up_Added_Posts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -25,11 +25,6 @@
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; }
 
-        [Required]
-        public string ScheduleId { get; set; }
-
-        public Schedule Schedule { get; set; }
-
         public ICollection<UserTeam> UserTeams { get; set; }
 
         public ICollection<Chat> Chats { get; set; }

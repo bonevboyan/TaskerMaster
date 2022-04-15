@@ -19,24 +19,6 @@
             public const int StatusMaxLength = 150;
         }
 
-        public class Bucket
-        {
-            public const int NameMinLength = 1;
-
-            public const int NameMaxLength = 30;
-        }
-
-        public class Company
-        {
-            public const int NameMinLength = 3;
-
-            public const int NameMaxLength = 50;
-
-            public const int DescriptionMinLength = 10;
-
-            public const int DescriptionMaxLength = 300;
-        }
-
         public class Chat
         {
             public const int NameMinLength = 1;
@@ -51,24 +33,6 @@
             public const int ContentMaxLength = 1000;
         }
 
-        public class Tag
-        {
-            public const int NameMinLength = 1;
-
-            public const int NameMaxLength = 20;
-        }
-
-        public class Card
-        {
-            public const int NameMaxLength = 1;
-
-            public const int NameMinLength = 40;
-
-            public const int DescriptionMaxLength = 300;
-
-            public const int DescriptionMinLength = 300;
-        }
-
         public class Team
         {
             public const int NameMinLength = 1;
@@ -76,6 +40,13 @@
             public const int NameMaxLength = 40;
 
             public const int DescriptionMaxLength = 300;
+        }
+
+        public class Post
+        {
+            public const int ContentMinLength = 5;
+
+            public const int ContentMaxLength = 300;
         }
     }
 }

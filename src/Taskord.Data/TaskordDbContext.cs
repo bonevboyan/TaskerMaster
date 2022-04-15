@@ -6,17 +6,9 @@
 
     public class TaskordDbContext : IdentityDbContext<User>
     {
-        public DbSet<Bucket> Buckets { get; set; }
-
-        public DbSet<Card> Cards { get; set; }
-
         public DbSet<Chat> Chats { get; set; }
 
         public DbSet<Message> Messages { get; set; }
-
-        public DbSet<Schedule> Schedules { get; set; }
-
-        public DbSet<Tag> Tags { get; set; }
 
         public DbSet<Team> Teams { get; set; }
 
@@ -26,6 +18,10 @@
 
         public DbSet<UserTeam> UserTeams { get; set; }
 
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Like> Likes { get; set; }
+
         public TaskordDbContext(DbContextOptions<TaskordDbContext> options)
             : base(options)
         {
@@ -33,12 +29,6 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder
-                .Entity<Team>()
-                .HasOne(x => x.Schedule)
-                .WithOne(x => x.Team)
-                .HasForeignKey<Schedule>(x => x.TeamId);
-
             builder
                 .Entity<ChatUser>()
                 .HasKey(x => new { x.ChatId, x.UserId });

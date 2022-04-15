@@ -9,7 +9,6 @@
         public User()
         {
             this.UserTeams = new HashSet<UserTeam>();
-            this.Cards = new HashSet<Card>();
             this.ChatUsers = new HashSet<ChatUser>();
             this.Messages = new HashSet<Message>();
             this.Friendships = new HashSet<Friendship>();
@@ -19,8 +18,6 @@
         public string ImagePath { get; set; }
 
         public ICollection<UserTeam> UserTeams { get; set; }
-
-        public ICollection<Card> Cards { get; set; }
 
         public ICollection<Message> Messages { get; set; }
 

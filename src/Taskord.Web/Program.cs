@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
 using Taskord.Data.Models;
 using Taskord.Services.Chats;
-using Taskord.Services.Schedules;
 using Taskord.Services.Teams;
 using Taskord.Services.Users;
 
@@ -20,7 +19,6 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITeamService, TeamService>();
-builder.Services.AddTransient<IScheduleService, ScheduleService>();
 builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<IUserService, UserService>();
 
@@ -59,9 +57,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "personalChat",
+    name: "personal",
     pattern: "me/{action}/{userId?}",
-    defaults: new { controller = "Personal" });
+    defaults: new { controller = "User" });
+
+app.MapControllerRoute(
+    name: "profile",
+    pattern: "profile/{userId=me}",
+    defaults: new { controller = "User", action = "Profile" });
+
+app.MapControllerRoute(
+    name: "posts",
+    pattern: "posts/{userId=me}",
+    defaults: new { controller = "Posts", action = "All" });
 
 app.MapControllerRoute(
     name: "chats",

@@ -11,10 +11,6 @@
                 <img class="card-img-top" src="@user.ImagePath">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@user.Name</h5>
-                    @*<a asp-controller="Personal" asp-action="AcceptRequest" asp-route-userId="@user.Id"
-                    class="btn btn-success">Accept</a>
-                    <a asp-controller="Personal" asp-action="DeclineRequest" asp-route-userId="@user.Id"
-                    class="btn btn-danger">Decline</a>*@
                     <a id="@user.Id" class="btn btn-success acceptFriendBtn">Accept</a>
                     <a id="@user.Id" class="btn btn-danger declineFriendBtn">Decline</a>
                 </div>
@@ -34,8 +30,6 @@
                 <img class="card-img-top" src="@user.ImagePath">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@user.Name</h5>
-                    @*<a asp-controller="Personal" asp-action="WithdrawRequest" asp-route-userId="@user.Id"
-                   class="btn btn-secondary">Withdraw</a>*@
                    <a id="@user.Id" class="btn btn-secondary withdrawFriendBtn">Withdraw</a>
                 </div>
             </div>

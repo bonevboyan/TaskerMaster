@@ -22,24 +22,11 @@
 
         public string Create(string name, string description, string imageUrl, string userId)
         {
-            var schedule = new Schedule();
-
-            schedule.Buckets.Add(new Bucket
-            {
-                Name = "To Do",
-            });
-
-            schedule.Buckets.Add(new Bucket
-            {
-                Name = "Done",
-            });
-
             var team = new Team
             {
                 Name = name,
                 Description = description,
-                ImagePath = imageUrl,
-                ScheduleId = schedule.Id,
+                ImagePath = imageUrl
             };
 
             var chat = new Chat
@@ -66,7 +53,6 @@
             chat.Users.Add(this.data.Users.FirstOrDefault(x => x.Id == userId));
             team.Chats.Add(chat);
             team.UserTeams.Add(userTeam);
-            this.data.Schedules.Add(schedule);
             this.data.ChatUsers.Add(chatUser);
             this.data.Teams.Add(team);
             this.data.SaveChanges();
