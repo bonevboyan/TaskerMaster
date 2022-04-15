@@ -1,7 +1,7 @@
 ﻿@using Taskord.Services.Users.Models
 @model ManageChatViewModel
 
-<partial name="_TeamPartial" model="Model.Team"/>
+<partial name="_TeamPartial" model="Model.Team" />
 
 <h2 class="text-center">Manage Chat Participants in @Model.ChatName</h2>
 
@@ -12,18 +12,20 @@
         {
             <div class="col-md-4">
                 <div class="card mb-3">
-                    <img class="card-img-top" src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
+                    <img class="card-img-top img-user-card" src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                     <div class="card-body text-center">
-                        <h5 class="card-title text-center">@user.Name</h5>
+                        <h5 class="card-title text-center">
+                            <a asp-controller="User" asp-action="Profile" asp-route-userId="@user.Id" class="profile">@user.Name</a>
+                        </h5>
                         @if (user.IsInChat)
                         {
-                            <button class="addBtn btn btn-success" id="@user.Id" disabled>Add to Chat</button>
-                            <button class="removeBtn btn btn-danger" id="@user.Id">Remove from Chat</button>
+                            <button class="addToChatBtn btn btn-success" id="@user.Id" disabled>Add to Chat</button>
+                            <button class="removefromChatBtn btn btn-danger" id="@user.Id">Remove from Chat</button>
                         }
                         else
                         {
-                            <button class="addBtn btn btn-success" id="@user.Id">Add to Chat</button>
-                            <button class="removeBtn btn btn-danger" id="@user.Id" disabled>Remove from Chat</button>
+                            <button class="addToChatBtn btn btn-success" id="@user.Id">Add to Chat</button>
+                            <button class="removefromChatBtn btn btn-danger" id="@user.Id" disabled>Remove from Chat</button>
                         }
                     </div>
                 </div>
@@ -38,34 +40,34 @@
 </div>
 
 @section Scripts {
-    <script type="module">
-        let addBtns = document.getElementsByClassName('addBtn');
-        let removeBtns = document.getElementsByClassName('removeBtn');
+<script type="module">
+    let addBtns = document.getElementsByClassName('addToChatBtn');
+    let removeBtns = document.getElementsByClassName('removefromChatBtn');
 
-        [...removeBtns].forEach(x => {
-            x.addEventListener('click' , (event) => {
-                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'addBtn');
-            });
+    [...removeBtns].forEach(x => {
+        x.addEventListener('click' , (event) => {
+            manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'addToChatBtn');
+        });
+    });
+
+    [...addBtns].forEach(x => {
+        x.addEventListener('click' , (event) => {
+            manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'removefromChatBtn');
+        });
+    });
+
+    async function manageChatUser(userId, chatId, teamId, btn, otherId) {
+        const response = await fetch('/api/teams/manageChatUser', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ TeamId: teamId, UserId: userId, ChatId: chatId})
         });
 
-        [...addBtns].forEach(x => {
-            x.addEventListener('click' , (event) => {
-                manageChatUser(x.id, '@Model.ChatId', '@Model.Team.Id', x, 'removeBtn');
-            });
-        });
-
-        async function manageChatUser(userId, chatId, teamId, btn, otherId) {
-            const response = await fetch('/api/teams/manageChatUser', {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ TeamId: teamId, UserId: userId, ChatId: chatId})
-            });
-
-            if (response.ok) {
-                let otherBtn = btn.parentElement.querySelector(`.${otherId}`);
-                otherBtn.disabled = !otherBtn.disabled;
-                btn.disabled = !btn.disabled;
-            }
+        if (response.ok) {
+            let otherBtn = btn.parentElement.querySelector(`.${otherId}`);
+            otherBtn.disabled = !otherBtn.disabled;
+            btn.disabled = !btn.disabled;
         }
-    </script>
+    }
+</script>
 }

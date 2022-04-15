@@ -7,6 +7,7 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
+    using Taskord.Services.Posts;
     using Taskord.Services.Relationships;
     using Taskord.Services.Teams;
     using Taskord.Services.Users;
@@ -19,15 +20,22 @@
         private readonly IChatService chatService;
         private readonly IRelationshipService relationshipService;
         private readonly ITeamService teamService;
+        private readonly IPostService postService;
         private readonly UserManager<User> userManager;
 
-        public UserController(IUserService userService, UserManager<User> userManager, IChatService chatService, ITeamService teamService, IRelationshipService relationshipService)
+        public UserController(IUserService userService, 
+            UserManager<User> userManager, 
+            IChatService chatService,
+            ITeamService teamService, 
+            IRelationshipService relationshipService,
+            IPostService postService)
         {
             this.teamService = teamService;
             this.chatService = chatService;
             this.relationshipService = relationshipService;
             this.userService = userService;
             this.userManager = userManager;
+            this.postService = postService;
         }
 
         public IActionResult SendRequest(string userId)
@@ -71,7 +79,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.BadRequest(ex);
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }
 
 
@@ -109,7 +117,32 @@
 
         public IActionResult Profile(string userId)
         {
-            return this.View();
+            var myUserId = this.userManager.GetUserId(this.User);
+
+            var profile = new UserProfileViewModel
+            {
+                IsOwn = false
+            };
+
+            if (userId == "me" || userId == myUserId)
+            {
+                userId = myUserId;
+                profile.IsOwn = true;
+            }
+
+            try
+            {
+
+                profile.Post = this.postService.GetLatest(userId);
+                profile.User = this.userService.GetUserProfile(userId);
+                profile.Relationship = this.relationshipService.GetRelationship(myUserId, userId);
+
+                return this.View(profile);
+            }
+            catch(ArgumentException ex)
+            {
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+            }
         }
 
         private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
@@ -131,7 +164,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.BadRequest(ex);
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }
         }
     }

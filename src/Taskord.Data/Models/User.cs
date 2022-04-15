@@ -13,6 +13,7 @@
             this.Messages = new HashSet<Message>();
             this.Relationships = new HashSet<Relationship>();
             this.Chats = new HashSet<Chat>();
+            this.Posts = new HashSet<Post>();
         }
 
         public string ImagePath { get; set; }
@@ -26,5 +27,7 @@
         public ICollection<Chat> Chats { get; set; }
 
         public ICollection<Relationship> Relationships { get; set; }
+
+        public ICollection<Post> Posts { get; set; }
     }
 }

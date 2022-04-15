@@ -5,6 +5,7 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
+    using Taskord.Services.Relationships.Models;
     using Taskord.Services.Users.Models;
 
     using static Taskord.Common.ErrorMessages.Relationship;
@@ -111,14 +112,18 @@
             this.data.SaveChanges();
         }
 
-        public RelationshipState? GetRelationshipState(string userId, string secondUserId)
+        public RelationshipServiceModel GetRelationship(string userId, string secondUserId)
         {
-            var state = this.data.Relationships
+            var relationship = this.data.Relationships
                 .FirstOrDefault(x => (x.SenderId == userId && x.ReceiverId == secondUserId)
-                    || (x.ReceiverId == userId && x.SenderId == secondUserId))?
-                .State;
+                    || (x.ReceiverId == userId && x.SenderId == secondUserId));
 
-            return state;
+            return relationship is null ? null : new RelationshipServiceModel
+            {
+                ReceiverId = relationship.ReceiverId,
+                SenderId = relationship.SenderId,
+                State = relationship.State
+            };
         }
     }
 }

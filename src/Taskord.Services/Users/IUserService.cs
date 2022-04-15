@@ -14,5 +14,7 @@
         IEnumerable<UserManageRolesServiceModel> GetRoleManageTeamMembersList(string userId, string teamId);
 
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
+
+        UserProfileServiceModel GetUserProfile(string userId);
     }
 }

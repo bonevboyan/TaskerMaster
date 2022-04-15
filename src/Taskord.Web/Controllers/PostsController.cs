@@ -13,14 +13,12 @@
     public class PostsController : Controller
     {
         private readonly IPostService postService;
-        private readonly IUserService userService;
         private readonly UserManager<User> userManager;
 
-        public PostsController(IPostService postService, UserManager<User> userManager, IUserService userService)
+        public PostsController(IPostService postService, UserManager<User> userManager)
         {
             this.postService = postService;
             this.userManager = userManager;
-            this.userService = userService;
         }
 
         public IActionResult All(string userId)

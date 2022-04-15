@@ -6,6 +6,7 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
+    using Taskord.Services.Posts;
     using Taskord.Services.Users.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -156,7 +157,7 @@
                     Id = x.Id,
                     Name = x.UserName,
                     ImagePath = x.ImagePath,
-                    RelationshipState = this.relationshipService.GetRelationshipState(x.Id, userId)
+                    RelationshipState = this.relationshipService.GetRelationship(x.Id, userId)?.State
                 })
                 .Skip((currentPage - 1) * usersPerPage)
                 .Take(usersPerPage);
@@ -195,6 +196,33 @@
                 .ToList();
 
             return members;
+        }
+
+        public UserProfileServiceModel GetUserProfile(string userId)
+        {
+            var user = this.data.Users
+                .Include(x => x.Posts)
+                .FirstOrDefault(x => x.Id == userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException(InvalidUserId);
+            }
+
+            var profile = new UserProfileServiceModel
+            {
+                FriendCount = this.data.Relationships
+                    .Count(x => (x.SenderId == userId || x.ReceiverId == userId) && x.State == RelationshipState.Accepted),
+                TeamCount = this.data.UserTeams
+                    .Count(x => (x.UserId == userId && x.State == RelationshipState.Accepted)),
+                Email = user.Email,
+                Username = user.UserName,
+                ImagePath = user.ImagePath,
+                Id = userId,
+                PostsCount = user.Posts.Count
+            };
+
+            return profile;
         }
     }
 }

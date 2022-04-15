@@ -1,6 +1,7 @@
 ﻿namespace Taskord.Services.Relationships
 {
     using Taskord.Data.Models.Enums;
+    using Taskord.Services.Relationships.Models;
     using Taskord.Services.Users.Models;
 
     public interface IRelationshipService
@@ -13,6 +14,6 @@
 
         void ChangeRelationshipState(string senderId, string receiverId, RelationshipState isAccepted);
 
-        RelationshipState? GetRelationshipState(string userId, string secondUserId);
+        RelationshipServiceModel GetRelationship(string userId, string secondUserId);
     }
 }

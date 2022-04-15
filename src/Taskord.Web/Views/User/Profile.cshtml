@@ -1,1 +1,69 @@
-﻿
+﻿@using Taskord.Data.Models.Enums
+@model UserProfileViewModel
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class="row container d-flex justify-content-center">
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div>
+                            <img src="@Model.User.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="img-user-card" alt="profile image">
+                            <h4>@Model.User.Username</h4>
+                            <p class="text-muted mb-0">@Model.User.Email</p>
+                        </div>
+                        @if (Model.Post is null)
+                        {
+                            <p class="mt-2 card-text font-italic">No posts yet</p>
+                            @if (Model.IsOwn)
+                            {
+                                <a asp-controller="Posts" asp-action="All" asp-route-userId="@Model.User.Id" class="btn btn-secondary" class="btn btn-info btn-sm mt-3 mb-4">Post something</a>
+                            }
+                        }
+                        else
+                        {
+                            <p class="mt-2 card-text font-italic">Latest post (@Model.Post.DateTime):</p>
+                            <p class="mt-2 card-text"> @Model.Post.Content </p>
+                        }
+                        @if (Model.Relationship != null)
+                        {
+                            @if (Model.Relationship.State == RelationshipState.Accepted)
+                            {
+                                <a asp-controller="Posts" asp-action="All" asp-route-userId="@Model.User.Id" class="btn btn-secondary" class="btn btn-info btn-sm mt-3 mb-4">See All Posts</a>
+                                <a asp-controller="Chats" asp-action="Get" asp-route-teamId="me" asp-route-chatId="@Model.User.Id" class="btn btn-primary" class="btn btn-info btn-sm mt-3 mb-4">Send Message</a>
+                            }
+                            else if (Model.Relationship.State == RelationshipState.Pending)
+                            {
+                                @if (Model.Relationship.SenderId != Model.User.Id)
+                                {
+                                    <a id="@Model.User.Id" class="btn btn-secondary withdrawFriendBtn">Withdraw</a>
+                                }
+                                else
+                                {
+                                    <a id="@Model.User.Id" class="btn btn-success acceptFriendBtn">Accept</a>
+                                    <a id="@Model.User.Id" class="btn btn-danger declineFriendBtn">Decline</a>
+                                }
+                            }
+                        }
+                        <div class="border-top pt-3 separator">
+                            <div class="row">
+                                <div class="col-4">
+                                    <h6>@Model.User.PostsCount</h6>
+                                    <p>Posts</p>
+                                </div>
+                                <div class="col-4">
+                                    <h6>@Model.User.FriendCount</h6>
+                                    <p>Friends</p>
+                                </div>
+                                <div class="col-4">
+                                    <h6>@Model.User.TeamCount</h6>
+                                    <p>Teams</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

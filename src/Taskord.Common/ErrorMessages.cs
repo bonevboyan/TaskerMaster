@@ -7,7 +7,9 @@
 
             public const string InvalidTeamId = "A team with that id doesn't exist.";
 
-            public const string InvalidUserId = "This user doesn't participate in this team";
+            public const string InvalidUserIdInTeam = "This user doesn't participate in this team";
+
+            public const string InvalidUserId = "A user with this id doesn't exist.";
         }
 
         public class Team

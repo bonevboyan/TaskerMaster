@@ -147,3 +147,12 @@ body {
     margin-right: 15px;
     overflow-x: hidden;
 }
+
+.separator{
+    margin-top: 10px;
+}
+
+.profile {
+    text-decoration: none;
+    color: black;
+}
