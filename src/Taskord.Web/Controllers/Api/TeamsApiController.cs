@@ -8,6 +8,7 @@
     using Taskord.Web.Models.Api;
 
     //[Route("api/teams/[action]")]
+    [Authorize]
     [ApiController]
     public class TeamsApiController : ControllerBase
     {
@@ -20,7 +21,6 @@
             this.userManager = userManager;
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/teams/inviteMember")]
         public IActionResult InviteMember(InviteMemberPostModel invitation)
@@ -45,7 +45,6 @@
             return this.Ok();
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/teams/respondToInvite")]
         public IActionResult RespondToInvite(RespondToInvitePostModel response)
@@ -61,7 +60,6 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/teams/withdrawInvite")]
         public IActionResult WithdrawInvite(WithdrawInvitePostModel withdraw)
@@ -85,7 +83,6 @@
             }
         }
 
-        [Authorize]
         [HttpGet]
         [Route("api/teams/teamInvitesCount")]
         public string GetTeamInvitesCount()
@@ -97,7 +94,6 @@
             return count.ToString();
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/teams/manageChatUser")]
         public IActionResult ManageChatUser(ManageChatUserPostModel chatUser)
@@ -121,7 +117,6 @@
             }
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/teams/manageMemberRole")]
         public IActionResult ManageMemberRoles(ManageMemberRolesPostModel manageRole)

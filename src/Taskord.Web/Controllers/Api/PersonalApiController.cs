@@ -40,6 +40,13 @@
             }
         }
 
+        [HttpPost]
+        [Route("api/amogus")]
+        public IActionResult Amogus(FriendRequestPostModel friendRequest)
+        {
+            return this.Ok();
+        }
+
         [Authorize]
         [HttpPost]
         [Route("api/me/respondToFriendRequest")]

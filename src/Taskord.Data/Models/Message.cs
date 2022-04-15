@@ -19,8 +19,6 @@
 
         public string ImagePath { get; set; }
 
-        [Required]
-        public MessageType MessageType { get; set; }
 
         [Required]
         public string UserId { get; set; }
