@@ -8,6 +8,7 @@
     using Taskord.Services.Teams;
     using Taskord.Web.Models.Api;
 
+    [Authorize]
     [ApiController]
     public class ChatsApiController : ControllerBase
     {
@@ -22,7 +23,6 @@
             this.teamService = teamService;
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/chats/sendMessage")]
         public IActionResult SendMessage(MessagePostModel message)
@@ -42,7 +42,6 @@
 
         }
 
-        [Authorize]
         [HttpPost]
         [Route("api/chats/addChat")]
         public IActionResult AddChat(AddChatPostModel chat)

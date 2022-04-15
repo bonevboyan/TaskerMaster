@@ -42,5 +42,10 @@
 
             public const string UserNotInChat = "The user does not participate in this chat.";
         }
+
+        public class Post
+        {
+            public const string UserNotPermittedToSeePosts = "You can't see this user's posts because you two aren't friends.";
+        }
     }
 }

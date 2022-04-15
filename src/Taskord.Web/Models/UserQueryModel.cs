@@ -5,7 +5,7 @@
     public class UserQueryModel
     {
 
-        public const int UsersPerPage = 10;
+        public const int UsersPerPage = 9;
 
         public string SearchTerm { get; set; }
 

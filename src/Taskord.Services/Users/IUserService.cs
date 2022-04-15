@@ -22,5 +22,9 @@
         string SendFriendRequest(string senderId, string receiverId);
 
         void ChangeRelationshipState(string senderId, string receiverId, RelationshipState isAccepted);
+
+        RelationshipState? GetRelationshipState(string userId, string secondUserId);
+
+
     }
 }

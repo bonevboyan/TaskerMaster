@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
 using Taskord.Data.Models;
 using Taskord.Services.Chats;
+using Taskord.Services.Posts;
 using Taskord.Services.Teams;
 using Taskord.Services.Users;
 
@@ -21,6 +22,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IPostService, PostService>();
 
 builder.Services
     .AddDefaultIdentity<User>(options =>

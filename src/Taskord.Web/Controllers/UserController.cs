@@ -38,7 +38,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.StatusCode((int) HttpStatusCode.BadRequest, ex.Message);
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }
 
         }
@@ -65,7 +65,7 @@
             {
                 var chat = this.chatService.GetPersonalChat(myUserId, userId);
                 return this.View(chat);
-            } 
+            }
             catch (ArgumentException ex)
             {
                 return this.BadRequest(ex);

@@ -209,21 +209,30 @@
                 .FirstOrDefault(x => x.SenderId == senderId && x.ReceiverId == receiverId 
                 || x.ReceiverId == senderId && x.SenderId == receiverId);
 
-            if (relationship != null && relationship.State != RelationshipState.Withdrawn)
+            if (relationship?.State == RelationshipState.Accepted)
             {
                 throw new ArgumentException(FriendshipAlreadyExists);
             }
 
-            var friendRequest = new Friendship
+            if(relationship == null)
             {
-                SenderId = senderId,
-                ReceiverId = receiverId
-            };
 
-            this.data.Friendships.Add(friendRequest);
+                relationship = new Friendship
+                {
+                    SenderId = senderId,
+                    ReceiverId = receiverId
+                };
+
+                this.data.Friendships.Add(relationship);
+            }
+            else
+            {
+                relationship.State = RelationshipState.Pending;
+            }
+
             this.data.SaveChanges();
 
-            return friendRequest.Id;
+            return relationship.Id;
         }
 
         public void ChangeRelationshipState(string senderId, string receiverId, RelationshipState state)
@@ -235,6 +244,7 @@
             {
                 throw new ArgumentException(InvalidFriendRequest);
             }
+
 
             request.State = state;
 
@@ -248,7 +258,7 @@
             this.data.SaveChanges();
         }
 
-        private RelationshipState? GetRelationshipState(string userId, string secondUserId)
+        public RelationshipState? GetRelationshipState(string userId, string secondUserId)
         {
             var state = this.data.Friendships
                 .FirstOrDefault(x => (x.SenderId == userId && x.ReceiverId == secondUserId)

@@ -16,7 +16,7 @@
                     <strong>@Model.Name</strong>
                     <div class="text-muted small"><em>@(Model.ChatType == ChatType.Personal ? "Personal chat" : "Team chat")</em></div>
                 </div>
-                @if(Model.ChatType != ChatType.Personal)
+                @if (Model.ChatType != ChatType.Personal)
                 {
                     @if (Model.IsAdmin)
                     {
@@ -151,5 +151,5 @@
 }
 else
 {
-    <a asp-controller="Personal" asp-action="Requests" class="btn btn-primary btn-lg btn-block">No chats found! Check out your friend requests</a>
+    <a asp-controller="User" asp-action="Requests" class="btn btn-primary btn-lg btn-block">No chats found! Check out your friend requests</a>
 }
