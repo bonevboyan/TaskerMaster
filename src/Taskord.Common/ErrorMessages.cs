@@ -4,11 +4,6 @@
     {
         public class User
         {
-            public const string InvalidFriendRequest = "There is no such friend request.";
-
-            public const string FriendshipAlreadyExists = "A relationship between these users already exists.";
-
-            public const string InvalidFriendRequestParameters = "You can't send an friend request to yourself!";
 
             public const string InvalidTeamId = "A team with that id doesn't exist.";
 
@@ -46,6 +41,15 @@
         public class Post
         {
             public const string UserNotPermittedToSeePosts = "You can't see this user's posts because you two aren't friends.";
+        }
+
+        public class Relationship
+        {
+            public const string InvalidFriendRequest = "There is no such friend request.";
+
+            public const string FriendshipAlreadyExists = "A relationship between these users already exists.";
+
+            public const string InvalidFriendRequestParameters = "You can't send an friend request to yourself!";
         }
     }
 }

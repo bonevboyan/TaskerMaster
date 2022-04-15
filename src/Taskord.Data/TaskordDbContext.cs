@@ -12,7 +12,7 @@
 
         public DbSet<Team> Teams { get; set; }
 
-        public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Relationship> Relationships { get; set; }
 
         public DbSet<ChatUser> ChatUsers { get; set; }
 
@@ -34,9 +34,9 @@
                 .HasKey(x => new { x.ChatId, x.UserId });
 
             builder
-                .Entity<Friendship>()
+                .Entity<Relationship>()
                 .HasOne(x => x.Receiver)
-                .WithMany(x => x.Friendships)
+                .WithMany(x => x.Relationships)
                 .HasForeignKey(x => x.ReceiverId); 
             
             builder

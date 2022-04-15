@@ -4,9 +4,9 @@
     using Taskord.Data.Common;
     using Taskord.Data.Models.Enums;
 
-    public class Friendship : BaseModel
+    public class Relationship : BaseModel
     {
-        public Friendship()
+        public Relationship()
             : base()
         {
             this.State = RelationshipState.Pending;

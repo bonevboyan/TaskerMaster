@@ -7,6 +7,7 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
+    using Taskord.Services.Relationships;
     using Taskord.Services.Teams;
     using Taskord.Services.Users;
     using Taskord.Web.Models;
@@ -16,13 +17,15 @@
     {
         private readonly IUserService userService;
         private readonly IChatService chatService;
+        private readonly IRelationshipService relationshipService;
         private readonly ITeamService teamService;
         private readonly UserManager<User> userManager;
 
-        public UserController(IUserService userService, UserManager<User> userManager, IChatService chatService, ITeamService teamService)
+        public UserController(IUserService userService, UserManager<User> userManager, IChatService chatService, ITeamService teamService, IRelationshipService relationshipService)
         {
             this.teamService = teamService;
             this.chatService = chatService;
+            this.relationshipService = relationshipService;
             this.userService = userService;
             this.userManager = userManager;
         }
@@ -33,7 +36,7 @@
 
             try
             {
-                this.userService.SendFriendRequest(myUserId, userId);
+                this.relationshipService.SendFriendRequest(myUserId, userId);
                 return this.Redirect("/chats/me");
             }
             catch (ArgumentException ex)
@@ -96,8 +99,8 @@
 
             var requests = new RequestsViewModel
             {
-                ReceivedRequests = this.userService.GetUserReceivedFriendRequests(userId),
-                SentRequests = this.userService.GetUserSentFriendRequests(userId),
+                ReceivedRequests = this.relationshipService.GetUserReceivedFriendRequests(userId),
+                SentRequests = this.relationshipService.GetUserSentFriendRequests(userId),
                 TeamInvites = this.teamService.GetTeamInvites(userId)
             };
 
@@ -117,11 +120,11 @@
             {
                 if (state == RelationshipState.Withdrawn)
                 {
-                    this.userService.ChangeRelationshipState(myUserId, userId, state);
+                    this.relationshipService.ChangeRelationshipState(myUserId, userId, state);
                 }
                 else
                 {
-                    this.userService.ChangeRelationshipState(userId, myUserId, state);
+                    this.relationshipService.ChangeRelationshipState(userId, myUserId, state);
                 }
 
                 return this.Redirect("/chats/me");

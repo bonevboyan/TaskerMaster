@@ -11,7 +11,7 @@
             this.UserTeams = new HashSet<UserTeam>();
             this.ChatUsers = new HashSet<ChatUser>();
             this.Messages = new HashSet<Message>();
-            this.Friendships = new HashSet<Friendship>();
+            this.Relationships = new HashSet<Relationship>();
             this.Chats = new HashSet<Chat>();
         }
 
@@ -25,6 +25,6 @@
 
         public ICollection<Chat> Chats { get; set; }
 
-        public ICollection<Friendship> Friendships { get; set; }
+        public ICollection<Relationship> Relationships { get; set; }
     }
 }

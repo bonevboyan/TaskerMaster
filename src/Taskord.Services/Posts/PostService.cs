@@ -7,6 +7,7 @@
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Posts.Models;
     using Taskord.Services.Users;
+    using Taskord.Services.Relationships;
     using Taskord.Services.Users.Models;
 
     using static Taskord.Common.ErrorMessages.Post;
@@ -14,17 +15,17 @@
     public class PostService : IPostService
     {
         private readonly TaskordDbContext data;
-        private readonly IUserService userService;
+        private readonly IRelationshipService relationshipService;
 
-        public PostService(TaskordDbContext data, IUserService userService)
+        public PostService(TaskordDbContext data, IRelationshipService relationshipService)
         {
             this.data = data;
-            this.userService = userService;
+            this.relationshipService = relationshipService;
         }
 
         public IEnumerable<PostServiceModel> All(string userId, string viewerId)
         {
-            if(this.userService.GetRelationshipState(userId, viewerId) != RelationshipState.Accepted)
+            if(this.relationshipService.GetRelationshipState(userId, viewerId) != RelationshipState.Accepted)
             {
                 throw new ArgumentException(UserNotPermittedToSeePosts);
             }

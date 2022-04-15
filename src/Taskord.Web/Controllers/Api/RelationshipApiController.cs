@@ -6,20 +6,20 @@
     using Microsoft.AspNetCore.Mvc;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
+    using Taskord.Services.Relationships;
     using Taskord.Services.Users;
     using Taskord.Web.Models.Api;
 
-    //[Route("api/me")]
     [ApiController]
-    public class PersonalApiController : ControllerBase
+    public class RelationshipApiController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IRelationshipService relationshipService;
         private readonly UserManager<User> userManager;
 
-        public PersonalApiController(IUserService userService, UserManager<User> userManager)
+        public RelationshipApiController(UserManager<User> userManager, IRelationshipService relationshipService)
         {
-            this.userService = userService;
             this.userManager = userManager;
+            this.relationshipService = relationshipService;
         }
 
         [Authorize]
@@ -31,7 +31,7 @@
 
             try
             {
-                this.userService.SendFriendRequest(myUserId, request.UserId);
+                this.relationshipService.SendFriendRequest(myUserId, request.UserId);
                 return this.Ok();
             }
             catch (ArgumentException ex)
@@ -49,7 +49,7 @@
 
             try
             {
-                this.userService.ChangeRelationshipState(response.UserId, myUserId,
+                this.relationshipService.ChangeRelationshipState(response.UserId, myUserId,
                     response.IsAccepted
                         ? RelationshipState.Accepted
                         : RelationshipState.Declined);
@@ -72,7 +72,7 @@
 
             try
             {
-                this.userService.ChangeRelationshipState(userId, withdraw.UserId, RelationshipState.Withdrawn);
+                this.relationshipService.ChangeRelationshipState(userId, withdraw.UserId, RelationshipState.Withdrawn);
 
                 return this.Ok();
             }
@@ -89,7 +89,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var count = this.userService.GetUserReceivedFriendRequests(userId).Count();
+            var count = this.relationshipService.GetUserReceivedFriendRequests(userId).Count();
 
             return count.ToString();
         }
@@ -101,7 +101,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            var count = this.userService.GetUserSentFriendRequests(userId).Count();
+            var count = this.relationshipService.GetUserSentFriendRequests(userId).Count();
 
             return count.ToString();
         }
