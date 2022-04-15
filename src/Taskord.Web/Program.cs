@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
 using Taskord.Data.Models;
@@ -30,16 +29,10 @@ builder.Services
         options.Password.RequireLowercase = false;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireUppercase = false;
-        options.SignIn.RequireConfirmedEmail = false;
         options.SignIn.RequireConfirmedAccount = false;
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TaskordDbContext>();
-
-builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
-});
 
 var app = builder.Build();
 
@@ -68,15 +61,15 @@ app.MapControllerRoute(
     pattern: "me/{action}/{userId?}",
     defaults: new { controller = "User" });
 
-//app.MapControllerRoute(
-//    name: "profile",
-//    pattern: "profile/{userId=me}",
-//    defaults: new { controller = "User", action = "Profile" });
+app.MapControllerRoute(
+    name: "profile",
+    pattern: "profile/{userId=me}",
+    defaults: new { controller = "User", action = "Profile" });
 
-//app.MapControllerRoute(
-//    name: "posts",
-//    pattern: "posts/{userId=me}",
-//    defaults: new { controller = "Posts", action = "All" });
+app.MapControllerRoute(
+    name: "posts",
+    pattern: "posts/{userId=me}",
+    defaults: new { controller = "Posts", action = "All" });
 
 app.MapControllerRoute(
     name: "chats",

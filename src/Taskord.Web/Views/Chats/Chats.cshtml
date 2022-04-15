@@ -53,7 +53,7 @@
                         {
                             <div class="@(message.IsOwn ? "chat-message-right" : "chat-message-left") pb-4">
                                 <div>
-                                    <img src="@message.Sender.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1 img-user-chat">
+                                    <img src="@message.Sender.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1" width="40" height="40">
 
                                     <div class="text-muted small text-nowrap mt-2">@message.DateTime</div>
                                 </div>
@@ -151,5 +151,5 @@
 }
 else
 {
-    <a asp-controller="User" asp-action="Requests" class="btn btn-primary btn-lg btn-block">No chats found! Check out your friend requests</a>
+    <a asp-controller="Personal" asp-action="Requests" class="btn btn-primary btn-lg btn-block">No chats found! Check out your friend requests</a>
 }

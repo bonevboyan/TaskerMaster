@@ -4,6 +4,7 @@
 
     public class FriendRequestPostModel
     {
+        [Required]
         public string UserId { get; set; }
     }
 }

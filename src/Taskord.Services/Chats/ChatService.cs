@@ -60,11 +60,6 @@
 
         public ChatServiceModel GetTeamChat(string userId, string teamId, string chatId)
         {
-            //if(this.teamService.IsUserInvited(userId, teamId) != RelationshipState.Accepted)
-            //{
-            //    throw new ArgumentException(UserNotInChat);
-            //}
-
             var chats = this.data.Chats
                     .Include(x => x.Messages)
                     .ThenInclude(x => x.User)
