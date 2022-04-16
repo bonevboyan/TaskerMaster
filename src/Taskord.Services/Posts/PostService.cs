@@ -25,7 +25,7 @@
 
         public IEnumerable<PostServiceModel> Own(string userId, string viewerId)
         {
-            if (userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId)?.State != RelationshipState.Accepted)
+            if(userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId)?.State != RelationshipState.Accepted)
             {
                 throw new ArgumentException(UserNotPermittedToSeePosts);
             }
@@ -37,7 +37,7 @@
 
         public IEnumerable<PostServiceModel> All()
         {
-            var allPosts = this.data.Posts
+            var friendsPosts = this.data.Posts
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new PostServiceModel
                 {
@@ -52,7 +52,7 @@
                     }
                 });
 
-            return allPosts;
+            return friendsPosts;
         }
 
         public PostServiceModel GetLatest(string userId)

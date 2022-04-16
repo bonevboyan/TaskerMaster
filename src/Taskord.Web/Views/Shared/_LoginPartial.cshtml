@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Taskord.Data.Models
-
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
@@ -12,7 +11,6 @@
         if (userIsAdmin)
         {
             <li class="nav-item">
-                @*<a class="nav-link text-light" asp-area="Admin" asp-controller="Posts" asp-action="All">Manage Posts</a>*@
                 <a class="nav-link text-light" href="/admin/posts/all">Manage Posts</a>
             </li>
         }
