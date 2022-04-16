@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 text-white">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-info border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Taskord</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -24,7 +24,7 @@
                         {
                             <li class="nav-item">
                                 <div class="dropdown">
-                                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Teams
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -35,33 +35,33 @@
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="Chats" asp-action="Get" asp-route-teamId="me" class="nav-link text-dark">Personal Chats</a>
+                                <a asp-controller="Chats" asp-action="Get" asp-route-teamId="me" class="nav-link text-light">Personal Chats</a>
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="User" asp-action="Search" class="nav-link text-dark">Search</a>
+                                <a asp-controller="User" asp-action="Search" class="nav-link text-light">Search</a>
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="User" asp-action="Requests" class="nav-link text-dark">Requests</a>
+                                <a asp-controller="User" asp-action="Requests" class="nav-link text-light">Requests</a>
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="User" asp-action="Profile" asp-route-userId="me" class="nav-link text-dark">Profile</a>
+                                <a asp-controller="User" asp-action="Profile" asp-route-userId="me" class="nav-link text-light">Profile</a>
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="Posts" asp-action="All" asp-route-userId="me" class="nav-link text-dark">All Posts</a>
+                                <a asp-controller="Posts" asp-action="All" asp-route-userId="me" class="nav-link text-light">All Posts</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="About">About</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contacts">Contacts</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Contacts">Contacts</a>
                             </li>
                         }
                     </ul>

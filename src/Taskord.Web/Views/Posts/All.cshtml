@@ -1,6 +1,11 @@
 ﻿@using Taskord.Services.Posts.Models
 @model IEnumerable<PostServiceModel>
 
+@{
+    ViewData["Title"] = "All Posts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="tab-content profile-tabs-content">
     <div class="tab-pane active" id="profile-overview" role="tabpanel">
         <div class="stream-posts">

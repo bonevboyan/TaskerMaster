@@ -1,6 +1,11 @@
 ﻿@using Taskord.Services.Users.Models
 @model ManageChatViewModel
 
+@{
+    ViewData["Title"] = "Manage Chat Members";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <partial name="_TeamPartial" model="Model.Team" />
 
 <h2 class="text-center">Manage Chat Participants in @Model.ChatName</h2>

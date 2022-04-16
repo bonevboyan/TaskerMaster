@@ -2,6 +2,11 @@
 @using Taskord.Services.Users.Models
 @model ManageTeamRolesViewModel
 
+@{
+    ViewData["Title"] = "Manage Team Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <partial name="_TeamPartial" model="Model.Team" />
 
 <h2 class="text-center">Manage Member Roles in @Model.Team.Name</h2>

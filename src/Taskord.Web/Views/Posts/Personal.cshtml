@@ -1,5 +1,10 @@
 ﻿@model PersonalPostsViewModel
 
+@{
+    ViewData["Title"] = "Personal Posts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 <div class="tab-content profile-tabs-content">
     <div class="tab-pane active" id="profile-overview" role="tabpanel">
         @if (Model.IsOwn)

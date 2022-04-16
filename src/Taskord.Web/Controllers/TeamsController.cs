@@ -51,7 +51,7 @@ namespace Taskord.Web.Controllers
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!this.teamService.IsAdmin(userId, invitation.TeamId))
+            if (!this.teamService.IsAdmin(userId, teamId))
             {
                 return this.Unauthorized();
             }
