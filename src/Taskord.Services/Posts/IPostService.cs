@@ -8,6 +8,8 @@
 
         IEnumerable<PostServiceModel> All(string userId, string viewerId);
 
+        IEnumerable<PostServiceModel> AllFriendsPosts(string userId);
+
         PostServiceModel GetLatest(string userId);
     }
 }

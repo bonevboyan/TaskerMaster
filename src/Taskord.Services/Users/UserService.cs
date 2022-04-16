@@ -29,13 +29,12 @@
             this.relationshipService = relationshipService;
         }
 
-
         public IEnumerable<UserTeamChatManageListServiceModel> GetTeamChatMembersList(string userId, string teamId, string chatId)
         {
             var teamMembers = this.data.UserTeams
                 .Include(x => x.User)
                 .Include(x => x.Team)
-                .Where(x => x.TeamId == teamId)
+                .Where(x => x.TeamId == teamId && x.State == RelationshipState.Accepted)
                 .ToList();
 
             if (!teamMembers.Any())
@@ -123,6 +122,7 @@
             sentFriends.AddRange(receivedFriends);
 
             var allFriends = sentFriends
+                .Where(x => this.teamService.IsUserInvited(x.Id, teamId) != RelationshipState.Accepted)
                 .Select(x => new UserInviteListServiceModel
                 {
                     ImagePath = x.ImagePath,
@@ -176,7 +176,7 @@
             var teamMembers = this.data.UserTeams
                 .Include(x => x.User)
                 .Include(x => x.Team)
-                .Where(x => x.TeamId == teamId)
+                .Where(x => x.TeamId == teamId && x.State == RelationshipState.Accepted)
                 .ToList();
 
             if (!teamMembers.Any())

@@ -35,6 +35,25 @@
             return posts;
         }
 
+        public IEnumerable<PostServiceModel> AllFriendsPosts(string userId)
+        {
+            var friendsPosts = this.data.Posts
+                .OrderByDescending(x => x.CreatedOn)
+                .Select(x => new PostServiceModel
+                {
+                    DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
+                    Content = x.Content,
+                    User = new UserListServiceModel
+                    {
+                        Id = x.User.Id,
+                        ImagePath = x.User.ImagePath,
+                        Name = x.User.UserName,
+                    }
+                });
+
+            return friendsPosts;
+        }
+
         public PostServiceModel GetLatest(string userId)
         {
             var post = this.GetAll(userId)?.FirstOrDefault();

@@ -47,7 +47,11 @@
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="Teams" asp-action="Create" class="nav-link text-dark">Create Team</a>
+                                <a asp-controller="User" asp-action="Profile" asp-route-userId="me" class="nav-link text-dark">Profile</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a asp-controller="Posts" asp-action="All" asp-route-userId="me" class="nav-link text-dark">All Posts</a>
                             </li>
                         }
                         else

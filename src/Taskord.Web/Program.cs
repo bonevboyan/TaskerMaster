@@ -67,8 +67,8 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "posts",
-    pattern: "posts/{userId=me}",
-    defaults: new { controller = "Posts", action = "All" });
+    pattern: "posts/{action=Personal}/{userId?}",
+    defaults: new { controller = "Posts"});
 
 app.MapControllerRoute(
     name: "chats",

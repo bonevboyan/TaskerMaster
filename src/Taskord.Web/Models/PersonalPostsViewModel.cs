@@ -3,7 +3,7 @@
     using Taskord.Services.Posts.Models;
     using Taskord.Services.Users.Models;
 
-    public class AllPostsViewModel
+    public class PersonalPostsViewModel
     {
         public bool IsOwn { get; set; }
 

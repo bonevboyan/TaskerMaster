@@ -23,7 +23,7 @@
             this.userService = userService;
         }
 
-        public IActionResult All(string userId)
+        public IActionResult Personal(string userId)
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
@@ -36,7 +36,7 @@
             {
                 var posts = this.postService.All(userId, myUserId);
 
-                var postsModel = new AllPostsViewModel
+                var postsModel = new PersonalPostsViewModel
                 {
                     Posts = posts,
                     IsOwn = myUserId == userId,
@@ -46,6 +46,22 @@
                 return this.View(postsModel);
             }
             catch(ArgumentException ex)
+            {
+                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+            }
+        }
+
+        public IActionResult All()
+        {
+            var myUserId = this.userManager.GetUserId(this.User);
+
+            try
+            {
+                var posts = this.postService.AllFriendsPosts(myUserId);
+
+                return this.View(posts);
+            }
+            catch (ArgumentException ex)
             {
                 return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
             }

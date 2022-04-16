@@ -270,7 +270,7 @@
         {
             var userTeam = this.data.UserTeams.FirstOrDefault(x => x.UserId == userId && x.TeamId == teamId);
 
-            if(userTeam is null)
+            if(userTeam is null || userTeam.State != RelationshipState.Accepted)
             {
                 throw new ArgumentException(UserNotInTeam);
             }
