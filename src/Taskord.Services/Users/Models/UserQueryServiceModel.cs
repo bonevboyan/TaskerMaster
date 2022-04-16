@@ -1,5 +1,7 @@
 ﻿namespace Taskord.Services.Users.Models
 {
+    using System.Collections.Generic;
+
     public class UserQueryServiceModel
     {
         public int UsersPerPage { get; set; }

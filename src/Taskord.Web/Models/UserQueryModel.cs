@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Web.Models
 {
+    using System.Collections.Generic;
     using Taskord.Services.Users.Models;
 
     public class UserQueryModel

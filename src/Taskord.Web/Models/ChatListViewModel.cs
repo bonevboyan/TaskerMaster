@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Web.Models
 {
+    using System.Collections.Generic;
     using Taskord.Services.Chats.Models;
 
     public class ChatListViewModel

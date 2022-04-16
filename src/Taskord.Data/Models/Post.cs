@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Data.Models
 {
+    using System.Collections.Generic;
     using Taskord.Data.Common;
 
     public class Post : BaseModel

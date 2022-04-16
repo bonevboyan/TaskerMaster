@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Web.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Taskord.Services.Users.Models;
     using static Taskord.Common.DataConstants.Chat;

@@ -6,11 +6,12 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Posts.Models;
-    using Taskord.Services.Users;
     using Taskord.Services.Relationships;
     using Taskord.Services.Users.Models;
 
     using static Taskord.Common.ErrorMessages.Post;
+    using System.Linq;
+    using System;
 
     public class PostService : IPostService
     {

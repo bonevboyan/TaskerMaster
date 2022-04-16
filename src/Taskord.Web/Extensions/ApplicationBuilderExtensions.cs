@@ -1,6 +1,10 @@
 ﻿namespace Taskord.Web.Extensions
 {
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+    using System;
+    using System.Threading.Tasks;
     using Taskord.Data.Models;
 
     using static Taskord.Web.Areas.Admin.AdminConstants;

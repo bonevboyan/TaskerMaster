@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Posts
 {
+    using System.Collections.Generic;
     using Taskord.Services.Posts.Models;
 
     public interface IPostService

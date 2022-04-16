@@ -1,11 +1,13 @@
 ﻿namespace Taskod.Tests
 {
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Taskord.Web;
 
     public class TestStartup : Startup
     {
-        public TestStartup(IHostingEnvironment hostingEnvironment)
-            : base(hostingEnvironment)
+        public TestStartup(IConfiguration configuration)
+            : base(configuration)
         {
         }
     }

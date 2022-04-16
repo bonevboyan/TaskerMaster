@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Statistics
 {
+    using System.Linq;
     using Taskord.Data;
     using Taskord.Services.Statistics.Models;
 

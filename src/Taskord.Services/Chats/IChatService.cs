@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Chats
 {
+    using System.Collections.Generic;
     using Taskord.Services.Chats.Models;
 
     public interface IChatService

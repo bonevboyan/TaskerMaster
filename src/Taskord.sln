@@ -14,14 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskord.Services", "Taskord
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskord.Common", "Taskord.Common\Taskord.Common.csproj", "{B89DABBB-0354-4FD2-91EF-7055223AD306}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskord.Tests", "Taskord.Tests\Taskord.Tests.csproj", "{A270F49A-7ABE-4435-924D-87DD4BF646E0}"
-	ProjectSection(ProjectDependencies) = postProject
-		{660B36A3-4278-4472-8E0C-487F826B80B0} = {660B36A3-4278-4472-8E0C-487F826B80B0}
-		{B89DABBB-0354-4FD2-91EF-7055223AD306} = {B89DABBB-0354-4FD2-91EF-7055223AD306}
-		{545E1DCB-6215-422C-AEBA-58341E92DD38} = {545E1DCB-6215-422C-AEBA-58341E92DD38}
-		{0451EEED-F414-40FD-9BC8-004E2D218212} = {0451EEED-F414-40FD-9BC8-004E2D218212}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,10 +36,6 @@ Global
 		{B89DABBB-0354-4FD2-91EF-7055223AD306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B89DABBB-0354-4FD2-91EF-7055223AD306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B89DABBB-0354-4FD2-91EF-7055223AD306}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A270F49A-7ABE-4435-924D-87DD4BF646E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A270F49A-7ABE-4435-924D-87DD4BF646E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A270F49A-7ABE-4435-924D-87DD4BF646E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A270F49A-7ABE-4435-924D-87DD4BF646E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

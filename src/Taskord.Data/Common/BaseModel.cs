@@ -1,5 +1,7 @@
 ﻿namespace Taskord.Data.Common
 {
+    using System;
+
     public abstract class BaseModel
     {
         public BaseModel()

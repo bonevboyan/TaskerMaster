@@ -3,16 +3,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using Taskord.Data;
-    using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats;
-    using Taskord.Services.Posts;
     using Taskord.Services.Users.Models;
     using Microsoft.EntityFrameworkCore;
 
     using static Taskord.Common.ErrorMessages.User;
     using Taskord.Services.Teams;
     using Taskord.Services.Relationships;
+    using System;
 
     public class UserService : IUserService
     {

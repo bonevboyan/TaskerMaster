@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Chats.Models
 {
+    using System.Collections.Generic;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Users.Models;
 

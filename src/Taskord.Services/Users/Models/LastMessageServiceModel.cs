@@ -1,5 +1,6 @@
 ﻿namespace Taskord.Services.Users.Models
 {
+    using System;
     using Taskord.Data.Models;
 
     internal class LastMessageServiceModel
