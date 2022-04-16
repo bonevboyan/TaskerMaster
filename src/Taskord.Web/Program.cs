@@ -20,7 +20,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
 //    .AddEntityFrameworkStores<TaskordDbContext>();
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITeamService, TeamService>();
 builder.Services.AddTransient<IChatService, ChatService>();
@@ -40,6 +40,8 @@ builder.Services
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<TaskordDbContext>();
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

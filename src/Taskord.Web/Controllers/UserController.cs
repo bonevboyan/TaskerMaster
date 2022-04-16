@@ -49,7 +49,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
 
         }
@@ -79,7 +79,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
 
 
@@ -141,7 +141,7 @@
             }
             catch(ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
         }
 
@@ -164,7 +164,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
         }
     }

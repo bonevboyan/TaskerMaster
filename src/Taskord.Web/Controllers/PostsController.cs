@@ -27,7 +27,7 @@
         {
             var myUserId = this.userManager.GetUserId(this.User);
 
-            if(userId == "me")
+            if (userId == "me")
             {
                 userId = myUserId;
             }
@@ -45,9 +45,9 @@
 
                 return this.View(postsModel);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
         }
 
@@ -61,7 +61,7 @@
             }
             catch (ArgumentException ex)
             {
-                return this.StatusCode((int)HttpStatusCode.BadRequest, ex.Message);
+                return this.View("Error", ex.Message);
             }
         }
     }
