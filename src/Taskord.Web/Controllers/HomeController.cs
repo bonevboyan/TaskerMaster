@@ -42,5 +42,10 @@
 
             return this.View(stats);
         }
+
+        public IActionResult About()
+        {
+            return this.View();
+        }
     }
 }
