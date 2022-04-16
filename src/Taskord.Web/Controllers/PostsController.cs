@@ -34,7 +34,7 @@
 
             try
             {
-                var posts = this.postService.All(userId, myUserId);
+                var posts = this.postService.Own(userId, myUserId);
 
                 var postsModel = new PersonalPostsViewModel
                 {
@@ -53,11 +53,9 @@
 
         public IActionResult All()
         {
-            var myUserId = this.userManager.GetUserId(this.User);
-
             try
             {
-                var posts = this.postService.AllFriendsPosts(myUserId);
+                var posts = this.postService.All();
 
                 return this.View(posts);
             }

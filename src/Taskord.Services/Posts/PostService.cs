@@ -23,9 +23,9 @@
             this.relationshipService = relationshipService;
         }
 
-        public IEnumerable<PostServiceModel> All(string userId, string viewerId)
+        public IEnumerable<PostServiceModel> Own(string userId, string viewerId)
         {
-            if(userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId)?.State != RelationshipState.Accepted)
+            if (userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId)?.State != RelationshipState.Accepted)
             {
                 throw new ArgumentException(UserNotPermittedToSeePosts);
             }
@@ -35,12 +35,13 @@
             return posts;
         }
 
-        public IEnumerable<PostServiceModel> AllFriendsPosts(string userId)
+        public IEnumerable<PostServiceModel> All()
         {
-            var friendsPosts = this.data.Posts
+            var allPosts = this.data.Posts
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new PostServiceModel
                 {
+                    Id = x.Id,
                     DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
                     Content = x.Content,
                     User = new UserListServiceModel
@@ -51,7 +52,7 @@
                     }
                 });
 
-            return friendsPosts;
+            return allPosts;
         }
 
         public PostServiceModel GetLatest(string userId)
@@ -83,6 +84,7 @@
                 .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new PostServiceModel
                 {
+                    Id = x.Id,
                     DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
                     Content = x.Content,
                     User = new UserListServiceModel
@@ -94,6 +96,19 @@
                 });
 
             return posts;
+        }
+
+        public void Delete(string postId)
+        {
+            var post = this.data.Posts.FirstOrDefault(x => x.Id == postId);
+
+            if (post is null)
+            {
+                throw new ArgumentException(CantDeletePost);
+            }
+
+            this.data.Posts.Remove(post);
+            this.data.SaveChanges();
         }
     }
 }

@@ -6,10 +6,12 @@
     {
         string Post(string userId, string content);
 
-        IEnumerable<PostServiceModel> All(string userId, string viewerId);
+        IEnumerable<PostServiceModel> Own(string userId, string viewerId);
 
-        IEnumerable<PostServiceModel> AllFriendsPosts(string userId);
+        IEnumerable<PostServiceModel> All();
 
         PostServiceModel GetLatest(string userId);
+
+        void Delete(string postId);
     }
 }

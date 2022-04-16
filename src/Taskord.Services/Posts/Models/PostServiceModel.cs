@@ -6,6 +6,8 @@
     {
         public UserListServiceModel User { get; set; }
 
+        public string Id { get; set; }
+
         public string Content { get; set; }
 
         public string DateTime { get; set; }

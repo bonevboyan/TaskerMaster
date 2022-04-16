@@ -384,6 +384,7 @@ body.menubar-top .profile-wrapper {
 }
 
 .sp-content {
+    margin-bottom: 7px;
     position: relative;
     border-radius: .25rem;
     background: #fff;

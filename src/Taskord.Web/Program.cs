@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Taskord.Data;
 using Taskord.Data.Models;
@@ -8,6 +9,7 @@ using Taskord.Services.Relationships;
 using Taskord.Services.Statistics;
 using Taskord.Services.Teams;
 using Taskord.Services.Users;
+using Taskord.Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,6 @@ builder.Services.AddDbContext<TaskordDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<TaskordDbContext>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<ITeamService, TeamService>();
@@ -27,6 +27,13 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IRelationshipService, RelationshipService>();
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
+
+builder.Services.AddMemoryCache();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+});
 
 builder.Services
     .AddDefaultIdentity<User>(options =>
@@ -42,15 +49,17 @@ builder.Services
 
 var app = builder.Build();
 
+app.PrepareDatabase();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -70,7 +79,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "posts",
     pattern: "posts/{action=Personal}/{userId?}",
-    defaults: new { controller = "Posts"});
+    defaults: new { controller = "Posts" });
 
 app.MapControllerRoute(
     name: "chats",
@@ -80,12 +89,16 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "teams",
     pattern: "teams/{teamId}/{action}/{id?}",
-    defaults: new { controller = "Teams"});
+    defaults: new { controller = "Teams" });
 
 app.MapControllerRoute(
     name: "schedule",
     pattern: "schedule/{teamId}/{action=Board}",
-    defaults: new { controller = "Schedules"});
+    defaults: new { controller = "Schedules" });
+
+app.MapControllerRoute(
+    name: "Areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

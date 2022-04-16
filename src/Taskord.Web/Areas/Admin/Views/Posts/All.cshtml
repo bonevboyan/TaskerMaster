@@ -2,7 +2,7 @@
 @model IEnumerable<PostServiceModel>
 
 @{
-    ViewData["Title"] = "All Posts";
+    ViewData["Title"] = "Manage All Posts";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -21,7 +21,7 @@
                 {
                     <div class="stream-post">
                         <div class="sp-author">
-                            <a asp-controller="User" asp-action="Profile" asp-route-userId="@post.User.Id" class="sp-author-avatar">
+                            <a asp-area="" asp-controller="User" asp-action="Profile" asp-route-userId="@post.User.Id" class="sp-author-avatar">
                                 <img src="@post.User.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                             </a>
                             <h6 class="sp-author-name"><a href="#">@post.User.Name</a></h6>
@@ -30,6 +30,7 @@
                             <div class="sp-info">@post.DateTime</div>
                             <p class="sp-paragraph mb-0">@post.Content</p>
                         </div>
+                        <a href="/Admin/Posts/Delete/@post.Id" class="btn btn-danger">Delete Post</a>
                     </div>
 
                 }

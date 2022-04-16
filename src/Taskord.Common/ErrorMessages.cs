@@ -43,6 +43,8 @@
         public class Post
         {
             public const string UserNotPermittedToSeePosts = "You can't see this user's posts because you two aren't friends.";
+
+            public const string CantDeletePost = "You can't delete an inexsitent post!";
         }
 
         public class Relationship
