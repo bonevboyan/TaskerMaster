@@ -1,1 +1,80 @@
-﻿
+﻿@model AllPostsViewModel
+
+<div class="tab-content profile-tabs-content">
+    <div class="tab-pane active" id="profile-overview" role="tabpanel">
+        @if (Model.IsOwn)
+        {
+            <div class="post-editor">
+                <textarea name="post-field" id="post-field" class="post-field" placeholder="Write Something Cool!"></textarea>
+                <div class="d-flex">
+                    <button id="postBtn" class="btn btn-success px-4 py-1">Post</button>
+                </div>
+            </div>
+        }
+
+        <!-- /.post-editor -->
+        <div class="stream-posts">
+            @if (Model.Posts.Count() == 0)
+            {
+                <div class="sp-content">
+                    <p class="sp-paragraph mb-0">This user has no posts yet!</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var post in Model.Posts)
+                {
+
+                    <!-- /.stream-post -->
+                    <div class="stream-post">
+                        <div class="sp-author">
+                            <a asp-controller="User" asp-action="Profile" asp-route-userId="@Model.User.Id" class="sp-author-avatar">
+                                <img src="@Model.User.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
+                            </a>
+                            <h6 class="sp-author-name"><a href="#">@Model.User.Name</a></h6>
+                        </div>
+                        <div class="sp-content">
+                            <div class="sp-info">@post.DateTime</div>
+                            <p class="sp-paragraph mb-0">@post.Content</p>
+                        </div>
+                        <!-- /.sp-content -->
+                    </div>
+
+                }
+            }
+
+
+
+
+            <!-- /.stream-post -->
+        </div>
+        <!-- /.stream-posts -->
+    </div>
+</div>
+<!-- /.tab-content -->
+@section Scripts{
+<script>
+
+    document.getElementById('postBtn').addEventListener('click', e => {
+        let text = document.getElementById('post-field').value;
+        createPost(text);
+    });
+
+    async function createPost(value) {
+        if (value == '') {
+            return;
+        }
+
+        const response = await fetch('/api/posts/create', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Content: value })
+        });
+
+        if (response.ok) {
+            //location.reload();
+        }
+    }
+
+</script>
+}

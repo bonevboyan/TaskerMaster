@@ -10,9 +10,7 @@
             <div class="card mb-3">
                 <img class="card-img-top img-user-card" src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                 <div class="card-body text-center">
-                    <h5 class="card-title text-center">
-                        <a asp-controller="User" asp-action="Profile" asp-route-userId="@user.Id" class="profile">@user.Name</a>
-                    </h5>
+                    <partial name="_UserProfileLinkPartial" model="user" />
                     <a id="@user.Id" class="btn btn-success acceptFriendBtn">Accept</a>
                     <a id="@user.Id" class="btn btn-danger declineFriendBtn">Decline</a>
                 </div>
@@ -31,9 +29,7 @@
             <div class="card mb-3">
                 <img class="card-img-top img-user-card" src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                 <div class="card-body text-center">
-                    <h5 class="card-title text-center">
-                        <a asp-controller="User" asp-action="Profile" asp-route-userId="@user.Id" class="profile">@user.Name</a>
-                    </h5>
+                    <partial name="_UserProfileLinkPartial" model="user" />
                     <a id="@user.Id" class="btn btn-secondary withdrawFriendBtn">Withdraw</a>
                 </div>
             </div>
@@ -52,9 +48,7 @@
                 <img class="card-img-top img-user-card" src="@invite.Team.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">Team Name: @invite.Team.Name</h5>
-                    <h5 class="card-title text-center">
-                        <a asp-controller="User" asp-action="Profile" asp-route-userId="@invite.Sender.Id" class="profile">@invite.Sender.Name</a>
-                    </h5>
+                    <partial name="_UserProfileLinkPartial" model="invite.Sender" />
                     <a id="@invite.Id" class="btn btn-success acceptTeamInviteBtn">Accept</a>
                     <a id="@invite.Id" class="btn btn-danger declineTeamInviteBtn">Decline</a>
                 </div>

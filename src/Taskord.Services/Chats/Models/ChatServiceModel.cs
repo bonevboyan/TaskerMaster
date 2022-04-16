@@ -1,6 +1,7 @@
 ﻿namespace Taskord.Services.Chats.Models
 {
     using Taskord.Data.Models.Enums;
+    using Taskord.Services.Users.Models;
 
     public class ChatServiceModel
     {
@@ -16,7 +17,7 @@
 
         public string TeamId { get; set; }
 
-        public IEnumerable<ChatMemberServiceModel> Members { get; set; }
+        public IEnumerable<UserListServiceModel> Members { get; set; }
 
         public IEnumerable<ChatMessageServiceModel> Messages { get; set; }
     }

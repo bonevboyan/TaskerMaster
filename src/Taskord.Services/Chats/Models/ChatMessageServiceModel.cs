@@ -1,5 +1,7 @@
 ﻿namespace Taskord.Services.Chats.Models
 {
+    using Taskord.Services.Users.Models;
+
     public class ChatMessageServiceModel
     {
         public string Id { get; set; }
@@ -10,6 +12,6 @@
 
         public bool IsOwn { get; set; }
 
-        public ChatMemberServiceModel Sender { get; set; }
+        public UserListServiceModel Sender { get; set; }
     }
 }

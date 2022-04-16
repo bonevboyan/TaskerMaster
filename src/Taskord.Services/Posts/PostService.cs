@@ -25,7 +25,7 @@
 
         public IEnumerable<PostServiceModel> All(string userId, string viewerId)
         {
-            if(userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId).State != RelationshipState.Accepted)
+            if(userId != viewerId && this.relationshipService.GetRelationship(userId, viewerId)?.State != RelationshipState.Accepted)
             {
                 throw new ArgumentException(UserNotPermittedToSeePosts);
             }

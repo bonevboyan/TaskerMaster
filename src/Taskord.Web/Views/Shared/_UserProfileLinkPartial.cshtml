@@ -1,0 +1,6 @@
+﻿@using Taskord.Services.Users.Models
+@model UserListServiceModel
+
+<h6 class="card-title text-center">
+    <a asp-controller="User" asp-action="Profile" asp-route-userId="@Model.Id" class="profile">@Model.Name</a>
+</h6>

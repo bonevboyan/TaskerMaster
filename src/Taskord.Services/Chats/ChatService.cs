@@ -8,6 +8,7 @@
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Chats.Models;
     using Taskord.Services.Teams;
+    using Taskord.Services.Users.Models;
     using static Taskord.Common.ErrorMessages.Chat;
 
     public class ChatService : IChatService
@@ -260,10 +261,10 @@
                 Content = message.Content,
                 DateTime = message.CreatedOn.ToString("MM/dd HH:mm"),
                 IsOwn = message.UserId == userId,
-                Sender = new ChatMemberServiceModel
+                Sender = new UserListServiceModel
                 {
                     ImagePath = message.User.ImagePath,
-                    Username = message.User.UserName
+                    Name = message.User.UserName
                 }
             };
         }
@@ -290,17 +291,19 @@
                         Content = x.Content,
                         DateTime = x.CreatedOn.ToString("MM/dd HH:mm"),
                         IsOwn = x.UserId == userId,
-                        Sender = new ChatMemberServiceModel
+                        Sender = new UserListServiceModel
                         {
                             ImagePath = x.User.ImagePath,
-                            Username = x.User.UserName
+                            Name = x.User.UserName,
+                            Id = x.User.Id
                         }
                     }).ToList(),
                 Members = chat.Users
-                    .Select(x => new ChatMemberServiceModel
+                    .Select(x => new UserListServiceModel
                     {
                         ImagePath = x.ImagePath,
-                        Username = x.UserName
+                        Name = x.UserName,
+                        Id = x.Id
                     }).ToList(),
             };
 

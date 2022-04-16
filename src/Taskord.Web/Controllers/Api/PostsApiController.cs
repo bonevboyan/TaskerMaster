@@ -21,7 +21,7 @@
         }
 
         [HttpPost]
-        [Route("posts/create")]
+        [Route("api/posts/create")]
         public IActionResult Post(CreatePostApiModel post)
         {
             var userId = this.userManager.GetUserId(this.User);

@@ -11,7 +11,7 @@
 user.IsSelected ? " selected-chat": string.Empty)">
             @*<div class="badge bg-success float-right">5</div>*@
             <div class="d-flex align-items-start">
-                @*<img src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1" alt="@user.Name" width="40" height="40">*@
+                <img src="@user.ImagePath" onerror="this.onerror=null; this.src='https://freepikpsd.com/file/2019/10/default-profile-picture-png-1-Transparent-Images.png'" class="rounded-circle mr-1" alt="@user.Name" width="40" height="40">
                 <div class="flex-grow-1 ml-3">
                     @if (user.IsRead)
                     {

@@ -16,5 +16,7 @@
         UserQueryServiceModel GetQueryUsers(string userId, string searchTerm, int currentPage, int usersPerPage);
 
         UserProfileServiceModel GetUserProfile(string userId);
+
+        UserListServiceModel GetUserListModel(string userId);
     }
 }

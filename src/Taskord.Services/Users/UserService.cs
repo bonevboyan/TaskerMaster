@@ -224,5 +224,26 @@
 
             return profile;
         }
+
+        public UserListServiceModel GetUserListModel(string userId)
+        {
+            var user = this.data.Users
+                .Include(x => x.Posts)
+                .FirstOrDefault(x => x.Id == userId);
+
+            if (user is null)
+            {
+                throw new ArgumentException(InvalidUserId);
+            }
+
+            var profile = new UserListServiceModel
+            {
+                Name = user.UserName,
+                ImagePath = user.ImagePath,
+                Id = userId
+            };
+
+            return profile;
+        }
     }
 }

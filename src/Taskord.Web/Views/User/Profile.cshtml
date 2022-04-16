@@ -15,16 +15,18 @@
                         @if (Model.Post is null)
                         {
                             <p class="mt-2 card-text font-italic">No posts yet</p>
-                            @if (Model.IsOwn)
-                            {
-                                <a asp-controller="Posts" asp-action="All" asp-route-userId="@Model.User.Id" class="btn btn-secondary" class="btn btn-info btn-sm mt-3 mb-4">Post something</a>
-                            }
                         }
                         else
                         {
-                            <p class="mt-2 card-text font-italic">Latest post (@Model.Post.DateTime):</p>
+                            <p class="mt-2 card-text fst-italic">Latest post (@Model.Post.DateTime):</p>
                             <p class="mt-2 card-text"> @Model.Post.Content </p>
                         }
+
+                        @if (Model.IsOwn)
+                        {
+                            <a asp-controller="Posts" asp-action="All" asp-route-userId="@Model.User.Id" class="btn btn-secondary" class="btn btn-info btn-sm mt-3 mb-4">Post something</a>
+                        }
+
                         @if (Model.Relationship != null)
                         {
                             @if (Model.Relationship.State == RelationshipState.Accepted)
