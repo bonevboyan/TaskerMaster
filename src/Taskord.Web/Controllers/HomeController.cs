@@ -1,13 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Taskord.Web.Models;
-
-namespace Taskord.Web.Controllers
+﻿namespace Taskord.Web.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Memory;
+    using System.Diagnostics;
+    using Taskord.Services.Statistics;
+    using Taskord.Services.Statistics.Models;
+    using Taskord.Web.Models;
+
+    using static WebConstants.Cache;
+
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly IStatisticsService statisticsService;
+        private readonly IMemoryCache cache;
+
+        public HomeController(IStatisticsService statisticsService, IMemoryCache cache)
         {
+            this.statisticsService = statisticsService;
+            this.cache = cache;
         }
 
         public IActionResult Index()
@@ -17,7 +27,20 @@ namespace Taskord.Web.Controllers
                 return this.Redirect("/chats/me");
             }
 
-            return this.View();
+            var stats = this.cache.Get<StatisticsServiceModel>(AppUsageStatistics);
+
+            if(stats is null)
+            {
+                stats = this.statisticsService.Total();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(2));
+
+                this.cache.Set(AppUsageStatistics, stats, cacheOptions);
+            }
+
+
+            return this.View(stats);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -475,3 +475,13 @@ body.menubar-top .profile-wrapper {
         right: 32px;
         bottom: 32px
     }
+
+.infoText {
+    max-width: 70%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.jumbotron {
+    margin-bottom: 20px;
+}

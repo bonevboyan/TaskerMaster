@@ -1,8 +1,36 @@
-﻿@{
+﻿@using Taskord.Services.Statistics.Models
+@model StatisticsServiceModel
+
+@{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome to Taskord!</h1>
+
+    <hr />
+
+    <p class="infoText">
+        Taskord is a social media app which provides you the opportunity to chat with your best friends thoough personal chats or by creating teams with multiple group chats.
+        Along with that, you can post your thoughts on your wall for other users to see.
+    </p>
+
+    <hr />
+    <div class="jumbotron" id="statistics">
+        <div class="row">
+            <h2 class="col-md-4 text-center" id="total-posts">Total Posts: @Model.TotalPosts</h2>
+            <h2 class="col-md-4 text-center" id="total-users">Total Users: @Model.TotalUsers</h2>
+            <h2 class="col-md-4 text-center" id="total-teams">Total Teams: @Model.TotalTeams</h2>
+        </div>
+    </div>
+
+    <hr />
+    <p>
+        <a class="btn-info btn" href="/Identity/Account/Register">Register as a new user</a>
+    </p>
+
+    <p>
+        <a class="btn-info btn" href="/Identity/Account/Login">Login</a>
+    </p>
 </div>

@@ -5,6 +5,7 @@ using Taskord.Data.Models;
 using Taskord.Services.Chats;
 using Taskord.Services.Posts;
 using Taskord.Services.Relationships;
+using Taskord.Services.Statistics;
 using Taskord.Services.Teams;
 using Taskord.Services.Users;
 
@@ -25,6 +26,7 @@ builder.Services.AddTransient<IChatService, ChatService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IRelationshipService, RelationshipService>();
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 
 builder.Services
     .AddDefaultIdentity<User>(options =>
