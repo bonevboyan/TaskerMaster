@@ -8,7 +8,6 @@
         public Post()
             :base()
         {
-            this.Likes = new HashSet<Like>();
         }
 
         public string UserId { get; set; }
@@ -16,7 +15,5 @@
         public User User { get; set; }
 
         public string Content { get; set; }
-
-        public ICollection<Like> Likes { get; set; }
     }
 }

@@ -11,6 +11,7 @@
 
     [Authorize]
     [ApiController]
+    [IgnoreAntiforgeryToken]
     public class ChatsApiController : ControllerBase
     {
         private readonly IChatService chatService;

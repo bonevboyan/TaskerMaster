@@ -13,6 +13,7 @@
     using Taskord.Web.Models.Api;
 
     [ApiController]
+    [IgnoreAntiforgeryToken]
     public class RelationshipApiController : ControllerBase
     {
         private readonly IRelationshipService relationshipService;

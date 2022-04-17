@@ -112,7 +112,8 @@
                 {
                     InviterId = senderId,
                     UserId = receiverId,
-                    TeamId = teamId
+                    TeamId = teamId,
+                    State = RelationshipState.Pending
                 };
 
                 this.data.UserTeams.Add(invite);

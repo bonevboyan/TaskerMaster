@@ -9,8 +9,8 @@
     using Taskord.Services.Teams;
     using Taskord.Web.Models.Api;
 
-    //[Route("api/teams/[action]")]
     [ApiController]
+    [IgnoreAntiforgeryToken]
     public class TeamsApiController : ControllerBase
     {
         private readonly ITeamService teamService;

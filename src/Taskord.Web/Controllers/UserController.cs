@@ -18,72 +18,22 @@
     public class UserController : Controller
     {
         private readonly IUserService userService;
-        private readonly IChatService chatService;
         private readonly IRelationshipService relationshipService;
         private readonly ITeamService teamService;
         private readonly IPostService postService;
         private readonly UserManager<User> userManager;
 
         public UserController(IUserService userService, 
-            UserManager<User> userManager, 
-            IChatService chatService,
+            UserManager<User> userManager,
             ITeamService teamService, 
             IRelationshipService relationshipService,
             IPostService postService)
         {
             this.teamService = teamService;
-            this.chatService = chatService;
             this.relationshipService = relationshipService;
             this.userService = userService;
             this.userManager = userManager;
             this.postService = postService;
-        }
-
-        public IActionResult SendRequest(string userId)
-        {
-            var myUserId = this.userManager.GetUserId(this.User);
-
-            try
-            {
-                this.relationshipService.SendFriendRequest(myUserId, userId);
-                return this.Redirect("/chats/me");
-            }
-            catch (ArgumentException ex)
-            {
-                return this.View("Error", ex.Message);
-            }
-
-        }
-
-        public IActionResult AcceptRequest(string userId)
-        {
-            return this.ChangeRelationshipState(userId, RelationshipState.Accepted);
-        }
-
-        public IActionResult DeclineRequest(string userId)
-        {
-            return this.ChangeRelationshipState(userId, RelationshipState.Declined);
-        }
-
-        public IActionResult WithdrawRequest(string userId)
-        {
-            return this.ChangeRelationshipState(userId, RelationshipState.Withdrawn);
-        }
-
-        public IActionResult Chats(string userId)
-        {
-            var myUserId = this.userManager.GetUserId(this.User);
-            try
-            {
-                var chat = this.chatService.GetPersonalChat(myUserId, userId);
-                return this.View(chat);
-            }
-            catch (ArgumentException ex)
-            {
-                return this.View("Error", ex.Message);
-            }
-
-
         }
 
         public IActionResult Search([FromQuery] UserQueryModel query)
@@ -141,29 +91,6 @@
                 return this.View(profile);
             }
             catch(ArgumentException ex)
-            {
-                return this.View("Error", ex.Message);
-            }
-        }
-
-        private IActionResult ChangeRelationshipState(string userId, RelationshipState state)
-        {
-            var myUserId = this.userManager.GetUserId(this.User);
-
-            try
-            {
-                if (state == RelationshipState.Withdrawn)
-                {
-                    this.relationshipService.ChangeRelationshipState(myUserId, userId, state);
-                }
-                else
-                {
-                    this.relationshipService.ChangeRelationshipState(userId, myUserId, state);
-                }
-
-                return this.Redirect("/chats/me");
-            }
-            catch (ArgumentException ex)
             {
                 return this.View("Error", ex.Message);
             }

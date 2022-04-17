@@ -10,6 +10,7 @@
 
     [Authorize]
     [ApiController]
+    [IgnoreAntiforgeryToken]
     public class PostsApiController : ControllerBase
     {
         private readonly IPostService postService;

@@ -65,14 +65,15 @@
             var chats = this.data.Chats
                     .Include(x => x.Messages)
                     .ThenInclude(x => x.User)
-                    .Include(x => x.Users);
+                    .Include(x => x.Users)
+                    .Include(x => x.ChatUsers);
 
             var chat = new Chat();
 
             if (chatId is null)
             {
                 chat = chats
-                    .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First())
+                    .OrderByDescending(x => x.Messages.Any() ? x.Messages.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn : x.CreatedOn)
                     .FirstOrDefault(x => x.TeamId == teamId
                         && (x.ChatType == ChatType.Team || x.ChatType == ChatType.General)
                         && x.Users.Any(u => u.Id == userId));
@@ -114,7 +115,7 @@
             if (secondUserId is null)
             {
                 chat = chats
-                    .OrderByDescending(x => x.Messages.OrderByDescending(m => m.CreatedOn).First().CreatedOn)
+                    .OrderByDescending(x => x.Messages.Any() ? x.Messages.OrderByDescending(x => x.CreatedOn).FirstOrDefault().CreatedOn : x.CreatedOn)
                     .FirstOrDefault(x => x.Users.Any(u => u.Id == userId)
                         && x.ChatType == ChatType.Personal);
 

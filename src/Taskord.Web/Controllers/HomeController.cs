@@ -46,6 +46,11 @@
 
         public IActionResult About()
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                return this.Redirect("/chats/me");
+            }
+
             return this.View();
         }
     }

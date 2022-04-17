@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +51,9 @@
                 .AddEntityFrameworkStores<TaskordDbContext>();
 
             services.AddMemoryCache();
+
+            services.AddMvc(options =>
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -92,13 +96,8 @@
 
                 endpoints.MapControllerRoute(
                     name: "teams",
-                    pattern: "teams/{teamId}/{action}/{id?}",
+                    pattern: "teams/{teamId}/{action}/{chatId?}",
                     defaults: new { controller = "Teams" });
-
-                endpoints.MapControllerRoute(
-                    name: "schedule",
-                    pattern: "schedule/{teamId}/{action=Board}",
-                    defaults: new { controller = "Schedules" });
 
                 endpoints.MapControllerRoute(
                     name: "Areas",
