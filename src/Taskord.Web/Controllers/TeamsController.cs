@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Taskord.Data.Models;
-using Taskord.Services.Chats;
-using Taskord.Services.Teams;
-using Taskord.Services.Users;
-using Taskord.Web.Models;
-
-namespace Taskord.Web.Controllers
+﻿namespace Taskord.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Taskord.Data.Models;
+    using Taskord.Services.Chats;
+    using Taskord.Services.Teams;
+    using Taskord.Services.Users;
+    using Taskord.Web.Models;
+
     public class TeamsController : Controller
     {
         private readonly ITeamService teamService;
@@ -69,6 +69,8 @@ namespace Taskord.Web.Controllers
         [Authorize]
         public IActionResult ManageChatMembers(string teamId, string chatId)
         {
+            if (chatId.Contains("@")) return null;
+
             var userId = this.userManager.GetUserId(this.User);
 
             if (!this.teamService.IsAdmin(userId, teamId))

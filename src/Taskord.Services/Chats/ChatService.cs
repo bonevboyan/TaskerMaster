@@ -1,9 +1,9 @@
 ﻿namespace Taskord.Services.Chats
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.EntityFrameworkCore;
     using Taskord.Data;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
@@ -62,6 +62,7 @@
 
         public ChatServiceModel GetTeamChat(string userId, string teamId, string chatId)
         {
+
             var chats = this.data.Chats
                     .Include(x => x.Messages)
                     .ThenInclude(x => x.User)
@@ -85,6 +86,11 @@
             }
             else
             {
+                if (chatId.Contains("@"))
+                {
+                    return null;
+                }
+
                 chat = chats
                     .FirstOrDefault(x => x.Id == chatId);
 

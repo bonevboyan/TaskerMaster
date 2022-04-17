@@ -1,8 +1,6 @@
 ﻿namespace Taskord.Test.Routing
 {
     using MyTested.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using Taskord.Services.Users.Models;
     using Taskord.Web.Controllers;
     using Taskord.Web.Models;
     using Xunit;

@@ -1,7 +1,7 @@
 ﻿namespace Taskord.Services.Posts
 {
-    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
+    using Microsoft.EntityFrameworkCore;
     using Taskord.Data;
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;

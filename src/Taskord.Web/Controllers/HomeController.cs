@@ -1,12 +1,10 @@
 ﻿namespace Taskord.Web.Controllers
 {
+    using System;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
-    using System;
-    using System.Diagnostics;
     using Taskord.Services.Statistics;
     using Taskord.Services.Statistics.Models;
-    using Taskord.Web.Models;
 
     using static WebConstants.Cache;
 

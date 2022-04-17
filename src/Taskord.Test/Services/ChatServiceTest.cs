@@ -1,6 +1,5 @@
 ﻿namespace Taskord.Test.Services
 {
-    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Linq;
     using Taskord.Data.Models;

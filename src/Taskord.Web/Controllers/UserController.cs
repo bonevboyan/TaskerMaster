@@ -1,13 +1,10 @@
 ﻿namespace Taskord.Web.Controllers
 {
+    using System;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Net;
     using Taskord.Data.Models;
-    using Taskord.Data.Models.Enums;
-    using Taskord.Services.Chats;
     using Taskord.Services.Posts;
     using Taskord.Services.Relationships;
     using Taskord.Services.Teams;

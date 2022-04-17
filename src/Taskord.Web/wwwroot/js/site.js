@@ -114,3 +114,42 @@ async function getTeamInvites() {
 
     return result;
 }
+
+let addBtns = document.getElementsByClassName('addFriend');
+let withdrawBtns = document.getElementsByClassName('withdrawRequest');
+
+[...withdrawBtns].forEach(x => {
+    x.addEventListener('click', (event) => {
+        withdrawRequest(x.id);
+    });
+
+    async function withdrawRequest(userId, teamId) {
+        const response = await fetch('/api/me/withdrawFriendRequest', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ UserId: userId })
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    }
+});
+
+[...addBtns].forEach(x => {
+    x.addEventListener('click', (event) => {
+        sendRequest(x.id);
+    });
+
+    async function sendRequest(id) {
+        const response = await fetch('/api/me/sendFriendRequest', {
+            method: 'post',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ UserId: id })
+        });
+
+        if (response.ok) {
+            location.reload();
+        }
+    }
+});

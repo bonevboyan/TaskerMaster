@@ -51,7 +51,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a asp-controller="Posts" asp-action="All" asp-route-userId="me" class="nav-link text-light">All Posts</a>
+                                <a asp-controller="Posts" asp-action="All" class="nav-link text-light">All Posts</a>
                             </li>
                         }
                         else
@@ -72,7 +72,6 @@
                 <div class="row g-0">
                     @RenderSection("Sidebar", false)
                     @RenderBody()
-                    @RenderSection("Members", false)
                 </div>
             </div>
         </div>

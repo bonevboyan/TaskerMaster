@@ -1,9 +1,9 @@
 ﻿namespace Taskord.Web.Controllers.Api
 {
+    using System;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System;
     using Taskord.Data.Models;
     using Taskord.Services.Chats;
     using Taskord.Services.Teams;

@@ -8,7 +8,6 @@
     using Taskord.Data.Models;
     using Taskord.Data.Models.Enums;
     using Taskord.Services.Teams.Models;
-    using Taskord.Services.Users;
     using Taskord.Services.Users.Models;
 
     using static Taskord.Common.ErrorMessages.Team;

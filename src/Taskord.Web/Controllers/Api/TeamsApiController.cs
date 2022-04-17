@@ -1,10 +1,10 @@
 ﻿namespace Taskord.Web.Controllers.Api
 {
+    using System;
+    using System.Linq;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using System;
-    using System.Linq;
     using Taskord.Data.Models;
     using Taskord.Services.Teams;
     using Taskord.Web.Models.Api;

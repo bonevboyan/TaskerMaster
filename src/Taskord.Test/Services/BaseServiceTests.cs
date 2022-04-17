@@ -3,7 +3,6 @@
     using System;
 
     using Microsoft.EntityFrameworkCore;
-    using Moq;
     using Taskord.Data;
     using Taskord.Services.Chats;
     using Taskord.Services.Posts;

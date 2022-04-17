@@ -1,6 +1,5 @@
 ﻿namespace Taskord.Test
 {
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Taskord.Web;
 
