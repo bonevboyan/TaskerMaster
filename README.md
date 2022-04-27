@@ -1,7 +1,7 @@
 # Taskord
 
 ## Project Infomation
-This is my project from the [ASP.NET Core course at the **Software University**](https://softuni.bg/trainings/3601/asp-dot-net-core-february-2022). It is a server-side ASP.NET Core 5.0 application.
+This is my project from the [ASP.NET Core course at the **Software University**](https://softuni.bg/trainings/3601/asp-dot-net-core-february-2022). It is a server-side ASP.NET Core 5.0 application. See my course grade [here](https://softuni.bg/certificates/details/132644/83f7f568).
 <br/><br/>
 
 ## Project Overview
